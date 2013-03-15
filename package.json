@@ -1,0 +1,22 @@
+{
+  "name": "rss-email-gw",
+  "version": "0.0.1",
+  "private": false,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "express": "~3",
+    "jade": "*",
+    "feedparser": "~0.13",
+    "mongoose": "~3",
+    "nodemailer": "~0.3"
+  },
+  "devDependencies": {
+    "sinon-chai": "~2.3",
+    "chai": "~1.5",
+    "chai-fuzzy": "~1.2",
+    "mocha": "~1.8",
+    "mocha-sinon": "~0.2"
+  }
+}
