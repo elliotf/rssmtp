@@ -81,4 +81,37 @@ describe("Feed model", function() {
       });
     });
   });
+
+  describe(".createFromURL", function() {
+    beforeEach(function() {
+      this.sinon.stub(Feed, 'fetch', function(url, done){
+        done(null, this.feedMetadata, this.feedArticles);
+      }.bind(this));
+
+      this.sinon.spy(Feed, 'create');
+
+      this.feedMetadata = {};
+      this.feedArticles = [];
+    });
+
+    it("creates a feed based on the contents of the url", function(done) {
+      this.feedMetadata.title  = 'A <i>fake</i> feed';
+      this.feedMetadata.xmlUrl = 'https://redirected.example.com';
+
+      Feed.createFromURL('http://d.example.com', function(err, feed){
+        expect(err).to.not.exist;
+
+        expect(Feed.create).to.have.been.calledWith({
+          url: 'https://redirected.example.com'
+          , name: 'A <i>fake</i> feed'
+        });
+
+        expect(feed).to.exist;
+        expect(feed.url).to.equal('https://redirected.example.com');
+        expect(feed.name).to.equal('A <i>fake</i> feed');
+
+        done();
+      });
+    });
+  });
 });

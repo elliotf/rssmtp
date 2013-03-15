@@ -6,7 +6,8 @@ var mongoose   = require('mongoose')
 ;
 
 var schema = new Schema({
-  url: { type: String }
+  name:  { type: String }
+  , url: { type: String }
 });
 
 schema.statics.fetch = function(url, done){
@@ -30,12 +31,21 @@ schema.statics.getOrCreateFromURL = function(url, done){
 
       if (feed) return done(null, feed);
 
-      Feed.createFromURL(url, done);
-    });
+      this.createFromURL(url, done);
+    }.bind(this));
 };
 
 schema.statics.createFromURL = function(url, done){
-  done();
+  this.fetch(url, function(err, metadata, articles){
+    if (err) return done(err);
+
+    var args = {
+      name:  metadata.title
+      , url: metadata.xmlUrl
+    };
+
+    this.create(args, done);
+  }.bind(this));
 };
 
 var Feed = module.exports = mongoose.model('Feed', schema);
