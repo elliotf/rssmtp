@@ -13,7 +13,8 @@
     "jade": "*",
     "feedparser": "~0.13",
     "mongoose": "~3",
-    "nodemailer": "~0.3"
+    "nodemailer": "~0.3",
+    "async": "~0.2.6"
   },
   "devDependencies": {
     "sinon-chai": "~2.3",

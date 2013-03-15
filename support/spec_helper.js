@@ -2,6 +2,7 @@ var app     = require('../app')
   , request = require('supertest')
   , chai    = require('chai')
   , cheerio = require('cheerio')
+  , async   = require('async')
 ;
 
 require('mocha-mongoose')(app.get('db uri'));
@@ -27,10 +28,25 @@ exports.model = function(model) {
 };
 
 beforeEach(function(done) {
-  exports.model('user').create({
-    email: 'default_user@example.com'
-  }, function(err, user){
-    this.user = user;
-    done(err);
+  var todo = [];
+
+  todo.push(function(done){
+    exports.model('user').create({
+      email: 'default_user@example.com'
+    }, function(err, user){
+      this.user = user;
+      done(err);
+    }.bind(this));
   }.bind(this));
+
+  todo.push(function(done){
+    exports.model('user').create({
+      email: 'other_user@example.com'
+    }, function(err, user){
+      this.other_user = user;
+      done(err);
+    }.bind(this));
+  }.bind(this));
+
+  async.parallel(todo, done);
 });
