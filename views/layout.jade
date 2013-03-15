@@ -1,7 +1,17 @@
 doctype 5
 html
   head
-    title= title
+    title rss-email-gw
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    block content
+    block full-page
+      .header
+        .nav
+          - if (user)
+            form.session(action="/session", method="post")
+              button Sign out
+              input(name="_method", type="hidden", value="delete")
+          - else
+            form.session(action="/auth/google", method="get")
+              button Sign in
+      block content

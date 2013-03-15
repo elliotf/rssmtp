@@ -1,6 +1,7 @@
-var express  = require('express')
-  , path     = require('path')
-  , mongoose = require('mongoose')
+var express   = require('express')
+  , path      = require('path')
+  , mongoose  = require('mongoose')
+  , namespace = require('express-namespace')
 ;
 
 var app = express();
@@ -19,8 +20,19 @@ app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.favicon());
+  app.use(express.cookieParser(process.env.APP_SECRET));
+  app.use(express.cookieSession({
+    key: 'sess'
+    , cookie: {
+      maxAge: 86400 * 90 * 1000
+    }
+  }));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+
+  require('./middleware/auth')(app);
+  require('./routes/index')(app);
+  require('./routes/auth')(app);
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -30,6 +42,5 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-require('./routes/index.js')(app);
 
 module.exports = app;

@@ -15,7 +15,9 @@
     "mongoose": "~3",
     "nodemailer": "~0.3",
     "async": "~0.2.6",
-    "request": "~2.16.2"
+    "request": "~2.16.2",
+    "passport": "~0.1.16",
+    "passport-google-oauth": "~0.1.5"
   },
   "devDependencies": {
     "sinon-chai": "~2.3",
