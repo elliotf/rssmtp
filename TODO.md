@@ -1,7 +1,9 @@
 # stories
 
 * user can sign up
+  * passport-*
 * user can sign in
+  * passport-*
 * user can add a feed via its URL
 * user can see feeds they've added
 * user can remove a feed
@@ -18,3 +20,23 @@
     * Mailing-list
     * List-Help
     * List-Subscribe
+
+* Models
+  * Feed
+    * prior lastModified
+    * prior etag
+    * uri
+    * name
+    * recent articles (N most recent?)
+    * #update
+      * get feed not updated in the last 30min
+      * for every article in update
+        * if we have not seen this article
+          * for every User that has this feed
+            * send the article as an html email
+  * User
+    * email
+    * accounts
+      * provider
+      * id
+    * Feeds
