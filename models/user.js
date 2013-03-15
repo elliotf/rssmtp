@@ -3,8 +3,27 @@ var mongoose = require('mongoose')
 ;
 
 var schema = new Schema({
-  accounts: [{}]
-  , email: { type: String }
+  accounts: [{provider: String, id: String}]
+}, {
+  autoIndex: false
 });
 
-var User = module.exports = mongoose.model('User', schema);
+schema.statics.getOrCreateByProviderId = function(provider, id, done) {
+  this
+    .findOne({
+      'accounts.provider': provider
+      , 'accounts.id': id
+    })
+    .exec(function(err, user){
+      if (err) return done(err);
+      if (user) return done(null, user);
+
+      this.create({
+        accounts: [
+          { provider: provider, id: id}
+        ]
+      }, done);
+    }.bind(this));
+};
+
+var Model = module.exports = mongoose.model('User', schema);

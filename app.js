@@ -1,10 +1,18 @@
-var express = require('express')
-  , routes = require('./routes')
-  , user = require('./routes/user')
-  , http = require('http')
-  , path = require('path');
+var express  = require('express')
+  , path     = require('path')
+  , mongoose = require('mongoose')
+;
 
 var app = express();
+
+if (!mongoose.connection.db) {
+  var uri = 'mongodb://localhost/' + process.env.NODE_ENV;
+  app.set('db uri', uri);
+  console.log("Connecting to MongoDB at " + uri);
+  mongoose.connect(uri, function(err){
+    if (err) return console.log("Got an err trying to connect to mongoose: ", err);
+  });
+}
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
