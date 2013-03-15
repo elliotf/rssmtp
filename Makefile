@@ -11,7 +11,7 @@ supper: test
 	bash -c "time git push origin master" # use bash for human-readable timing
 
 test:
-	./node_modules/.bin/mocha --recursive test -R list
+	NODE_ENV=test ./node_modules/.bin/mocha --recursive test -R list
 
 testwatch:
 	./node_modules/.bin/chicken -c 'clear; time make test' .
