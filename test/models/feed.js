@@ -46,4 +46,39 @@ describe("Feed model", function() {
       });
     });
   });
+
+  describe(".getOrCreateFromURL", function() {
+    beforeEach(function() {
+      this.sinon.spy(Feed, 'createFromURL');
+    });
+
+    describe("when a feed with that url exists", function() {
+      beforeEach(function(done) {
+        Feed.create({
+          url: 'http://c.example.com/rss'
+        }, done);
+      });
+
+      it("returns the existing feed", function(done) {
+        Feed.getOrCreateFromURL('http://c.example.com/rss', function(err, feed){
+          expect(Feed.createFromURL).not.to.have.been.called;
+
+          expect(feed).to.exist;
+          expect(feed.url).to.equal('http://c.example.com/rss');
+
+          done();
+        });
+      });
+    });
+
+    describe("when a feed with that url does not exist", function() {
+      it("creates a new feed", function(done) {
+        Feed.getOrCreateFromURL('http://c.example.com/rss', function(err, feed){
+          expect(Feed.createFromURL).to.have.been.calledWith('http://c.example.com/rss');
+
+          done();
+        });
+      });
+    });
+  });
 });
