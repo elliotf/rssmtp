@@ -12,3 +12,7 @@ exports.setupRequestSpec = function(done) {
 exports.$ = function(html){
   return cheerio.load(html);
 };
+
+exports.model = function(model) {
+  return require('../models/' + model);
+};

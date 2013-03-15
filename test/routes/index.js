@@ -2,7 +2,7 @@ var helper = require('../../support/spec_helper')
   , expect = require('chai').expect
 ;
 
-describe("routes/index", function() {
+describe("GET /", function() {
   beforeEach(helper.setupRequestSpec);
 
   it("displays the site title", function(done) {
