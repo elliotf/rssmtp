@@ -18,6 +18,9 @@
     "chai-fuzzy": "~1.2",
     "mocha": "~1.8",
     "mocha-sinon": "~0.2",
-    "chicken-little": "~0.1.2"
+    "chicken-little": "~0.1.2",
+    "mocha-mongoose": "~0.1.4",
+    "cheerio": "~0.10.8",
+    "supertest": "~0.5.1"
   }
 }

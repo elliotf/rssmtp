@@ -1,8 +1,6 @@
 
-/*
- * GET home page.
- */
-
-exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
+module.exports = function register(app){
+  app.get('/', function(req, res, next){
+    res.render('index', { title: 'rss-email-gw' });
+  });
 };
