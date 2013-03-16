@@ -17,7 +17,8 @@
     "async": "~0.2.6",
     "request": "~2.16.2",
     "passport": "~0.1.16",
-    "passport-google-oauth": "~0.1.5"
+    "passport-google-oauth": "~0.1.5",
+    "express-namespace": "~0.1.1"
   },
   "devDependencies": {
     "sinon-chai": "~2.3",
