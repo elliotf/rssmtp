@@ -3,6 +3,8 @@ var helper     = require('../../support/spec_helper')
   , request    = require('request')
   , feedparser = require('feedparser')
   , expect     = require('chai').expect
+  , _          = require('underscore')
+  , async      = require('async')
 ;
 
 describe("Feed model", function() {
@@ -115,6 +117,126 @@ describe("Feed model", function() {
         expect(feed.name).to.equal('A <i>fake</i> feed');
 
         done();
+      });
+    });
+  });
+
+  describe("#getLock", function() {
+    beforeEach(function(done) {
+      Feed.create({
+        name: '#getLock'
+        , url: 'http://j.example.com'
+      }, function(err, feed){
+        this.feed = feed;
+        done(err);
+      }.bind(this));
+    });
+
+    it("marks a feed as locked", function(done) {
+      var prevLockExpire = this.feed.lockExpire;
+
+      expect(prevLockExpire).to.exist;
+      expect(prevLockExpire).to.be.above(0);
+      expect(prevLockExpire).to.be.below(Date.now());
+
+      this.feed.getLock(6000, function(err, haveLock, feed){
+        expect(err).to.not.exist;
+
+        expect(haveLock).to.be.true;
+        expect(feed.lockExpire).to.be.above(prevLockExpire);
+
+        done();
+      }.bind(this));
+    });
+
+    describe("when another process already has the lock", function() {
+      it("does not allow another process to lock it", function(done) {
+        this.feed.getLock(6000, function(err, locked){
+          expect(err).to.not.exist;
+
+          expect(locked).to.be.true;
+
+          setTimeout(function(){
+            Feed.findById(this.feed.id, function(err, feed){
+              expect(err).to.not.exist;
+
+              feed.getLock(6000, function(err, locked){
+                expect(err).to.not.exist;
+
+                expect(locked).to.be.false;
+
+                done();
+              });
+            });
+          }.bind(this), 2);
+        }.bind(this));
+      });
+    });
+
+    describe("when the lock has expired", function() {
+      it("allows another process to lock it", function(done) {
+        this.feed.getLock(1, function(err, locked){
+          expect(err).to.not.exist;
+
+          expect(locked).to.be.true;
+
+          setTimeout(function(){
+            Feed.findById(this.feed.id, function(err, feed){
+              expect(err).to.not.exist;
+
+              feed.getLock(1, function(err, locked){
+                expect(err).to.not.exist;
+
+                expect(locked).to.be.true;
+
+                done();
+              });
+            });
+          }.bind(this), 2);
+        }.bind(this));
+      });
+    });
+
+    describe("when multiple processes attempt to lock at the same time", function() {
+      it("should give the lock to only one", function(done) {
+        var todo = [];
+        var feeds = [];
+
+        var numWorkers = 8;
+        for (var i = 0; i < numWorkers; ++i) {
+          todo.push(function(done){
+            Feed.findById(this.feed.id, function(err, feed){
+              expect(err).to.not.exist;
+
+              feeds.push(feed);
+
+              done(err);
+            });
+          }.bind(this));
+        }
+
+        async.parallel(todo, function(err){
+          var todo = [];
+          var numLocked = 0;
+
+          feeds.forEach(function(feed){
+            todo.push(function(done){
+              feed.getLock(6000, function(err, haveLock){
+                expect(err).to.not.exist;
+
+                if (haveLock) numLocked++;
+
+                done();
+              });
+            });
+          });
+
+          async.parallel(todo, function(err){
+            expect(numLocked).to.equal(1);
+
+            done();
+          });
+        });
       });
     });
   });

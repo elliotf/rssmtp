@@ -1,9 +1,15 @@
 # stories
 
-* user can add a feed via its URL
-* user can see feeds they've added
 * user can remove a feed
 * when a new item comes in to a feed
+  * periodically check each feed
+    * use feeds to track state
+    * to get work
+      * attempt feed lock aquisition
+        * find feed that was started more than N seconds ago
+        * attempt to update feed
+          * set started timestamp
+          * set worker to host/pid identifier
   * users that are subscribed to that feed get an email
 * user sees a footer at the bottom of every email
   * to unsubscribe from the feed the item is in
