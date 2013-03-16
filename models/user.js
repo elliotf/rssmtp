@@ -51,4 +51,13 @@ schema.statics.getOrCreateByProviderId = function(provider, id, done) {
     }.bind(this));
 };
 
-var Model = module.exports = mongoose.model('User', schema);
+schema.methods.getFeeds = function(done){
+  User
+    .findById(this.id)
+    .populate('_feeds')
+    .exec(function(err, user){
+      done(err, user._feeds);
+    }.bind(this));
+};
+
+var User = module.exports = mongoose.model('User', schema);

@@ -2,6 +2,8 @@ var helper = require('../../support/spec_helper')
   , expect = require('chai').expect
   , User   = helper.model('user')
   , Feed   = helper.model('feed')
+  , async  = require('async')
+  , _      = require('underscore')
 ;
 
 describe("User model", function() {
@@ -153,6 +155,48 @@ describe("User model", function() {
 
         done();
       }.bind(this));
+    });
+  });
+
+  describe("#getFeeds", function() {
+    beforeEach(function(done) {
+      var todo = [];
+
+      todo.push(function(done){
+        Feed.create({
+          name: 'user feed'
+          , url: 'http://g.example.com'
+        }, function(err, feed){
+          expect(err).to.not.exist;
+
+          this.feed = feed;
+
+          this.user.addFeed(feed, done);
+        }.bind(this));
+      }.bind(this));
+
+      todo.push(function(done){
+        Feed.create({
+          name: 'other_feed'
+          , url: 'http://h.example.com'
+        }, function(err, feed){
+          this.feed = feed;
+          done(err);
+        }.bind(this));
+      }.bind(this));
+
+      async.parallel(todo, done);
+    });
+
+    it("returns feed objects associated with the user", function(done) {
+      this.user.getFeeds(function(err, feeds){
+        expect(err).to.not.exist;
+
+        expect(feeds).to.have.length(1);
+        expect(_.pluck(feeds, 'name')).to.be.like(['user feed']);
+
+        done();
+      });
     });
   });
 });
