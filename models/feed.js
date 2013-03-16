@@ -82,4 +82,7 @@ schema.methods.getLock = function(expireTime, done){
   });
 };
 
+schema.methods.pull = function(done){
+};
+
 var Feed = module.exports = mongoose.model('Feed', schema);
