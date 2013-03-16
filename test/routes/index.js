@@ -28,6 +28,31 @@ describe("Main routes", function() {
         this.loginAs(this.user, done);
       });
 
+      it("has a form to add a new feed", function(done) {
+        this.request
+          .get('/')
+          .end(function(err, res){
+            expect(res.status).to.equal(200);
+
+            var $ = helper.$(res.text);
+
+            var form = $('form.new.feed');
+            expect(form).to.have.length(1);
+
+            expect(form.attr('action')).to.equal('/');
+            expect(form.attr('method')).to.equal('post');
+
+            var csrf = form.find('input[name="_csrf"]');
+            expect(csrf).to.have.length(1);
+            expect(csrf.attr("type")).to.equal("hidden");
+
+            var input = form.find('input[name="url"]');
+            expect(input).to.have.length(1);
+
+            done();
+          });
+      });
+
       it("has a link to sign out", function(done) {
         this.request
           .get('/')
