@@ -1,6 +1,7 @@
 var helper = require('../../support/spec_helper')
   , expect = require('chai').expect
   , User   = helper.model('user')
+  , Feed   = helper.model('feed')
 ;
 
 describe("User model", function() {
@@ -127,6 +128,31 @@ describe("User model", function() {
           done();
         });
       });
+    });
+  });
+
+  describe("#addFeed", function() {
+    beforeEach(function(done) {
+      Feed.create({
+        name: '#addFeed'
+        , url: 'http://f.example.com'
+      }, function(err, feed){
+        this.feed = feed;
+
+        done(err);
+      }.bind(this));
+    });
+
+    it("adds the feed to the user's feeds", function(done) {
+      expect(this.user._feeds).to.have.length(0);
+
+      this.user.addFeed(this.feed._id, function(err, user){
+        expect(err).to.not.exist;
+
+        expect(user._feeds).to.have.length(1);
+
+        done();
+      }.bind(this));
     });
   });
 });

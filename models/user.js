@@ -5,9 +5,15 @@ var mongoose = require('mongoose')
 var schema = new Schema({
   accounts: [{provider: String, id: String}]
   , email: {type: String}
+  , _feeds: [{ type: Schema.Types.ObjectId, ref: 'Feed' }]
 }, {
   autoIndex: false
 });
+
+schema.methods.addFeed = function(feed, done) {
+  this._feeds.addToSet(feed);
+  this.save(done);
+};
 
 schema.statics.getOrCreateByProfileData = function(data, done) {
   var provider = data.provider
