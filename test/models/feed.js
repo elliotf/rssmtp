@@ -365,22 +365,25 @@ describe("Feed model", function() {
         }
       ];
 
-      this.sinon.spy(Article, 'create');
+      this.sinon.spy(Article, 'getOrCreate');
     });
 
     it("instantiates Articles", function(done) {
       this.feed.merge(this.metadata, this.articles, function(err, newArticles){
         expect(err).to.not.exist;
 
-        expect(Article.create).to.have.been.calledTwice;
-        expect(Article.create).to.have.been.calledWith({
+        expect(Article.getOrCreate).to.have.been.calledTwice;
+        expect(Article.getOrCreate).to.have.been.calledWith({
           description: 'desc 2'
           , title: 'article 2'
+          , _feed: this.feed.id
           , link: 'http://m.example.com/article_2'
         });
-        expect(Article.create).to.have.been.calledWith({
+
+        expect(Article.getOrCreate).to.have.been.calledWith({
           description: 'desc 1'
           , title: 'article 1'
+          , _feed: this.feed.id
           , link: 'http://m.example.com/article_1'
         });
 
@@ -388,15 +391,6 @@ describe("Feed model", function() {
 
         done();
       }.bind(this));
-    });
-
-    it.skip("updates feed metadata", function() {
-    });
-
-    it.skip("mails new articles", function() {
-    });
-
-    it.skip("does not re-mail previously mailed articles", function() {
     });
   });
 

@@ -4,6 +4,7 @@ var mongoose   = require('mongoose')
   , request    = require('request')
   , moment     = require('moment')
   , async      = require('async')
+  , _          = require('underscore')
 ;
 
 var schema = new Schema({
@@ -103,8 +104,9 @@ schema.methods.merge = function(meta, articles, done){
   var newArticles = [];
 
   articles.forEach(function(data){
+    data = _.extend({}, data, {_feed: this.id });
     todo.push(function(done){
-      this.model('Article').create(data, function(err, article){
+      this.model('Article').getOrCreate(data, function(err, article, created){
         if (err) return done(err);
 
         newArticles.push(article);
