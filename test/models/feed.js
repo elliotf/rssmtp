@@ -1,5 +1,6 @@
 var helper     = require('../../support/spec_helper')
   , Feed       = helper.model('feed')
+  , Article    = helper.model('article')
   , request    = require('request')
   , feedparser = require('feedparser')
   , expect     = require('chai').expect
@@ -344,14 +345,58 @@ describe("Feed model", function() {
     });
   });
 
-  describe.skip("#merge", function() {
-    it("records new articles", function() {
+  describe("#merge", function() {
+    beforeEach(function() {
+      this.feed = new Feed({
+        name: '#merge'
+        , url: 'http://m.example.com'
+      });
+
+      this.articles = [
+        {
+          description: 'desc 2'
+          , title: 'article 2'
+          , link: 'http://m.example.com/article_2'
+        }
+        , {
+          description: 'desc 1'
+          , title: 'article 1'
+          , link: 'http://m.example.com/article_1'
+        }
+      ];
+
+      this.sinon.spy(Article, 'create');
     });
 
-    it("mails new articles", function() {
+    it("instantiates Articles", function(done) {
+      this.feed.merge(this.metadata, this.articles, function(err, newArticles){
+        expect(err).to.not.exist;
+
+        expect(Article.create).to.have.been.calledTwice;
+        expect(Article.create).to.have.been.calledWith({
+          description: 'desc 2'
+          , title: 'article 2'
+          , link: 'http://m.example.com/article_2'
+        });
+        expect(Article.create).to.have.been.calledWith({
+          description: 'desc 1'
+          , title: 'article 1'
+          , link: 'http://m.example.com/article_1'
+        });
+
+        expect(newArticles).to.have.length(2);
+
+        done();
+      }.bind(this));
     });
 
-    it("does not re-mail previously mailed articles", function() {
+    it.skip("updates feed metadata", function() {
+    });
+
+    it.skip("mails new articles", function() {
+    });
+
+    it.skip("does not re-mail previously mailed articles", function() {
     });
   });
 

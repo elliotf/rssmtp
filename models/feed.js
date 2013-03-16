@@ -3,6 +3,7 @@ var mongoose   = require('mongoose')
   , feedparser = require('feedparser')
   , request    = require('request')
   , moment     = require('moment')
+  , async      = require('async')
 ;
 
 var schema = new Schema({
@@ -97,7 +98,27 @@ schema.methods.fetch = function(done){
   }.bind(this));
 };
 
-schema.methods.merge = function(done){
+schema.methods.merge = function(meta, articles, done){
+  var todo = [];
+  var newArticles = [];
+
+  articles.forEach(function(data){
+    todo.push(function(done){
+      this.model('Article').create(data, function(err, article){
+        if (err) return done(err);
+
+        newArticles.push(article);
+
+        done();
+      });
+    }.bind(this));
+  }.bind(this));
+
+  async.parallel(todo, function(err){
+    if (err) return done(err, []);
+
+    done(err, newArticles);
+  });
 };
 
 schema.methods.pull = function(done){
