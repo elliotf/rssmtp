@@ -5,6 +5,7 @@ var helper     = require('../../support/spec_helper')
   , expect     = require('chai').expect
   , _          = require('underscore')
   , async      = require('async')
+  , moment     = require('moment')
 ;
 
 describe("Feed model", function() {
@@ -238,6 +239,66 @@ describe("Feed model", function() {
           });
         });
       });
+    });
+  });
+
+  describe(".getOutdated", function() {
+    beforeEach(function(done) {
+      var todo = [];
+
+      todo.push(function(done){
+        Feed.create({
+          name: 'is up-to-date'
+          , url: 'http://k.example.com'
+          , lastPublished: new Date()
+        }, function(err, feed){
+          expect(err).to.not.exist;
+
+          this.uptodate = feed;
+
+          done();
+        }.bind(this));
+      }.bind(this));
+
+      todo.push(function(done){
+        Feed.create({
+          name: 'needs an update 2'
+          , url: 'http://l.example.com'
+          , lastPublished: moment(86400).toDate()
+        }, function(err, feed){
+          expect(err).to.not.exist;
+
+          this.outdated = feed;
+
+          done();
+        }.bind(this));
+      }.bind(this));
+
+      todo.push(function(done){
+        Feed.create({
+          name: 'needs an update 1'
+          , url: 'http://l.example.com'
+        }, function(err, feed){
+          expect(err).to.not.exist;
+
+          this.outdated = feed;
+
+          done();
+        }.bind(this));
+      }.bind(this));
+
+      async.parallel(todo, done);
+    });
+
+    it("returns the most outdated field", function(done) {
+      Feed.getOutdated(function(err, feed){
+        expect(err).to.not.exist;
+
+        expect(feed).to.exist;
+        expect(feed.name).to.be.equal('needs an update 1');
+
+        done();
+      }.bind(this));
     });
   });
 });

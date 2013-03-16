@@ -19,7 +19,8 @@
     "passport": "~0.1.16",
     "passport-google-oauth": "~0.1.5",
     "express-namespace": "~0.1.1",
-    "underscore": "~1.4.4"
+    "underscore": "~1.4.4",
+    "moment": "~2.0.0"
   },
   "devDependencies": {
     "sinon-chai": "~2.3",

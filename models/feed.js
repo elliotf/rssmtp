@@ -2,13 +2,14 @@ var mongoose   = require('mongoose')
   , Schema     = mongoose.Schema
   , feedparser = require('feedparser')
   , request    = require('request')
-  , nodemailer = require('nodemailer')
+  , moment     = require('moment')
 ;
 
 var schema = new Schema({
   name:  { type: String }
   , url: { type: String }
   , lockExpire: { type: Number, 'default': 100 }
+  , lastPublished: { type: Date, required: true, 'default': function(){ return moment(0).toDate(); } }
 });
 
 schema.statics.fetch = function(url, done){
@@ -48,6 +49,20 @@ schema.statics.createFromURL = function(url, done){
 
     this.create(args, done);
   }.bind(this));
+};
+
+schema.statics.getOutdated = function(done){
+  var interval  = moment.duration(2, 'hours');
+  var threshold = moment().utc().subtract(interval);
+
+  this
+    .where('lastPublished')
+    .lte(threshold.toDate())
+    .sort('lastPublished')
+    .limit(1)
+    .exec(function(err, feeds){
+      done(err, feeds[0]);
+    });
 };
 
 schema.methods.getLock = function(expireTime, done){
