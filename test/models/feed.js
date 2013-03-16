@@ -9,12 +9,14 @@ var helper     = require('../../support/spec_helper')
 ;
 
 describe("Feed model", function() {
+  beforeEach(function() {
+    this.sinon.stub(request, 'get', function(url, done){
+      done(null, 'fake response', 'fake body');
+    });
+  });
+
   describe(".fetch", function() {
     beforeEach(function() {
-      this.sinon.stub(request, 'get', function(url, done){
-        done(null, 'fake response', 'fake body');
-      });
-
       this.sinon.stub(feedparser, 'parseString', function(url, done){
         done(null, 'fake meta', 'fake articles');
       });
@@ -296,6 +298,81 @@ describe("Feed model", function() {
 
         expect(feed).to.exist;
         expect(feed.name).to.be.equal('needs an update 1');
+
+        done();
+      }.bind(this));
+    });
+  });
+
+  describe("#fetch", function() {
+    beforeEach(function(done) {
+      this.meta = {};
+      this.articles = [];
+
+      var self = this;
+      this.sinon.stub(feedparser, 'parseString', function(url, done){
+        done(null, self.meta, self.articles);
+      });
+
+      Feed.create({
+        name: '#fetch'
+        , url: 'http://l.example.com'
+      }, function(err, feed){
+        this.feed = feed;
+
+        done(err);
+      }.bind(this));
+    });
+
+    it("returns the current feed contents", function(done) {
+      this.meta     = {fake: 'meta'};
+      this.articles = [{fake: 'article'}];
+
+      this.feed.fetch(function(err, meta, articles){
+        expect(request.get).to.have.been.calledWith({
+          jar: false
+          , url: 'http://l.example.com'
+        });
+
+        expect(err).to.not.exist;
+
+        expect(meta).to.be.like({ fake: 'meta' });
+        expect(articles).to.be.like([{ fake: 'article' }]);
+
+        done();
+      });
+    });
+  });
+
+  describe.skip("#merge", function() {
+    it("records new articles", function() {
+    });
+
+    it("mails new articles", function() {
+    });
+
+    it("does not re-mail previously mailed articles", function() {
+    });
+  });
+
+  describe("#pull", function() {
+    beforeEach(function() {
+      this.feed = new Feed({
+      });
+
+      this.sinon.stub(this.feed, 'fetch', function(done){
+        done(null, 'fake meta', 'fake articles');
+      });
+
+      this.sinon.stub(this.feed, 'merge', function(meta, articles, done){
+        done(null);
+      });
+    });
+
+    it("calls fetch and merge", function(done) {
+      this.feed.pull(function(err){
+        expect(this.feed.fetch).to.have.been.called;
+        expect(this.feed.merge).to.have.been.calledWith('fake meta', 'fake articles');
 
         done();
       }.bind(this));

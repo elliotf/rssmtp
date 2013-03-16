@@ -82,7 +82,30 @@ schema.methods.getLock = function(expireTime, done){
   });
 };
 
+schema.methods.fetch = function(done){
+  var args = {
+    url: this.url
+    , jar: false
+  };
+
+  request.get(args, function(err, response, body){
+    if (err) return done(err);
+
+    feedparser.parseString(body, function(err, meta, articles){
+      done(err, meta, articles);
+    }.bind(this));
+  }.bind(this));
+};
+
+schema.methods.merge = function(done){
+};
+
 schema.methods.pull = function(done){
+  this.fetch(function(err, meta, articles){
+    if (err) return done(err);
+
+    this.merge(meta, articles, done);
+  }.bind(this));
 };
 
 var Feed = module.exports = mongoose.model('Feed', schema);
