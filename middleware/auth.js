@@ -44,5 +44,5 @@ module.exports.loginRequired = function(req, res, next) {
 
   // FIXME:: store something in the session to record where they were trying to go
 
-  res.redirect('/login');
+  res.redirect('/');
 };

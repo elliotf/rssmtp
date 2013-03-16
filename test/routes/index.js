@@ -1,10 +1,13 @@
 var helper = require('../../support/spec_helper')
   , expect = require('chai').expect
+  , Feed   = helper.model('feed')
+  , User   = helper.model('user')
 ;
 
 describe("Main routes", function() {
+  beforeEach(helper.setupRequestSpec);
+
   describe("GET /", function() {
-    beforeEach(helper.setupRequestSpec);
 
     it("displays the site title", function(done) {
       this.request
@@ -67,6 +70,62 @@ describe("Main routes", function() {
             expect(form.text()).to.equal('Sign in');
 
             expect(form.find('input[name="_method"]')).to.have.length(0);
+
+            done();
+          });
+      });
+    });
+  });
+
+  describe("POST /", function() {
+    beforeEach(function() {
+      this.fakeFeed = new Feed({name: 'fake feed', url: 'fake url'});
+
+      this.sinon.stub(Feed, 'getOrCreateFromURL', function(url, done){
+        done(null, this.fakeFeed);
+      }.bind(this));
+
+      this.sinon.stub(User.prototype, 'addFeed', function(feed, done){
+        done();
+      }.bind(this));
+    });
+
+    describe("when logged in", function() {
+      beforeEach(function(done) {
+        this.loginAs(this.user, done);
+      });
+
+      describe("and a url is provided", function() {
+        it("creates that feed", function(done) {
+          this.request
+            .post('/')
+            .send({url: 'http://e.example.com'})
+            .expect(302)
+            .expect('location', '/')
+            .end(function(err, res){
+              expect(err).to.not.exist;
+
+              expect(Feed.getOrCreateFromURL).to.have.been.calledWith('http://e.example.com');
+              expect(User.prototype.addFeed).to.have.been.calledWith(this.fakeFeed.id);
+
+              done();
+            }.bind(this));
+        });
+      });
+    });
+
+    describe("when not logged in", function() {
+      it("redirects to the main page", function(done) {
+        this.request
+          .post('/')
+          .send('http://www.google.com')
+          .expect(302)
+          .expect('location', '/')
+          .end(function(err, res){
+            expect(err).to.not.exist;
+
+            expect(Feed.getOrCreateFromURL).to.not.have.been.called;
+            expect(User.prototype.addFeed).to.not.have.been.called;
 
             done();
           });
