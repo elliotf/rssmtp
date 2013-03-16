@@ -25,7 +25,34 @@ describe("Main routes", function() {
 
     describe("when signed in", function() {
       beforeEach(function(done) {
+        var todo = [];
+
+        this.sinon.stub(User.prototype, 'getFeeds', function(done){
+          var feeds = [];
+          feeds.push(new Feed({ name: 'feed one'}));
+          feeds.push(new Feed({ name: 'feed two'}));
+
+          done(null, feeds);
+        });
+
         this.loginAs(this.user, done);
+      });
+
+      it("shows a list of the user's feeds", function(done) {
+        this.request
+          .get('/')
+          .end(function(err, res){
+            expect(res.status).to.equal(200);
+
+            var $ = helper.$(res.text);
+
+            var feeds = $('.feed.list .feed.item');
+            expect(feeds).to.have.length(2);
+
+            expect(feeds.eq(0).text()).to.match(/feed one/);
+
+            done();
+          });
       });
 
       it("has a form to add a new feed", function(done) {

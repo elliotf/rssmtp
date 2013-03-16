@@ -7,7 +7,13 @@ module.exports = function register(app){
     if (!req.isAuthenticated()) {
       return res.render('splash');
     }
-    res.render('index');
+
+    req.user.getFeeds(function(err, feeds){
+      if (err) return next(err);
+
+      res.locals.feeds = feeds;
+      res.render('index');
+    });
   });
 
   app.post('/', loginRequired, function(req, res, next){

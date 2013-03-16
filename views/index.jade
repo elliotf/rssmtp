@@ -7,3 +7,8 @@ block content
     != csrf_form_tag()
     input(name="url", type="text", placeholder="Enter feed url")
     button(type="submit") Add new feed
+
+    ol.feed.list
+      - for feed in feeds
+        li.feed.item
+          .item-title= feed.name
