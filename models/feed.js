@@ -17,6 +17,8 @@ schema.statics.fetch = function(url, done){
   };
 
   request.get(args, function(err, response, body){
+    if (err) return done(err);
+
     feedparser.parseString(body, function(err, meta, articles){
       done(err, meta, articles);
     });
