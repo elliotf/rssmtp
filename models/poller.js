@@ -8,6 +8,11 @@ function Poller() {
     Feed.getOutdated(function(err, feed){
       if (err) return done(err);
 
+      if (!feed) {
+        self.requeue(30 * 60 * 1000);
+        return done();
+      }
+
       feed.pull(function(err){
         self.requeue(0);
 

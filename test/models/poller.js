@@ -34,15 +34,30 @@ describe("Poller model", function() {
       }.bind(this));
     });
 
-    it("queues itself to run again", function() {
+    it("queues itself to run again", function(done) {
       this.poller.updateOneFeed(function(err, feed){
         expect(err).to.not.exist;
 
         expect(this.poller.requeue).to.have.been.calledWith(0);
+
+        done();
       }.bind(this));
     });
 
     describe("when there are no outdated feeds", function() {
+      beforeEach(function() {
+        this.feed = null;
+      });
+
+      it("queues itself up to run again", function(done) {
+        this.poller.updateOneFeed(function(err, feed){
+          expect(err).to.not.exist;
+
+          expect(this.poller.requeue).to.have.been.calledWith(30 * 60 * 1000);
+
+          done();
+        }.bind(this));
+      });
     });
   });
 });
