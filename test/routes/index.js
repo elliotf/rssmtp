@@ -43,6 +43,9 @@ describe("Main routes", function() {
             expect(method.attr('type')).to.equal('hidden');
             expect(method.attr('value')).to.equal('delete');
 
+            var csrf = form.find('input[name="_csrf"]');
+            expect(csrf).to.have.length(1);
+
             done();
           });
       });

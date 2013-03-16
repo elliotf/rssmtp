@@ -1,6 +1,5 @@
 coverage:
-	./node_modules/.bin/mocha  --require blanket -R html-cov --recursive test > ./coverage.html
-	google-chrome ./coverage.html
+	./node_modules/.bin/mocha  --require blanket -R html-cov --recursive test
 
 cov: coverage
 

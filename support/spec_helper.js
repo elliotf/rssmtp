@@ -16,6 +16,28 @@ chai.use(require('sinon-chai'));
 exports.setupRequestSpec = function(done) {
   this.request = request(app);
 
+  ['del', 'get', 'post', 'put'].forEach(function(method){
+    var orig = this.request[method];
+    this.request[method] = function(){
+      var request = orig.apply(request, arguments);
+      if (this._csrf)   request.set('X-CSRF-Token', this._csrf);
+      if (this._cookie) request.set('Cookie',       this._cookie);
+      return request;
+    }.bind(this);
+  }.bind(this));
+
+  this.loginAs = function(user, done){
+    this.request
+      .get('/test/session/')
+      .send({userId: user.id})
+      .end(function(err, res){
+        this._cookie = res.header['set-cookie'];
+        this._csrf   = res.body._csrf;
+
+        done(err);
+      }.bind(this));
+  };
+
   done();
 };
 

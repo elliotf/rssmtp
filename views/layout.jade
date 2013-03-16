@@ -10,6 +10,7 @@ html
           - if (user)
             form.session(action="/session", method="post")
               button Sign out
+              != csrf_form_tag()
               input(name="_method", type="hidden", value="delete")
           - else
             form.session(action="/auth/google", method="get")

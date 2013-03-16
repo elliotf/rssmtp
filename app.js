@@ -30,11 +30,16 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
 
+  require('./middleware/csrf')(app);
   require('./middleware/auth')(app);
   require('./routes/index')(app);
   require('./routes/auth')(app);
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
+
+  if (process.env.NODE_ENV == 'test') {
+    require('./routes/test')(app);
+  }
 });
 
 app.configure('development', function(){
