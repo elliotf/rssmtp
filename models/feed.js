@@ -127,7 +127,21 @@ schema.methods.pull = function(done){
   this.fetch(function(err, meta, articles){
     if (err) return done(err);
 
-    this.merge(meta, articles, done);
+    this.merge(meta, articles, function(err, newArticles){
+      this.getUsers(function(err, users){
+        if (err) return done(err);
+
+        var todo = [];
+        newArticles.forEach(function(article){
+          todo.push(function(done){
+            article.sendTo(users, done);
+          });
+        });
+
+        async.parallel(todo, done);
+      });
+
+    }.bind(this));
   }.bind(this));
 };
 

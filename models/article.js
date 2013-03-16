@@ -33,7 +33,10 @@ schema.statics.getOrCreate = function(attr, done){
       });
     }.bind(this));
   }.bind(this));
+};
 
+schema.methods.sendTo = function(users, done) {
+  done();
 };
 
 var Article = module.exports = mongoose.model('Article', schema);

@@ -420,7 +420,11 @@ describe("Feed model", function() {
 
   describe("#pull", function() {
     beforeEach(function() {
-      this.feed = new Feed({
+      this.feed = new Feed({});
+      var article = this.article = new Article({});
+
+      this.sinon.stub(this.article, 'sendTo', function(users, done){
+        done();
       });
 
       this.sinon.stub(this.feed, 'fetch', function(done){
@@ -428,7 +432,11 @@ describe("Feed model", function() {
       });
 
       this.sinon.stub(this.feed, 'merge', function(meta, articles, done){
-        done(null);
+        done(null, [article]);
+      });
+
+      this.sinon.stub(this.feed, 'getUsers', function(done){
+        done(null, 'fake users');
       });
     });
 
@@ -436,6 +444,7 @@ describe("Feed model", function() {
       this.feed.pull(function(err){
         expect(this.feed.fetch).to.have.been.called;
         expect(this.feed.merge).to.have.been.calledWith('fake meta', 'fake articles');
+        expect(this.article.sendTo).to.have.been.calledWith('fake users');
 
         done();
       }.bind(this));
