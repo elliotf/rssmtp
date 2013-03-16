@@ -12,8 +12,12 @@ var schema = new Schema({
 });
 
 schema.statics.getOrCreate = function(attr, done){
-  var toHash = ['desc: ', attr.description, 'title: ', attr.title, 'feed: ', attr._feed].join("");
-
+  var toHash = [
+    'title: ',  attr.title
+    , 'desc: ', attr.description
+    , 'feed: ', attr._feed
+    , 'link: ', attr.link
+  ].join("");
 
   mmh3.murmur128Hex(toHash, function(err, hash){
     if (err) return done(err);
