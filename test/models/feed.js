@@ -49,7 +49,9 @@ describe("Feed model", function() {
 
   describe(".getOrCreateFromURL", function() {
     beforeEach(function() {
-      this.sinon.spy(Feed, 'createFromURL');
+      this.sinon.stub(Feed, 'createFromURL', function(url, done){
+        done();
+      });
     });
 
     describe("when a feed with that url exists", function() {
@@ -74,6 +76,8 @@ describe("Feed model", function() {
     describe("when a feed with that url does not exist", function() {
       it("creates a new feed", function(done) {
         Feed.getOrCreateFromURL('http://c.example.com/rss', function(err, feed){
+          expect(err).to.not.exist;
+
           expect(Feed.createFromURL).to.have.been.calledWith('http://c.example.com/rss');
 
           done();

@@ -30,7 +30,6 @@ schema.statics.getOrCreateFromURL = function(url, done){
     .findOne({url: url})
     .exec(function(err, feed){
       if (err) return done(err);
-
       if (feed) return done(null, feed);
 
       this.createFromURL(url, done);
