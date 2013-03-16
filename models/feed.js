@@ -109,7 +109,7 @@ schema.methods.merge = function(meta, articles, done){
       this.model('Article').getOrCreate(data, function(err, article, created){
         if (err) return done(err);
 
-        newArticles.push(article);
+        if (created) newArticles.push(article);
 
         done();
       });

@@ -392,6 +392,30 @@ describe("Feed model", function() {
         done();
       }.bind(this));
     });
+
+    describe("when some articles already exist", function() {
+      beforeEach(function(done) {
+        var existing = _.extend({}, this.articles[1], { _feed: this.feed.id });
+
+        Article.getOrCreate(existing, done);
+      });
+
+      it("does not return those", function(done) {
+        Article.getOrCreate.reset();
+
+        this.feed.merge(this.metadata, this.articles, function(err, newArticles){
+          expect(err).to.not.exist;
+
+          expect(Article.getOrCreate).to.have.been.calledTwice;
+
+          expect(newArticles).to.have.length(1);
+
+          expect(newArticles[0].title).to.equal('article 2');
+
+          done();
+        }.bind(this));
+      });
+    });
   });
 
   describe("#pull", function() {
