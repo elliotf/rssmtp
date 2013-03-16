@@ -432,10 +432,38 @@ describe("Feed model", function() {
       });
     });
 
-    it("calls fetch and merge", function(done) {
+    it("sends out new articles", function(done) {
       this.feed.pull(function(err){
         expect(this.feed.fetch).to.have.been.called;
         expect(this.feed.merge).to.have.been.calledWith('fake meta', 'fake articles');
+
+        done();
+      }.bind(this));
+    });
+  });
+
+  describe("#getUsers", function() {
+    beforeEach(function(done) {
+      Feed.create({
+        name:  "#getUsers"
+        , url: "http://o.example.com"
+      }, function(err, feed){
+        this.feed = feed;
+
+        done(err);
+      }.bind(this));
+    });
+
+    beforeEach(function(done) {
+      this.user.addFeed(this.feed, done);
+    });
+
+    it("returns users that are subscribed to the feed", function(done) {
+      this.feed.getUsers(function(err, users){
+        expect(err).to.not.exist;
+
+        expect(users).to.have.length(1);
+        expect(users[0].id).to.be.like(this.user.id);
 
         done();
       }.bind(this));

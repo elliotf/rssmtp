@@ -131,4 +131,11 @@ schema.methods.pull = function(done){
   }.bind(this));
 };
 
+schema.methods.getUsers = function(done){
+  this
+    .model('User')
+    .find({_feeds: this.id})
+    .exec(done);
+};
+
 var Feed = module.exports = mongoose.model('Feed', schema);
