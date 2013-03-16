@@ -3,6 +3,5 @@ extends layout
 block content
   h1 rss-email-gw
 
-  form.new.feed(action="/", method="post")
-    != csrf_form_tag
-    input(name="url", type="text", placeholder="Enter feed url")
+  h2 Please 
+    a(href="/auth/google") Sign in

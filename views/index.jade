@@ -4,5 +4,6 @@ block content
   h1 rss-email-gw
 
   form.new.feed(action="/", method="post")
-    != csrf_form_tag
+    != csrf_form_tag()
     input(name="url", type="text", placeholder="Enter feed url")
+    button(type="submit") Add new feed

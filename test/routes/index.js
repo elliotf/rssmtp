@@ -49,6 +49,8 @@ describe("Main routes", function() {
             var input = form.find('input[name="url"]');
             expect(input).to.have.length(1);
 
+            expect(form.find('button')).to.have.length(1);
+
             done();
           });
       });
@@ -95,6 +97,20 @@ describe("Main routes", function() {
             expect(form.text()).to.equal('Sign in');
 
             expect(form.find('input[name="_method"]')).to.have.length(0);
+
+            done();
+          });
+      });
+
+      it("does not show a form to add a feed", function(done) {
+        this.request
+          .get('/')
+          .end(function(err, res){
+            expect(res.status).to.equal(200);
+
+            var $ = helper.$(res.text);
+
+            expect($('.new.feed')).to.have.length(0);
 
             done();
           });

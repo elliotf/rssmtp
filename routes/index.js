@@ -4,7 +4,10 @@ var loginRequired = require('../middleware/auth').loginRequired
 
 module.exports = function register(app){
   app.get('/', function(req, res, next){
-    res.render('index', { title: 'rss-email-gw' });
+    if (!req.isAuthenticated()) {
+      return res.render('splash');
+    }
+    res.render('index');
   });
 
   app.post('/', loginRequired, function(req, res, next){
