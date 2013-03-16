@@ -5,7 +5,7 @@ block content
 
   form.new.feed(action="/", method="post")
     != csrf_form_tag()
-    input(name="url", type="text", placeholder="Enter feed url")
+    input(name="url", type="url", placeholder="Enter feed url", required)
     button(type="submit") Add new feed
 
     ol.feed.list

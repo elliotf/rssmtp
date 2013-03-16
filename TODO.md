@@ -1,9 +1,5 @@
 # stories
 
-* user can sign up
-  * passport-*
-* user can sign in
-  * passport-*
 * user can add a feed via its URL
 * user can see feeds they've added
 * user can remove a feed
