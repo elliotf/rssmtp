@@ -34,4 +34,17 @@ test:
 testwatch:
 	DB_TOKEN="testwatch" ./node_modules/.bin/chicken -c 'clear; time make test' .
 
+install:
+	# for node.js
+	sudo apt-get -y install python-software-properties
+	sudo add-apt-repository -y ppa:chris-lea/node.js
+	# for mongodb
+	sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+	sudo sh -c 'echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" > /etc/apt/sources.list.d/10gen.list'
+	# install packages
+	sudo apt-get update
+	sudo apt-get install -y build-essential mongodb-10gen nodejs
+	npm install
+	npm install mongodb --mongodb:native
+
 .PHONY: cov coverage dev supper test testwatch
