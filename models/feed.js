@@ -12,7 +12,12 @@ var schema = new Schema({
   , url: { type: String, 'default': '' }
   , lockExpire: { type: Number, 'default': 100 }
   , lastPublished: { type: Date, required: true, 'default': function(){ return moment(0).toDate(); } }
+}, {
+  //autoIndex: false
 });
+
+schema.index({ url: 1 });
+schema.index({ lastPublished: -1 });
 
 schema.statics.fetch = function(url, done){
   var args = {
@@ -58,8 +63,7 @@ schema.statics.getOutdated = function(done){
   var threshold = moment().utc().subtract(interval);
 
   this
-    .where('lastPublished')
-    .lte(threshold.toDate())
+    .where('lastPublished').lte(threshold.toDate())
     .sort('lastPublished')
     .limit(1)
     .exec(function(err, feeds){

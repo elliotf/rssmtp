@@ -12,7 +12,11 @@ var schema = new Schema({
   , date:      { type: Date, 'default': Date.now }
   , hash:      { type: String, required: true }
   , _feed:     { type: Schema.Types.ObjectId, ref: 'Feed', required: true }
+}, {
+  //autoIndex: false
 });
+
+schema.index({ hash: 1 });
 
 schema.statics.getOrCreate = function(attr, done){
   var toHash = [

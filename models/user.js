@@ -7,8 +7,11 @@ var schema = new Schema({
   , email: {type: String}
   , _feeds: [{ type: Schema.Types.ObjectId, ref: 'Feed' }]
 }, {
-  autoIndex: false
+  //autoIndex: false
 });
+
+schema.index({ _feeds: 1 });
+schema.index({ 'accounts.provider': 1, 'accounts.id': 1 });
 
 schema.methods.addFeed = function(feed, done) {
   this._feeds.addToSet(feed);
