@@ -63,7 +63,8 @@ describe("Feed model", function() {
     describe("when a feed with that url exists", function() {
       beforeEach(function(done) {
         Feed.create({
-          url: 'http://c.example.com/rss'
+          name: '.getOrCreateFromURL'
+          , url: 'http://c.example.com/rss'
         }, done);
       });
 
@@ -106,21 +107,40 @@ describe("Feed model", function() {
 
     it("creates a feed based on the contents of the url", function(done) {
       this.feedMetadata.title  = 'A <i>fake</i> feed';
-      this.feedMetadata.xmlUrl = 'https://redirected.example.com';
+      this.feedMetadata.xmlUrl = 'https://redirected.example.com/rss';
 
-      Feed.createFromURL('http://d.example.com', function(err, feed){
+      Feed.createFromURL('http://d.example.com/rss', function(err, feed){
         expect(err).to.not.exist;
 
         expect(Feed.create).to.have.been.calledWith({
-          url: 'https://redirected.example.com'
+          url: 'https://redirected.example.com/rss'
           , name: 'A <i>fake</i> feed'
         });
 
         expect(feed).to.exist;
-        expect(feed.url).to.equal('https://redirected.example.com');
+        expect(feed.url).to.equal('https://redirected.example.com/rss');
         expect(feed.name).to.equal('A <i>fake</i> feed');
 
         done();
+      });
+    });
+
+    describe("when the feed metadata is missing attributes", function() {
+      it("defaults to the input url", function(done) {
+        Feed.createFromURL('http://d.example.com/rss', function(err, feed){
+          expect(err).to.not.exist;
+
+          expect(Feed.create).to.have.been.calledWith({
+            url: 'http://d.example.com/rss'
+            , name: 'http://d.example.com/rss'
+          });
+
+          expect(feed).to.exist;
+          expect(feed.url).to.equal('http://d.example.com/rss');
+          expect(feed.name).to.equal('http://d.example.com/rss');
+
+          done();
+        });
       });
     });
   });
@@ -476,7 +496,10 @@ describe("Feed model", function() {
 
   describe("#publish", function() {
     beforeEach(function() {
-      this.feed = new Feed({});
+      this.feed = new Feed({
+        name: '#publish'
+        , url: 'http://q.example.com/rss'
+      });
 
       var article = this.article = new Article({
         description: 'desc here'

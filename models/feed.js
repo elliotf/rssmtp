@@ -8,8 +8,8 @@ var mongoose   = require('mongoose')
 ;
 
 var schema = new Schema({
-  name:  { type: String, 'default': '' }
-  , url: { type: String, 'default': '' }
+  name:  { type: String, required: true }
+  , url: { type: String, required: true }
   , lockExpire: { type: Number, 'default': 100 }
   , lastPublished: { type: Date, required: true, 'default': function(){ return moment(0).toDate(); } }
 }, {
@@ -50,8 +50,8 @@ schema.statics.createFromURL = function(url, done){
     if (err) return done(err);
 
     var args = {
-      name:  metadata.title
-      , url: metadata.xmlUrl
+      name:  metadata.title  || url
+      , url: metadata.xmlUrl || url
     };
 
     this.create(args, done);
