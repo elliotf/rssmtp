@@ -8,6 +8,9 @@ var app = express();
 
 if (!mongoose.connection.db) {
   var uri = 'mongodb://localhost/rss-email-gw_' + process.env.NODE_ENV;
+  if (process.env.DB_TOKEN) {
+    uri = uri + '_' + process.env.DB_TOKEN;
+  }
   app.set('db uri', uri);
   console.log("Connecting to MongoDB at " + uri);
   mongoose.connect(uri, function(err){

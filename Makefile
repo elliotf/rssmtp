@@ -1,5 +1,6 @@
 coverage:
 	NODE_ENV=test \
+					 DB_TOKEN="coverage" \
 					 GOOGLE_OAUTH_SECRET="test" \
 					 GOOGLE_OAUTH_ID="test" \
 					 GOOGLE_OAUTH_FQDN="test" \
@@ -25,6 +26,6 @@ test:
 					 ./node_modules/.bin/mocha --recursive test -R list
 
 testwatch:
-	./node_modules/.bin/chicken -c 'clear; time make test' .
+	DB_TOKEN="testwatch" ./node_modules/.bin/chicken -c 'clear; time make test' .
 
 .PHONY: cov coverage dev supper test testwatch
