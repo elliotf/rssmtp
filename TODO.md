@@ -1,20 +1,10 @@
 # stories
 
 * user can remove a feed
-* when a new item comes in to a feed
-  * periodically check each feed
-    * use feeds to track state
-    * to get work
-      * attempt feed lock aquisition
-        * find feed that was started more than N seconds ago
-        * attempt to update feed
-          * set started timestamp
-          * set worker to host/pid identifier
-  * users that are subscribed to that feed get an email
 * user sees a footer at the bottom of every email
   * to unsubscribe from the feed the item is in
   * to manage their account
-* user can filter rss-email-gw emails
+* user can filter emails
   * via envelope sender
   * via message header sender
   * via mail header
