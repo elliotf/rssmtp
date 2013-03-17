@@ -8,8 +8,8 @@ var mongoose   = require('mongoose')
 ;
 
 var schema = new Schema({
-  name:  { type: String }
-  , url: { type: String }
+  name:  { type: String, 'default': '' }
+  , url: { type: String, 'default': '' }
   , lockExpire: { type: Number, 'default': 100 }
   , lastPublished: { type: Date, required: true, 'default': function(){ return moment(0).toDate(); } }
 });
@@ -149,9 +149,9 @@ schema.methods.publish = function(articles, done){
     var todo = [];
     articles.forEach(function(article){
       todo.push(function(done){
-        article.sendTo(users, done);
-      });
-    });
+        article.sendTo(this, users, done);
+      }.bind(this));
+    }.bind(this));
 
     async.parallel(todo, function(err){
       if (err) return done(err);

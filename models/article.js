@@ -1,7 +1,8 @@
-var mongoose = require('mongoose')
-  , Schema   = mongoose.Schema
-  , mmh3     = require('murmurhash3')
-  , _        = require('underscore')
+var mongoose   = require('mongoose')
+  , Schema     = mongoose.Schema
+  , mmh3       = require('murmurhash3')
+  , _          = require('underscore')
+  , nodemailer = require('nodemailer')
 ;
 
 var schema = new Schema({
@@ -37,8 +38,23 @@ schema.statics.getOrCreate = function(attr, done){
   }.bind(this));
 };
 
-schema.methods.sendTo = function(users, done) {
+schema.methods.sendTo = function(feed, users, done) {
   done();
+};
+
+schema.methods.asEmailOptions = function(feed, users, done) {
+  var recipients = _.pluck(users, 'email');
+  var from = [feed.name, " <", process.env.APP_SMTP_SENDER, ">"].join('');
+
+  var data = {
+    from: from
+    , to: from
+    , bcc: recipients.join(',')
+    , subject: this.title
+    , date: this.date
+    , html: this.description
+  };
+  done(null, data);
 };
 
 var Article = module.exports = mongoose.model('Article', schema);

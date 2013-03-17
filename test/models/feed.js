@@ -484,7 +484,7 @@ describe("Feed model", function() {
         , link: 'link here'
         , date: new Date()
       });
-      this.sinon.stub(this.article, 'sendTo', function(users, done){
+      this.sinon.stub(this.article, 'sendTo', function(feed, users, done){
         done();
       });
       this.articles = [article];
@@ -499,7 +499,7 @@ describe("Feed model", function() {
         expect(err).to.not.exist;
 
         expect(this.feed.getUsers).to.have.been.called;
-        expect(this.article.sendTo).to.have.been.calledWith('fake users');
+        expect(this.article.sendTo).to.have.been.calledWith(this.feed, 'fake users');
 
         done();
       }.bind(this));

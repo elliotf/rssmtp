@@ -5,6 +5,7 @@ coverage:
 					 GOOGLE_OAUTH_ID="test" \
 					 GOOGLE_OAUTH_FQDN="test" \
 					 APP_SECRET="test" \
+					 APP_SMTP_SENDER="no-reply@example.com" \
 					 ./node_modules/.bin/mocha  --require blanket -R html-cov --recursive test > coverage.html
 	google-chrome coverage.html
 
@@ -23,6 +24,7 @@ test:
 					 GOOGLE_OAUTH_ID="test" \
 					 GOOGLE_OAUTH_FQDN="test" \
 					 APP_SECRET="test" \
+					 APP_SMTP_SENDER="no-reply@example.com" \
 					 ./node_modules/.bin/mocha --recursive test -R list
 
 testwatch:
