@@ -88,4 +88,12 @@ describe("Poller model", function() {
       done();
     });
   });
+
+  describe("#start", function() {
+    it("queues itself", function() {
+      this.poller.start();
+
+      expect(this.poller.requeue).to.have.been.calledWith(0);
+    });
+  });
 });
