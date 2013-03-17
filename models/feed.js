@@ -94,11 +94,16 @@ schema.methods.fetch = function(done){
     , jar: false
   };
 
-  request.get(args, function(err, response, body){
-    if (err) return done(err);
+  request.get(args, function(httpErr, response, body){
+    this.lastPublished = Date.now();
 
-    feedparser.parseString(body, function(err, meta, articles){
-      done(err, meta, articles);
+    this.save(function(err, feed){
+      if (err) return done(err);
+      if (httpErr) return done(httpErr);
+
+      feedparser.parseString(body, function(err, meta, articles){
+        done(err, meta, articles);
+      }.bind(this));
     }.bind(this));
   }.bind(this));
 };
@@ -157,12 +162,7 @@ schema.methods.publish = function(articles, done){
       }.bind(this));
     }.bind(this));
 
-    async.parallel(todo, function(err){
-      if (err) return done(err);
-
-      this.lastPublished = Date.now();
-      this.save(done);
-    }.bind(this));
+    async.parallel(todo, done);
   }.bind(this));
 };
 

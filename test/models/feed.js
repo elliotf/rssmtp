@@ -363,6 +363,20 @@ describe("Feed model", function() {
         done();
       });
     });
+
+    it("updates the lastPublished attribute of the feed", function(done) {
+      var prevPublished = this.feed.lastPublished.getTime();
+      this.sinon.spy(this.feed, 'save');
+
+      this.feed.fetch(function(err, meta, articles){
+        expect(err).to.not.exist;
+
+        expect(this.feed.lastPublished).to.be.above(prevPublished);
+        expect(this.feed.save).to.have.been.called;
+
+        done();
+      }.bind(this));
+    });
   });
 
   describe("#merge", function() {
@@ -523,18 +537,6 @@ describe("Feed model", function() {
 
         expect(this.feed.getUsers).to.have.been.called;
         expect(this.article.sendTo).to.have.been.calledWith(this.feed, 'fake users');
-
-        done();
-      }.bind(this));
-    });
-
-    it("updates the lastPublished timestamp", function(done) {
-      var prevPublished = this.feed.lastPublished.getTime();
-
-      this.feed.publish(this.articles, function(err, feed){
-        expect(err).to.not.exist;
-
-        expect(feed.lastPublished.getTime()).to.be.above(prevPublished);
 
         done();
       }.bind(this));

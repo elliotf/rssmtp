@@ -1,8 +1,6 @@
 # stories
 
 * user can remove a feed
-* if there is a problem pulling a feed
-  * do not immediately retry it
 * user sees a footer at the bottom of every email
   * to unsubscribe from the feed the item is in
   * to manage their account
