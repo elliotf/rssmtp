@@ -5,10 +5,10 @@ var mongoose = require('mongoose')
 ;
 
 var schema = new Schema({
-  description: { type: String, required: true }
-  , title: { type: String, required: true }
-  , link: { type: String, required: true }
-  , date: { type: Date, default: Date.now }
+  description: { type: String, required: true, 'default': '' }
+  , title: { type: String, required: true, 'default': '' }
+  , link: { type: String, required: true, 'default': '' }
+  , date: { type: Date, 'default': Date.now }
   , hash: { type: String, required: true }
   , _feed: { type: Schema.Types.ObjectId, ref: 'Feed', required: true }
 });
