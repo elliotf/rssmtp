@@ -40,7 +40,17 @@ schema.statics.getOrCreate = function(attr, done){
 
 schema.methods.sendTo = function(feed, users, done) {
   this.asEmailOptions(feed, users, function(err, options){
-    var mailer = nodemailer.createTransport();
+    var settings = {
+      secureConnection: process.env.APP_SMTP_SSL || ''
+      , host: process.env.APP_SMTP_HOST || ''
+      , port: process.env.APP_SMTP_PORT || ''
+      , auth: {
+        user: process.env.APP_SMTP_FROM || ''
+        , pass: process.env.APP_SMTP_PASS || ''
+      }
+    };
+
+    var mailer = nodemailer.createTransport("SMTP", settings);
     mailer.sendMail(options, function(err){
       done(err);
     });
@@ -49,7 +59,7 @@ schema.methods.sendTo = function(feed, users, done) {
 
 schema.methods.asEmailOptions = function(feed, users, done) {
   var recipients = _.pluck(users, 'email');
-  var from = [feed.name, " <", process.env.APP_SMTP_SENDER, ">"].join('');
+  var from = [feed.name, " <", process.env.APP_SMTP_FROM, ">"].join('');
 
   var data = {
     from: from

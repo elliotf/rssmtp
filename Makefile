@@ -24,7 +24,11 @@ test:
 					 GOOGLE_OAUTH_ID="test" \
 					 GOOGLE_OAUTH_FQDN="test" \
 					 APP_SECRET="test" \
-					 APP_SMTP_SENDER="no-reply@example.com" \
+					 APP_SMTP_HOST="smtp.example.com" \
+					 APP_SMTP_PORT="465" \
+					 APP_SMTP_SSL="true" \
+					 APP_SMTP_FROM="no-reply@example.com" \
+					 APP_SMTP_PASS="dummy password" \
 					 ./node_modules/.bin/mocha --recursive test -R list
 
 testwatch:

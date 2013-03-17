@@ -117,7 +117,15 @@ describe("Article model", function() {
         expect(err).to.not.exist;
 
         expect(this.article.asEmailOptions).to.have.been.calledWith(this.feed, this.users);
-        expect(nodemailer.createTransport).to.have.been.called;
+        expect(nodemailer.createTransport).to.have.been.calledWith("SMTP", {
+          host: "smtp.example.com"
+          , secureConnection: "true"
+          , port: "465"
+          , auth: {
+            user: "no-reply@example.com"
+            , pass: "dummy password"
+          }
+        });
         expect(this.mailer.sendMail).to.have.been.calledWith(this.emailOptions);
 
         done();
