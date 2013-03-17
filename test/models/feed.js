@@ -298,7 +298,7 @@ describe("Feed model", function() {
         expect(err).to.not.exist;
 
         expect(feed).to.exist;
-        expect(feed.name).to.be.equal('needs an update 1');
+        expect(feed.name).to.be.equal('needs an update 2');
 
         done();
       }.bind(this));

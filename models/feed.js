@@ -64,7 +64,7 @@ schema.statics.getOutdated = function(done){
 
   this
     .where('lastPublished').lte(threshold.toDate())
-    .sort('lastPublished')
+    .sort('id')
     .limit(1)
     .exec(function(err, feeds){
       done(err, feeds[0]);
