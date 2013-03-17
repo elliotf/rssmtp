@@ -1,7 +1,10 @@
+#!/usr/bin/env node
+
 var feedparser = require('feedparser')
   , request    = require('request')
   , nodemailer = require('nodemailer')
   , async      = require('async')
+  , _          = require('underscore')
 ;
 
 function sendMail(article, done){
