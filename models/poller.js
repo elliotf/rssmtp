@@ -9,7 +9,7 @@ Poller.prototype.updateOneFeed = function(done){
     if (err) return done(err);
 
     if (!feed) {
-      this.requeue(30 * 60 * 1000);
+      this.requeue(30 * 1000);
       return done();
     }
 
