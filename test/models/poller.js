@@ -60,4 +60,32 @@ describe("Poller model", function() {
       });
     });
   });
+
+  describe("#requeue", function() {
+    beforeEach(function() {
+      this.sinon.stub(global, 'setTimeout', function(done, delay){
+        done();
+      });
+
+      this.poller.requeue.restore();
+
+      this.sinon.stub(this.poller, 'updateOneFeed', function(done) {
+        done();
+      });
+    });
+
+    it("updates another feed after an interval", function(done) {
+      this.poller.requeue(10);
+      expect(global.setTimeout).to.have.been.calledOnce;
+      expect(global.setTimeout.firstCall.args[1]).to.equal(10);
+      expect(this.poller.updateOneFeed).to.have.been.calledOnce;
+
+      this.poller.requeue(0);
+      expect(global.setTimeout).to.have.been.calledTwice;
+      expect(global.setTimeout.secondCall.args[1]).to.equal(0);
+      expect(this.poller.updateOneFeed).to.have.been.calledTwice;
+
+      done();
+    });
+  });
 });

@@ -22,6 +22,11 @@ function Poller() {
   };
 
   self.requeue = function(delay){
+    global.setTimeout(function(){
+      this.updateOneFeed(function(err, feed){
+        if (err) { console.error("ERROR: ", err, " while updating feed: ", feed); }
+      });
+    }.bind(this), delay);
   };
 
   return self;
