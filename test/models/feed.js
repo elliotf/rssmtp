@@ -421,30 +421,25 @@ describe("Feed model", function() {
   describe("#pull", function() {
     beforeEach(function() {
       this.feed = new Feed({});
-      var article = this.article = new Article({});
-
-      this.sinon.stub(this.article, 'sendTo', function(users, done){
-        done();
-      });
 
       this.sinon.stub(this.feed, 'fetch', function(done){
         done(null, 'fake meta', 'fake articles');
       });
 
       this.sinon.stub(this.feed, 'merge', function(meta, articles, done){
-        done(null, [article]);
+        done(null, 'fake new articles');
       });
 
-      this.sinon.stub(this.feed, 'getUsers', function(done){
-        done(null, 'fake users');
+      this.sinon.stub(this.feed, 'publish', function(articles, done){
+        done(null);
       });
     });
 
-    it("sends out new articles", function(done) {
+    it("fetches, merges, publishes", function(done) {
       this.feed.pull(function(err){
         expect(this.feed.fetch).to.have.been.called;
         expect(this.feed.merge).to.have.been.calledWith('fake meta', 'fake articles');
-        expect(this.article.sendTo).to.have.been.calledWith('fake users');
+        expect(this.feed.publish).to.have.been.calledWith('fake new articles');
 
         done();
       }.bind(this));
@@ -473,6 +468,50 @@ describe("Feed model", function() {
 
         expect(users).to.have.length(1);
         expect(users[0].id).to.be.like(this.user.id);
+
+        done();
+      }.bind(this));
+    });
+  });
+
+  describe("#publish", function() {
+    beforeEach(function() {
+      this.feed = new Feed({});
+
+      var article = this.article = new Article({
+        description: 'desc here'
+        , title: 'title here'
+        , link: 'link here'
+        , date: new Date()
+      });
+      this.sinon.stub(this.article, 'sendTo', function(users, done){
+        done();
+      });
+      this.articles = [article];
+
+      this.sinon.stub(this.feed, 'getUsers', function(done){
+        done(null, 'fake users');
+      });
+    });
+
+    it("publishes articles to feed subscribers", function(done) {
+      this.feed.publish(this.articles, function(err, feed){
+        expect(err).to.not.exist;
+
+        expect(this.feed.getUsers).to.have.been.called;
+        expect(this.article.sendTo).to.have.been.calledWith('fake users');
+
+        done();
+      }.bind(this));
+    });
+
+    it("updates the lastPublished timestamp", function(done) {
+      var prevPublished = this.feed.lastPublished.getTime();
+
+      this.feed.publish(this.articles, function(err, feed){
+        expect(err).to.not.exist;
+
+        expect(feed.lastPublished.getTime()).to.be.above(prevPublished);
 
         done();
       }.bind(this));

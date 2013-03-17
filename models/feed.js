@@ -128,19 +128,9 @@ schema.methods.pull = function(done){
     if (err) return done(err);
 
     this.merge(meta, articles, function(err, newArticles){
-      this.getUsers(function(err, users){
-        if (err) return done(err);
+      if (err) return done(err);
 
-        var todo = [];
-        newArticles.forEach(function(article){
-          todo.push(function(done){
-            article.sendTo(users, done);
-          });
-        });
-
-        async.parallel(todo, done);
-      });
-
+      this.publish(newArticles, done);
     }.bind(this));
   }.bind(this));
 };
@@ -150,6 +140,26 @@ schema.methods.getUsers = function(done){
     .model('User')
     .find({_feeds: this.id})
     .exec(done);
+};
+
+schema.methods.publish = function(articles, done){
+  this.getUsers(function(err, users){
+    if (err) return done(err);
+
+    var todo = [];
+    articles.forEach(function(article){
+      todo.push(function(done){
+        article.sendTo(users, done);
+      });
+    });
+
+    async.parallel(todo, function(err){
+      if (err) return done(err);
+
+      this.lastPublished = Date.now();
+      this.save(done);
+    }.bind(this));
+  }.bind(this));
 };
 
 var Feed = module.exports = mongoose.model('Feed', schema);
