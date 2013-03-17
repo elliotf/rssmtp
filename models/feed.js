@@ -11,13 +11,13 @@ var schema = new Schema({
   name:  { type: String, required: true }
   , url: { type: String, required: true }
   , lockExpire: { type: Number, 'default': 100 }
-  , lastPublished: { type: Date, required: true, 'default': function(){ return moment(0).toDate(); } }
+  , lastFetched: { type: Date, required: true, 'default': function(){ return moment(0).toDate(); } }
 }, {
   //autoIndex: false
 });
 
 schema.index({ url: 1 });
-schema.index({ lastPublished: -1 });
+schema.index({ lastFetched: -1 });
 
 schema.statics.fetch = function(url, done){
   var args = {
@@ -63,7 +63,7 @@ schema.statics.getOutdated = function(done){
   var threshold = moment().utc().subtract(interval);
 
   this
-    .where('lastPublished').lte(threshold.toDate())
+    .where('lastFetched').lte(threshold.toDate())
     .sort('id')
     .limit(1)
     .exec(function(err, feeds){
@@ -95,7 +95,7 @@ schema.methods.fetch = function(done){
   };
 
   request.get(args, function(httpErr, response, body){
-    this.lastPublished = Date.now();
+    this.lastFetched = Date.now();
 
     this.save(function(err, feed){
       if (err) return done(err);

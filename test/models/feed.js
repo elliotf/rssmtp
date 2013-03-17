@@ -273,7 +273,7 @@ describe("Feed model", function() {
         Feed.create({
           name: 'is up-to-date'
           , url: 'http://k.example.com'
-          , lastPublished: new Date()
+          , lastFetched: new Date()
         }, function(err, feed){
           expect(err).to.not.exist;
 
@@ -287,7 +287,7 @@ describe("Feed model", function() {
         Feed.create({
           name: 'needs an update 2'
           , url: 'http://l.example.com'
-          , lastPublished: moment(86400).toDate()
+          , lastFetched: moment(86400).toDate()
         }, function(err, feed){
           expect(err).to.not.exist;
 
@@ -364,14 +364,14 @@ describe("Feed model", function() {
       });
     });
 
-    it("updates the lastPublished attribute of the feed", function(done) {
-      var prevPublished = this.feed.lastPublished.getTime();
+    it("marks the feed as having been fetched", function(done) {
+      var prevFetchedDate = this.feed.lastFetched.getTime();
       this.sinon.spy(this.feed, 'save');
 
       this.feed.fetch(function(err, meta, articles){
         expect(err).to.not.exist;
 
-        expect(this.feed.lastPublished).to.be.above(prevPublished);
+        expect(this.feed.lastFetched).to.be.above(prevFetchedDate);
         expect(this.feed.save).to.have.been.called;
 
         done();
