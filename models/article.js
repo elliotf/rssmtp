@@ -39,7 +39,12 @@ schema.statics.getOrCreate = function(attr, done){
 };
 
 schema.methods.sendTo = function(feed, users, done) {
-  done();
+  this.asEmailOptions(feed, users, function(err, options){
+    var mailer = nodemailer.createTransport();
+    mailer.sendMail(options, function(err){
+      done(err);
+    });
+  });
 };
 
 schema.methods.asEmailOptions = function(feed, users, done) {
@@ -53,6 +58,7 @@ schema.methods.asEmailOptions = function(feed, users, done) {
     , subject: this.title
     , date: this.date
     , html: this.description
+    , generateTextFromHTML: true
   };
   done(null, data);
 };

@@ -91,6 +91,40 @@ describe("Article model", function() {
     });
   });
 
+  describe("#sendTo", function() {
+    beforeEach(function() {
+      this.feed    = new Feed({});
+      this.article = new Article({});
+      this.users   = [{fake: 'user'}];
+
+      var fakeMailer = this.mailer = nodemailer.createTransport("Gmail", {});
+      this.sinon.stub(fakeMailer, 'sendMail', function(options, done){
+        done();
+      });
+
+      this.sinon.stub(nodemailer, 'createTransport', function(type, options){
+        return fakeMailer;
+      });
+
+      var fakeOptions = this.emailOptions = {fake: 'emailOptions'};
+      this.sinon.stub(this.article, 'asEmailOptions', function(feed, users, done){
+        done(null, fakeOptions);
+      });
+    });
+
+    it("sends the article as an email", function(done) {
+      this.article.sendTo(this.feed, this.users, function(err){
+        expect(err).to.not.exist;
+
+        expect(this.article.asEmailOptions).to.have.been.calledWith(this.feed, this.users);
+        expect(nodemailer.createTransport).to.have.been.called;
+        expect(this.mailer.sendMail).to.have.been.calledWith(this.emailOptions);
+
+        done();
+      }.bind(this));
+    });
+  });
+
   describe("#asEmailOptions", function() {
     describe("when there is content", function() {
       beforeEach(function(done) {
@@ -135,6 +169,7 @@ describe("Article model", function() {
             , subject: 'my article title'
             , date: this.articleDate
             , html: '<p>some content</p>'
+            , generateTextFromHTML: true
           });
 
           done();
