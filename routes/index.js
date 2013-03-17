@@ -1,5 +1,6 @@
 var loginRequired = require('../middleware/auth').loginRequired
   , Feed          = require('../models/feed')
+  , Article       = require('../models/article')
 ;
 
 module.exports = function register(app){
