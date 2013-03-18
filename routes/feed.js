@@ -4,8 +4,18 @@ var loginRequired = require('../middleware/auth').loginRequired
 
 module.exports = function register(app){
   function loadFeed(req, res, next){
+    function notfound() {
+      res.status(404);
+      res.render('404');
+    }
+
     Feed.findById(req.params.feed, function(err, feed){
-      if (err) return next(err);
+      if (err) {
+        if ('CastError' == err.name) return notfound();
+        return next(err);
+      }
+
+      if (!feed) return notfound();
 
       res.locals.feed = feed;
       next();

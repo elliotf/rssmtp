@@ -56,6 +56,22 @@ describe("Feed routes", function() {
             }.bind(this));
         });
       });
+
+      describe("when the provided feed does not exist", function(done) {
+        it("returns 404", function(done) {
+          this.request
+            .get('/feed/' + this.user.id)
+            .expect(404, done);
+        });
+      });
+
+      describe("when invalid input is provided", function() {
+        it("returns 404", function(done) {
+          this.request
+            .get('/feed/waffles_fuck_yes')
+            .expect(404, done);
+        });
+      });
     });
   });
 
