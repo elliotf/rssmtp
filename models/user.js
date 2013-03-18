@@ -18,6 +18,11 @@ schema.methods.addFeed = function(feed, done) {
   this.save(done);
 };
 
+schema.methods.removeFeed = function(feed, done) {
+  this._feeds.remove(feed);
+  this.save(done);
+};
+
 schema.statics.getOrCreateByProfileData = function(data, done) {
   var provider = data.provider
     , id = data.id

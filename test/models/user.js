@@ -199,4 +199,34 @@ describe("User model", function() {
       });
     });
   });
+
+  describe("#removeFeed", function() {
+    describe("when the user has that feed", function() {
+      beforeEach(function(done) {
+        this.user.addFeed(this.user.id, done);
+      });
+
+      it("removes the provided feed", function(done) {
+        this.user.removeFeed(this.user.id, function(err, user){
+          expect(err).to.not.exist;
+
+          expect(user._feeds).to.have.length(0);
+
+          done();
+        });
+      });
+    });
+
+    describe("when the user does not have that feed", function() {
+      it("doesn't do anything", function(done) {
+        this.user.removeFeed(this.user.id, function(err, user){
+          expect(err).to.not.exist;
+
+          expect(user._feeds).to.have.length(0);
+
+          done();
+        });
+      });
+    });
+  });
 });
