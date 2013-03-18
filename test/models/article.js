@@ -180,7 +180,7 @@ describe("Article model", function() {
           expect(email).to.be.like({
             from: "RSS - my_ feed's name <no-reply@example.com>"
             , to: "RSS - my_ feed's name <no-reply@example.com>"
-            , bcc: 'default_user@example.com,other_user@example.com'
+            , bcc: ['default_user@example.com', 'other_user@example.com']
             , subject: "my_ article's title"
             , date: this.articleDate
             , headers: {

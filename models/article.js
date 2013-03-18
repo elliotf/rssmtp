@@ -80,7 +80,7 @@ schema.methods.asEmailOptions = function(feed, users, done) {
   var data = {
     from: from
     , to: from
-    , bcc: recipients.join(',')
+    , bcc: recipients
     , subject: this.title.replace(/[^\w\s'_-]/g, '_')
     , date: this.date
     , headers: {
