@@ -68,7 +68,7 @@ schema.methods.sendTo = function(feed, users, done) {
 
 schema.methods.asEmailOptions = function(feed, users, done) {
   var recipients = _.pluck(users, 'email');
-  var feedName = feed.name.replace(/[:<@>]/g, '_');
+  var feedName = feed.name.replace(/[:<@>,]+/g, '_');
   var from = ['RSS - ', feedName, " <", process.env.APP_SMTP_FROM, ">"].join('');
 
   var html = [
