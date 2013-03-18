@@ -12,10 +12,16 @@ module.exports = function register(app){
     });
   }
 
-  app.namespace('/feed', function(){
-    app.namespace('/:feed', loadFeed, function(){
-      app.get('/', function(req, res, next){
-        res.render('feed/show.jade');
+  app.namespace('/feed/:feed', function(){
+    app.get('/', loadFeed, function(req, res, next){
+      res.render('feed/show.jade');
+    });
+
+    app.del('/', function(req, res, next){
+      req.user.removeFeed(req.params.feed, function(err, user){
+        if (err) return next(err);
+
+        res.redirect('/');
       });
     });
   });

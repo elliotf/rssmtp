@@ -1,6 +1,7 @@
 var helper = require('../../support/spec_helper')
   , expect = require('chai').expect
   , Feed   = helper.model('feed')
+  , User   = helper.model('user')
 ;
 
 describe("Feed routes", function() {
@@ -9,16 +10,11 @@ describe("Feed routes", function() {
   describe("GET /feed/:feed", function() {
     describe("when logged in", function() {
       describe("when the provided feed exists", function() {
-        beforeEach(function(done) {
-          var feed;
-
-          Feed.create({
+        beforeEach(function() {
+          var feed = this.feed = new Feed({
             name: 'GET /feed/:feed feed name'
             , url: 'http://r.example.com/rss'
-          }, function(err, model){
-            feed = this.feed = model;
-            done(err);
-          }.bind(this));
+          });
 
           this.sinon.stub(Feed, 'findById', function(id, done){
             done(null, feed);
@@ -44,12 +40,52 @@ describe("Feed routes", function() {
               expect(form.attr('method')).to.equal('post');
               expect(form.attr('action')).to.equal('/feed/' + this.feed.id);
 
+              var method = form.find('input[name="_method"]');
+              expect(method).to.have.length(1);
+              expect(method.attr('value')).to.equal('delete');
+              expect(method.attr('type')).to.equal('hidden');
+
               var csrf = form.find('input[name="_csrf"]');
               expect(csrf).to.have.length(1);
 
               var button = form.find('.button');
               expect(button.attr('type')).to.equal('submit');
               expect(button.text()).to.match(/unsub/i);
+
+              done();
+            }.bind(this));
+        });
+      });
+    });
+  });
+
+  describe("DEL /feed/:feed", function() {
+    describe("when logged in", function() {
+      beforeEach(function(done) {
+        this.loginAs(this.user, done);
+      });
+
+      describe("when the provided feed exists", function() {
+        beforeEach(function(done) {
+          var feed = this.feed = new Feed({
+            name: 'DEL /feed/:feed'
+            , url: 'http://s.example.com'
+          });
+
+          this.user.addFeed(this.feed.id, done);
+        });
+
+        it("removes the feed from the user", function(done) {
+          this.request
+            .del('/feed/' + this.feed.id)
+            .expect(302)
+            .expect('location', '/')
+            .end(function(err, res){
+              expect(err).to.not.exist;
+
+              User.findById(this.user.id, function(err, user){
+                expect(user._feeds).to.have.length(0);
+              });
 
               done();
             }.bind(this));

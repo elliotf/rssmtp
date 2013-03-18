@@ -7,4 +7,5 @@ block content
 
   form.feed.unsubscribe(action="/feed/#{feed.id}", method="post")
     != csrf_form_tag()
+    input(name="_method", value="delete", type="hidden")
     button.button(type="submit") Unsubscribe
