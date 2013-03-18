@@ -14,6 +14,7 @@
 * analytics
 * when a new user adds an existing up-to-date feed
   * they recieve the last N days of articles
+* process.env. is kind of ghetto
 
 * Models
   * Feed
