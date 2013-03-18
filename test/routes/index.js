@@ -198,8 +198,23 @@ describe("Main routes", function() {
 
                 expect(flash.error[0]).to.contain('valid feed');
 
-                done();
-              });
+                var cookieWithFeedback = res.headers['set-cookie'];
+
+                this.request
+                  .get('/')
+                  .set('Cookie', cookieWithFeedback)
+                  .end(function(err, res){
+                    expect(err).to.not.exist;
+                    expect(res.status).to.equal(200);
+
+                    var $ = helper.$(res.text);
+                    var messages = $('.feedback .error.alert');
+                    expect(messages).to.have.length(1);
+                    expect(messages.text()).to.contain('valid feed');
+
+                    done();
+                  }.bind(this));
+              }.bind(this));
           });
         });
 
