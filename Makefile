@@ -4,9 +4,15 @@ coverage:
 					 GOOGLE_OAUTH_SECRET="test" \
 					 GOOGLE_OAUTH_ID="test" \
 					 GOOGLE_OAUTH_FQDN="test" \
+					 APP_FQDN="rssmtp.firetaco.com" \
 					 APP_SECRET="test" \
-					 APP_SMTP_SENDER="no-reply@example.com" \
+					 APP_SMTP_HOST="smtp.example.com" \
+					 APP_SMTP_PORT="465" \
+					 APP_SMTP_SSL="true" \
+					 APP_SMTP_FROM="no-reply@example.com" \
+					 APP_SMTP_PASS="dummy password" \
 					 ./node_modules/.bin/mocha  --require blanket -R html-cov --recursive test > coverage.html
+					 #./node_modules/.bin/mocha  --recursive test
 	google-chrome coverage.html
 
 cov: coverage
@@ -23,6 +29,7 @@ test:
 					 GOOGLE_OAUTH_SECRET="test" \
 					 GOOGLE_OAUTH_ID="test" \
 					 GOOGLE_OAUTH_FQDN="test" \
+					 APP_FQDN="rssmtp.firetaco.com" \
 					 APP_SECRET="test" \
 					 APP_SMTP_HOST="smtp.example.com" \
 					 APP_SMTP_PORT="465" \

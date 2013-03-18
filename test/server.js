@@ -8,7 +8,7 @@ var helper = require('../support/spec_helper')
 describe("Server", function() {
   beforeEach(function() {
     var fakeServer = this.fakeServer = {
-      listen: this.sinon.spy()
+      listen: this.sinon.stub().callsArg(1)
     };
 
     this.sinon.stub(http, 'createServer', function(app){
