@@ -178,11 +178,16 @@ describe("Article model", function() {
           ].join('');
 
           expect(email).to.be.like({
-            from: 'feed name <no-reply@example.com>'
-            , to: 'feed name <no-reply@example.com>'
+            from: 'RSS: feed name <no-reply@example.com>'
+            , to: 'RSS: feed name <no-reply@example.com>'
             , bcc: 'default_user@example.com,other_user@example.com'
             , subject: 'my article title'
             , date: this.articleDate
+            , headers: {
+              "List-ID": this.feed.id + '.rssmtp.firetaco.com'
+              , "List-Unsubscribe": 'http://rssmtp.firetaco.com/feed/' + this.feed.id
+              , "List-Subscribe": 'http://rssmtp.firetaco.com/feed/' + this.feed.id
+            }
             , html: expectedHTML
             , generateTextFromHTML: true
           });
