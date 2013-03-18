@@ -173,6 +173,7 @@ describe("Article model", function() {
           var expectedHTML = [
             '<h1><a href="http://p.example.com/an_article">my article title</a></h1>',
             '<p>some content</p>',
+            '<br><br>',
             '<a href="http://rssmtp.firetaco.com/feed/', this.feed.id, '">unsubscribe</a>'
           ].join('');
 

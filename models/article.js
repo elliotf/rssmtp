@@ -73,7 +73,7 @@ schema.methods.asEmailOptions = function(feed, users, done) {
   var html = [
     '<h1><a href="', this.link, '">', this.title || '', '</a></h1>',
     this.description,
-    '<a href="http://rssmtp.firetaco.com/feed/', feed.id, '">unsubscribe</a>'
+    '<br><br><a href="http://rssmtp.firetaco.com/feed/', feed.id, '">unsubscribe</a>'
   ].join('');
 
   var data = {
