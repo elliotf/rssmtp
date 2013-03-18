@@ -3,8 +3,8 @@ extends layout
 block content
   form.new.feed(action="/", method="post")
     != csrf_form_tag()
-    input.grid_10(name="url", type="url", placeholder="Enter feed url", required)
-    button.button.grid_2(type="submit") Add new feed
+    input.grid_9(name="url", type="url", placeholder="Enter feed url", required)
+    button.button.grid_3(type="submit") Add new feed
 
     .clear
 
