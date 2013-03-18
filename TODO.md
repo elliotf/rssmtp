@@ -15,6 +15,7 @@
 * when a new user adds an existing up-to-date feed
   * they recieve the last N days of articles
 * process.env. is kind of ghetto
+* push error handling down into models
 
 * Models
   * Feed

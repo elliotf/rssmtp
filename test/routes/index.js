@@ -1,7 +1,8 @@
-var helper = require('../../support/spec_helper')
-  , expect = require('chai').expect
-  , Feed   = helper.model('feed')
-  , User   = helper.model('user')
+var helper  = require('../../support/spec_helper')
+  , expect  = require('chai').expect
+  , Feed    = helper.model('feed')
+  , User    = helper.model('user')
+  , request = require('request')
 ;
 
 describe("Main routes", function() {
@@ -168,6 +169,57 @@ describe("Main routes", function() {
 
               done();
             }.bind(this));
+        });
+      });
+
+      describe("with bad input", function() {
+        beforeEach(function() {
+          Feed.getOrCreateFromURL.restore();
+        });
+
+        describe("of a non-feed url", function() {
+          beforeEach(function() {
+            this.sinon.stub(request, 'get', function(url, done){
+              done(null, 'fake response', 'fake body');
+            });
+          });
+
+          it("provides feedback to enter a feed URL", function(done) {
+            this.request
+              .post('/')
+              .send({url: 'http://r.example.com'})
+              .expect(302)
+              .expect('location', '/')
+              .end(function(err, res){
+                expect(err).to.not.exist;
+
+                var flash = helper.getFlash(res);
+                expect(flash).to.be.a('object');
+
+                expect(flash.error[0]).to.be.contain('valid feed');
+
+                done();
+              });
+          });
+        });
+
+        describe("of a non-url", function() {
+          it("provides feedback to enter a feed URL", function(done) {
+            this.request
+              .post('/')
+              .send({url: 'waffles are really awesome'})
+              .expect(302)
+              .expect('location', '/')
+              .end(function(err, res){
+                expect(err).to.not.exist;
+
+                var flash = helper.getFlash(res);
+                expect(flash).to.be.a('object');
+                expect(flash.error[0]).to.be.contain('valid feed');
+
+                done();
+              });
+          });
         });
       });
     });

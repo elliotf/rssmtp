@@ -20,8 +20,27 @@ module.exports = function register(app){
   app.post('/', loginRequired, function(req, res, next){
     var url = req.body.url;
 
+    function badInput(){
+      req.flash('error',
+        [
+          "'", url, "' is not a valid feed URL."
+        ].join('')
+      );
+      res.redirect('/');
+    }
+
     Feed.getOrCreateFromURL(url, function(err, feed){
-      if (err) return next(err);
+      if (err) {
+        if ("Error: Not a feed" == err) {
+          return badInput();
+        }
+
+        if (err.toString().match(/Error: Invalid URI/)) {
+          return badInput();
+        }
+
+        return next(err);
+      }
 
       req.user.addFeed(feed.id, function(err){
         if (err) return next(err);

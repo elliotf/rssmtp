@@ -2,6 +2,7 @@ var express   = require('express')
   , path      = require('path')
   , mongoose  = require('mongoose')
   , namespace = require('express-namespace')
+  , _         = require('underscore')
 ;
 
 var app = express();
@@ -32,6 +33,22 @@ app.configure(function(){
   }));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+
+  app.use(require('connect-flash')());
+  app.use(function(req, res, next){
+    res.locals.messages = function(){
+      var messages = [];
+      var flash = req.flash();
+      _.each(flash, function(text, type){
+        messages.push(flash[type].map(function(text){
+          return {type: type, text: text};
+        }));
+      });
+      var result = _.flatten(messages);
+      return result;
+    };
+    next();
+  });
 
   require('./middleware/csrf')(app);
   require('./middleware/auth')(app);

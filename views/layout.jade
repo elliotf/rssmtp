@@ -21,4 +21,9 @@ html
           .clear
 
       .content.container_12
+        ul.feedback
+          - var messageList = messages()
+            for message in messageList
+              li(class=message.type + " alert")= message.text
+
         block content

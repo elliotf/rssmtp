@@ -72,3 +72,25 @@ beforeEach(function(done) {
 
   async.parallel(todo, done);
 });
+
+exports.getSession = function(input) {
+  if (typeof input === 'object') {
+    if (input.hasOwnProperty('header')) {
+      input = input.header['set-cookie'][0];
+    }
+  }
+
+  var cookie = require('cookie');
+  var utils  = require('connect').utils;
+
+  var cookies = cookie.parse(input);
+  var result = utils.parseSignedCookies(cookies, process.env.APP_SECRET);
+  result = utils.parseJSONCookies(result);
+
+  return result.sess;
+};
+
+exports.getFlash = function(input) {
+  var session = exports.getSession(input);
+  return session.flash;
+};
