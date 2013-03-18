@@ -48,11 +48,16 @@ schema.methods.sendTo = function(feed, users, done) {
       secureConnection: process.env.APP_SMTP_SSL || ''
       , host: process.env.APP_SMTP_HOST || ''
       , port: process.env.APP_SMTP_PORT || ''
-      , auth: {
-        user: process.env.APP_SMTP_FROM || ''
-        , pass: process.env.APP_SMTP_PASS || ''
-      }
     };
+
+    var auth = {
+      user: process.env.APP_SMTP_FROM || ''
+      , pass: process.env.APP_SMTP_PASS || ''
+    };
+
+    if (auth.user && auth.pass) {
+      settings.auth = auth;
+    }
 
     var mailer = nodemailer.createTransport("SMTP", settings);
     mailer.sendMail(options, function(err){
