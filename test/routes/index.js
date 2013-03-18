@@ -196,7 +196,7 @@ describe("Main routes", function() {
                 var flash = helper.getFlash(res);
                 expect(flash).to.be.a('object');
 
-                expect(flash.error[0]).to.be.contain('valid feed');
+                expect(flash.error[0]).to.contain('valid feed');
 
                 done();
               });
@@ -215,7 +215,7 @@ describe("Main routes", function() {
 
                 var flash = helper.getFlash(res);
                 expect(flash).to.be.a('object');
-                expect(flash.error[0]).to.be.contain('valid feed');
+                expect(flash.error[0]).to.contain('valid feed');
 
                 done();
               });
