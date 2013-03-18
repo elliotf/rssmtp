@@ -36,6 +36,7 @@ app.configure(function(){
   require('./middleware/csrf')(app);
   require('./middleware/auth')(app);
   require('./routes/index')(app);
+  require('./routes/feed')(app);
   require('./routes/auth')(app);
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));

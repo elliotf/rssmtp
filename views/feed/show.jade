@@ -1,0 +1,10 @@
+extends ../layout
+
+block content
+  h1= feed.name
+
+  h4= feed.url
+
+  form.feed.unsubscribe(action="/feed/#{feed.id}", method="post")
+    != csrf_form_tag()
+    button.button(type="submit") Unsubscribe

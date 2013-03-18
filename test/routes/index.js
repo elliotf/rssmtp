@@ -8,27 +8,13 @@ describe("Main routes", function() {
   beforeEach(helper.setupRequestSpec);
 
   describe("GET /", function() {
-
-    it("displays the site title", function(done) {
-      this.request
-        .get('/')
-        .end(function(err, res){
-          expect(res.status).to.equal(200);
-
-          var $ = helper.$(res.text);
-
-          expect($('h1').eq(0).text()).to.match(/rss.*email/);
-
-          done();
-        });
-    });
-
     describe("when signed in", function() {
       beforeEach(function(done) {
         var todo = [];
 
+        var feeds = this.feeds = [];
+
         this.sinon.stub(User.prototype, 'getFeeds', function(done){
-          var feeds = [];
           feeds.push(new Feed({ name: 'feed one'}));
           feeds.push(new Feed({ name: 'feed two'}));
 
@@ -51,8 +37,12 @@ describe("Main routes", function() {
 
             expect(feeds.eq(0).text()).to.match(/feed one/);
 
+            var link = feeds.find('a');
+            expect(link).to.have.length(2);
+            expect(link.eq(0).attr('href')).to.equal('/feed/' + this.feeds[0].id);
+
             done();
-          });
+          }.bind(this));
       });
 
       it("has a form to add a new feed", function(done) {

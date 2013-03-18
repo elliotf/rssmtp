@@ -1,18 +1,24 @@
 doctype 5
 html
   head
-    title rss-email-gw
+    title RSSMTP
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     block full-page
       .header
-        .nav
-          - if (user)
-            form.session(action="/session", method="post")
-              button Sign out
-              != csrf_form_tag()
-              input(name="_method", type="hidden", value="delete")
-          - else
-            form.session(action="/auth/google", method="get")
-              button Sign in
-      block content
+        .container_12
+          .title.grid_6
+            a(href="/") RSSMTP
+          .nav.tools.grid_6
+            - if (user)
+              form.session(action="/session", method="post")
+                button.button Sign out
+                != csrf_form_tag()
+                input(name="_method", type="hidden", value="delete")
+            - else
+              form.session(action="/auth/google", method="get")
+                button.button Sign in
+          .clear
+
+      .content.container_12
+        block content

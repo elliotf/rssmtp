@@ -1,14 +1,15 @@
 extends layout
 
 block content
-  h1 rss-email-gw
-
   form.new.feed(action="/", method="post")
     != csrf_form_tag()
-    input(name="url", type="url", placeholder="Enter feed url", required)
-    button(type="submit") Add new feed
+    input.grid_10(name="url", type="url", placeholder="Enter feed url", required)
+    button.button.grid_2(type="submit") Add new feed
+
+    .clear
 
     ol.feed.list
       - for feed in feeds
         li.feed.item
-          .item-title= feed.name
+          .item-title
+            a(href="/feed/#{feed.id}")= feed.name
