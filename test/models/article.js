@@ -137,7 +137,7 @@ describe("Article model", function() {
     describe("when there is content", function() {
       beforeEach(function(done) {
         this.feed = Feed.create({
-          name: "my: feed's name"
+          name: "my: feed's <name>"
           , url: 'http://p.example.com'
         }, function(err, feed){
           this.feed = feed;
@@ -178,8 +178,8 @@ describe("Article model", function() {
           ].join('');
 
           expect(email).to.be.like({
-            from: "RSS - my_ feed's name <no-reply@example.com>"
-            , to: "RSS - my_ feed's name <no-reply@example.com>"
+            from: "RSS - my_ feed's _name_ <no-reply@example.com>"
+            , to: "RSS - my_ feed's _name_ <no-reply@example.com>"
             , bcc: ['default_user@example.com', 'other_user@example.com']
             , subject: "my_ article's title"
             , date: this.articleDate

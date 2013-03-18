@@ -68,7 +68,7 @@ schema.methods.sendTo = function(feed, users, done) {
 
 schema.methods.asEmailOptions = function(feed, users, done) {
   var recipients = _.pluck(users, 'email');
-  var feedName = feed.name.replace(/[^\w\s'_-]/g, '_');
+  var feedName = feed.name.replace(/[:<@>]/g, '_');
   var from = ['RSS - ', feedName, " <", process.env.APP_SMTP_FROM, ">"].join('');
 
   var html = [
@@ -81,7 +81,7 @@ schema.methods.asEmailOptions = function(feed, users, done) {
     from: from
     , to: from
     , bcc: recipients
-    , subject: this.title.replace(/[^\w\s'_-]/g, '_')
+    , subject: this.title.replace(/[:]/g, '_')
     , date: this.date
     , headers: {
       "List-ID": [feed.id, process.env.APP_FQDN].join('.')
