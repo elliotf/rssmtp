@@ -36,6 +36,7 @@ app.configure(function(){
 
   app.use(require('connect-flash')());
   app.use(function(req, res, next){
+    res.locals.googleAnalyticsID = process.env.GOOGLE_ANALYTICS_ID;
     res.locals.messages = function(){
       var messages = [];
       var flash = req.flash();
