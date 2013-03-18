@@ -170,13 +170,19 @@ describe("Article model", function() {
 
           expect(email).to.exist;
 
+          var expectedHTML = [
+            '<h1><a href="http://p.example.com/an_article">my article title</a></h1>',
+            '<p>some content</p>',
+            '<a href="http://rssmtp.firetaco.com/feed/', this.feed.id, '">unsubscribe</a>'
+          ].join('');
+
           expect(email).to.be.like({
             from: 'feed name <no-reply@example.com>'
             , to: 'feed name <no-reply@example.com>'
             , bcc: 'default_user@example.com,other_user@example.com'
             , subject: 'my article title'
             , date: this.articleDate
-            , html: '<p>some content</p>'
+            , html: expectedHTML
             , generateTextFromHTML: true
           });
 

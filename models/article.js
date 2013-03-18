@@ -70,13 +70,19 @@ schema.methods.asEmailOptions = function(feed, users, done) {
   var recipients = _.pluck(users, 'email');
   var from = [feed.name, " <", process.env.APP_SMTP_FROM, ">"].join('');
 
+  var html = [
+    '<h1><a href="', this.link, '">', this.title || '', '</a></h1>',
+    this.description,
+    '<a href="http://rssmtp.firetaco.com/feed/', feed.id, '">unsubscribe</a>'
+  ].join('');
+
   var data = {
     from: from
     , to: from
     , bcc: recipients.join(',')
     , subject: this.title
     , date: this.date
-    , html: this.description
+    , html: html
     , generateTextFromHTML: true
   };
   done(null, data);
