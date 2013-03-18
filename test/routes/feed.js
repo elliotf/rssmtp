@@ -9,6 +9,10 @@ describe("Feed routes", function() {
 
   describe("GET /feed/:feed", function() {
     describe("when logged in", function() {
+      beforeEach(function(done) {
+        this.loginAs(this.user, done);
+      });
+
       describe("when the provided feed exists", function() {
         beforeEach(function() {
           var feed = this.feed = new Feed({
@@ -71,6 +75,27 @@ describe("Feed routes", function() {
             .get('/feed/waffles_fuck_yes')
             .expect(404, done);
         });
+      });
+    });
+
+    describe("when not logged in", function() {
+      beforeEach(function() {
+        var feed = this.feed = new Feed({
+          name: 'GET /feed/:feed feed name'
+          , url: 'http://r.example.com/rss'
+        });
+
+        this.sinon.stub(Feed, 'findById', function(id, done){
+          done(null, feed);
+        });
+      });
+
+      it("redirects to the main page for login", function(done) {
+        this.request
+          .get('/feed/' + this.feed.id)
+          .send('http://www.google.com')
+          .expect(302)
+          .expect('location', '/', done);
       });
     });
   });

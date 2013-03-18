@@ -22,7 +22,7 @@ module.exports = function register(app){
     });
   }
 
-  app.namespace('/feed/:feed', function(){
+  app.namespace('/feed/:feed', loginRequired, function(){
     app.get('/', loadFeed, function(req, res, next){
       res.render('feed/show.jade');
     });
