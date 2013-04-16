@@ -38,7 +38,7 @@ describe("Main routes", function() {
 
             expect(feeds.eq(0).text()).to.match(/feed one/);
 
-            var link = feeds.find('a');
+            var link = feeds.find('a.manage-feed');
             expect(link).to.have.length(2);
             expect(link.eq(0).attr('href')).to.equal('/feed/' + this.feeds[0].id);
 

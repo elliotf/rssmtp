@@ -12,7 +12,7 @@ block content
       - for feed in feeds
         li.feed.item
           .item-title
-            a(href="/feed/#{feed.id}")= feed.name
+            a.manage-feed(href="/feed/#{feed.id}")= feed.name
 
             if isDev
               span  /
