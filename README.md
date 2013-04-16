@@ -12,4 +12,4 @@ Use your mail client as your RSS reader
 
 ## Why not rss2email?
 
-* I'd rather have it run on a server with a web interface that my wife can use it without having to wait for me
+* I'd rather have it run on a server with a web interface that my wife can use without having to wait for me
