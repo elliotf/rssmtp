@@ -34,5 +34,15 @@ module.exports = function register(app){
         res.redirect('/');
       });
     });
+
+    if (app.get('isDev')) {
+      app.get('/refetch', loadFeed, function(req, res, next){
+        res.locals.feed.pull(function(err){
+          if (err) return next(err);
+
+          res.send('ok');
+        });
+      });
+    }
   });
 };

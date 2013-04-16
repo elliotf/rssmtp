@@ -134,4 +134,45 @@ describe("Feed routes", function() {
       });
     });
   });
+
+  describe("GET /feed/:feed/refetch", function() {
+    beforeEach(function(done) {
+      this.loginAs(this.user, done);
+    });
+
+    beforeEach(function(done) {
+      Feed.create({
+        name: 'GET /feed/:feed'
+        , url: 'http://t.example.com'
+      }, function(err, feed){
+        if (err) return done(err);
+
+        this.feed = feed;
+
+        this.user.addFeed(feed.id, done);
+      }.bind(this));
+    });
+
+    beforeEach(function() {
+      this.sinon.stub(Feed.prototype, 'pull', function(done){
+        done();
+      });
+    });
+
+    it("refetches the selected feed", function(done) {
+      this.request
+        .get('/feed/' + this.feed.id + '/refetch')
+        .end(function(err, res){
+          expect(err).to.not.exist;
+          expect(res.status).to.equal(200);
+
+          expect(Feed.prototype.pull).to.have.been.calledOnce;
+          var feed = Feed.prototype.pull.thisValues[0];
+
+          expect(feed.id).to.equal(this.feed.id);
+
+          done();
+        }.bind(this));
+    });
+  });
 });

@@ -35,7 +35,9 @@ app.configure(function(){
   app.use(express.methodOverride());
 
   app.use(require('connect-flash')());
+  app.set('isDev', (process.env.NODE_ENV != 'production'));
   app.use(function(req, res, next){
+    res.locals.isDev = (process.env.NODE_ENV != 'production');
     res.locals.googleAnalyticsID = process.env.GOOGLE_ANALYTICS_ID;
     res.locals.messages = function(){
       var messages = [];
