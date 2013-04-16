@@ -29,6 +29,8 @@ schema.statics.fetch = function(url, done){
     if (err) return done(err);
 
     feedparser.parseString(body, function(err, meta, articles){
+      if (err) return done(err);
+      if (!meta.xmlUrl) meta.xmlUrl = url;
       done(err, meta, articles);
     });
   });
