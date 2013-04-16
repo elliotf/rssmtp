@@ -51,6 +51,29 @@ describe("Feed model", function() {
         done();
       });
     });
+
+    describe("when the fetched feed does not have an xmlUrl", function() {
+      it("defaults to the url that was fetched", function(done) {
+        feedparser.parseString.restore();
+
+        this.sinon.stub(feedparser, 'parseString', function(url, done){
+          done(null, {fake: 'meta', without: 'url'}, 'fake articles');
+        });
+
+        Feed.fetch('http://b.example.com', function(err, meta, articles){
+          expect(err).to.not.exist;
+
+          expect(meta).to.be.like({
+            fake: 'meta'
+            , without: 'url'
+            , xmlUrl: 'http://b.example.com'
+          });
+          expect(articles).to.equal('fake articles');
+
+          done();
+        });
+      });
+    });
   });
 
   describe(".getOrCreateFromURL", function() {
