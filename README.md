@@ -1,8 +1,8 @@
-# rss-email-gw
+# rssmtp
 
 Use your mail client as your RSS reader
 
-[![Build Status](https://secure.travis-ci.org/elliotf/rss-email-gw.png)](http://travis-ci.org/elliotf/rss-email-gw)
+[![Build Status](https://secure.travis-ci.org/elliotf/rssmtp.png)](http://travis-ci.org/elliotf/rssmtp)
 
 ## Why?
 

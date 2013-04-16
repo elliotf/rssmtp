@@ -1,5 +1,5 @@
 {
-  "name": "rss-email-gw",
+  "name": "rssmtp",
   "version": "0.0.1",
   "dependencies": {
     "express": {
@@ -372,13 +372,13 @@
       "version": "0.1.0",
       "from": "connect-flash@~0.1.0"
     },
-    "chai": {
-      "version": "1.5.0",
-      "from": "chai@~1.5"
-    },
     "chai-fuzzy": {
       "version": "1.2.0",
       "from": "chai-fuzzy@~1.2"
+    },
+    "chai": {
+      "version": "1.5.0",
+      "from": "chai@~1.5"
     },
     "cookie": {
       "version": "0.0.5",
@@ -560,6 +560,28 @@
         }
       }
     },
+    "mocha-sinon": {
+      "version": "0.2.0",
+      "from": "mocha-sinon@~0.2",
+      "dependencies": {
+        "sinon": {
+          "version": "1.5.2",
+          "from": "sinon@~1.5.2",
+          "dependencies": {
+            "buster-format": {
+              "version": "0.5.5",
+              "from": "buster-format@~0.5",
+              "dependencies": {
+                "buster-core": {
+                  "version": "0.6.4",
+                  "from": "buster-core@>=0.6.2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "cheerio": {
       "version": "0.10.8",
       "from": "cheerio@~0.10.8",
@@ -603,28 +625,6 @@
           "version": "0.2.1",
           "from": "entities@0.x",
           "resolved": "https://registry.npmjs.org/entities/-/entities-0.2.1.tgz"
-        }
-      }
-    },
-    "mocha-sinon": {
-      "version": "0.2.0",
-      "from": "mocha-sinon@~0.2",
-      "dependencies": {
-        "sinon": {
-          "version": "1.5.2",
-          "from": "sinon@~1.5.2",
-          "dependencies": {
-            "buster-format": {
-              "version": "0.5.5",
-              "from": "buster-format@~0.5",
-              "dependencies": {
-                "buster-core": {
-                  "version": "0.6.4",
-                  "from": "buster-core@>=0.6.2"
-                }
-              }
-            }
-          }
         }
       }
     },

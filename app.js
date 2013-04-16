@@ -8,7 +8,7 @@ var express   = require('express')
 var app = express();
 
 if (!mongoose.connection.db) {
-  var uri = 'mongodb://localhost/rss-email-gw_' + process.env.NODE_ENV;
+  var uri = 'mongodb://localhost/rssmtp_' + process.env.NODE_ENV;
   if (process.env.DB_TOKEN) {
     uri = uri + '_' + process.env.DB_TOKEN;
   }
@@ -68,6 +68,5 @@ app.configure('development', function(){
   app.use(express.logger('dev'));
   app.use(express.errorHandler());
 });
-
 
 module.exports = app;
