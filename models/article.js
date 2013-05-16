@@ -42,6 +42,10 @@ schema.statics.getOrCreate = function(attr, done){
   }.bind(this));
 };
 
+schema.statics.getOrCreateFromFeedEntry = function(attr, done){
+  this.getOrCreate(attr, done);
+};
+
 schema.methods.sendTo = function(feed, users, done) {
   this.asEmailOptions(feed, users, function(err, options){
     var settings = {

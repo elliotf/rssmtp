@@ -110,12 +110,16 @@ schema.methods.fetch = function(done){
   }.bind(this));
 };
 
+var debug = 0;
 schema.methods.merge = function(meta, articles, done){
   var todo = [];
   var newArticles = [];
 
   articles.forEach(function(data){
     data = _.extend({}, data, {_feed: this.id });
+
+    if (!debug++) console.log(data.link);
+
     todo.push(function(done){
       this.model('Article').getOrCreate(data, function(err, article, created){
         if (err) return done(err);

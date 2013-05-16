@@ -114,6 +114,11 @@ describe("Feed model", function() {
         });
       });
     });
+
+    describe("when the feed does not have a url", function() {
+      it("uses the url that was fetched", function() {
+      });
+    });
   });
 
   describe(".createFromURL", function() {

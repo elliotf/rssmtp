@@ -91,6 +91,30 @@ describe("Article model", function() {
     });
   });
 
+  describe.only("getOrCreateFromEntry", function() {
+    beforeEach(function() {
+      this.sinon.stub(Article, 'getOrCreate', function(data, done){
+        done();
+      });
+
+      this.data = {
+        description: 'a desc'
+        , title:     'a title'
+        , link:      'a title'
+      };
+    });
+
+    it("calls #getOrCreate with data passed in to it", function(done) {
+      Article.getOrCreateFromFeedEntry(this.data, function(err, article){
+        expect(Article.getOrCreate).to.have.been.calledWith(this.data);
+        done();
+      }.bind(this));
+    });
+
+    describe("when there is no link", function() {
+    });
+  });
+
   describe("#sendTo", function() {
     beforeEach(function() {
       this.feed    = new Feed({});
