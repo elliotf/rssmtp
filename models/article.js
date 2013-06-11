@@ -10,35 +10,55 @@ var schema = new Schema({
   , title:     { type: String, required: true, 'default': '' }
   , link:      { type: String, required: true, 'default': '' }
   , date:      { type: Date, 'default': Date.now }
-  , hash:      { type: String, required: true }
+  , guid:      { type: String, required: true }
   , _feed:     { type: Schema.Types.ObjectId, ref: 'Feed', required: true }
 }, {
   //autoIndex: false
 });
 
-schema.index({ hash: 1 });
+schema.index({ _feed: 1, guid: 1 });
 
-schema.statics.getOrCreate = function(attr, done){
+schema.statics.getHashForData = function(data, done) {
   var toHash = [
-    'title: ',  attr.title
-    , 'desc: ', attr.description
-    , 'feed: ', attr._feed
-    , 'link: ', attr.link
+    'title: ',  data.title
+    , 'desc: ', data.description
+    , 'feed: ', data._feed
+    , 'link: ', data.link
   ].join("");
 
-  mmh3.murmur128Hex(toHash, function(err, hash){
+  mmh3.murmur128Hex(toHash, done);
+};
+
+schema.statics.getByData = function(data, done) {
+  var guid = data.guid;
+
+  if (data.guid) {
+    return this.getByGuid(guid, done);
+  }
+
+  var self = this;
+  this.getHashForData(data, function(err, hash){
     if (err) return done(err);
 
-    attr = _.extend({}, attr, { hash: hash });
+    data.guid = hash;
+    self.getByGuid(hash, done);
+  });
+};
 
-    this.findOne({hash: hash}, function(err, article){
-      if (err) return done(err);
-      if (article) return done(err, article, false);
+schema.statics.getByGuid = function(guid, done) {
+  this.findOne({guid: guid}, done);
+};
 
-      this.create(attr, function(err, article){
-        done(err, article, true);
-      });
-    }.bind(this));
+schema.statics.getOrCreate = function(data, done){
+  var attr = _.extend({}, data);
+
+  this.getByData(attr, function(err, article){
+    if (err) return done(err);
+    if (article) return done(err, article, false);
+
+    this.create(attr, function(err, article){
+      done(err, article, true);
+    });
   }.bind(this));
 };
 

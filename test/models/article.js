@@ -7,44 +7,109 @@ var helper     = require('../../support/spec_helper')
 ;
 
 describe("Article model", function() {
-  describe("#getOrCreate", function() {
-    beforeEach(function() {
-      this.data = {
-        description: 'desc here'
-        , title: 'title here'
-        , link: 'http://n.example.com'
-        , date: new Date(86400 * 1000)
-        , _feed: this.user.id
-        , discarded: 'this will be thrown away'
-      };
+  beforeEach(function() {
+    this.dummyFeedId = '51b7ace85c9d23e775000008';
+    this.data = {
+      description: 'desc here'
+      , title: 'title here'
+      , link: 'http://n.example.com'
+      , date: new Date(86400 * 1000)
+      , guid: 'a guid'
+      , _feed: this.dummyFeedId
+      , discarded: 'this will be thrown away'
+    };
+  });
 
-      this.sinon.spy(Article, 'create');
+  it("has basic attributes", function(done) {
+    var attrs = _.extend({}, this.data, {
+      guid: 'abc123'
     });
 
-    it("has basic attributes", function(done) {
-      var attrs = _.extend({}, this.data, {
-        hash: 'abc123'
-      });
+    Article.create(attrs, function(err, article){
+      expect(err).to.not.exist;
 
-      Article.create(attrs, function(err, article){
+      expect(article.discarded).to.not.exist;
+
+      Article.findById(article.id, function(err, article){
         expect(err).to.not.exist;
 
-        expect(article.discarded).to.not.exist;
+        expect(article.description).to.equal('desc here');
+        expect(article.title).to.equal('title here');
+        expect(article.link).to.equal('http://n.example.com');
+        expect(article._feed + "").to.be.like(this.dummyFeedId + "");
 
-        Article.findById(article.id, function(err, article){
+        expect(article.date).to.be.a('Date');
+        expect(article.date.getTime()).to.equal(86400 * 1000);
+
+        done();
+      }.bind(this));
+    }.bind(this));
+  });
+
+  describe(".getByGuid", function() {
+    beforeEach(function(done) {
+      Article.create(this.data, done);
+    });
+
+    it("looks an article up by its guid", function(done) {
+      Article.getByGuid('a guid', function(err, article){
+        expect(err).to.not.exist;
+
+        expect(article).to.exist;
+        expect(article.title).to.equal('title here');
+
+        done();
+      });
+    });
+  });
+
+  describe(".getHashForData", function() {
+    it("generates a hash for the given data", function(done) {
+      Article.getHashForData(this.data, function(err, hash){
+        expect(err).to.not.exist;
+        expect(hash).to.equal('1795a1c34c403122f44a4d655cf862f6');
+
+        done();
+      });
+    });
+  });
+
+  describe(".getByData", function() {
+    beforeEach(function() {
+      this.sinon.spy(Article, 'getByGuid');
+      this.sinon.spy(Article, 'getHashForData');
+    });
+
+    describe("when the data has a guid", function() {
+      it("uses the guid", function(done) {
+        Article.getByData(this.data, function(err, article){
           expect(err).to.not.exist;
+          expect(Article.getByGuid).to.have.been.calledWith('a guid');
+          done();
+        });
+      });
+    });
 
-          expect(article.description).to.equal('desc here');
-          expect(article.title).to.equal('title here');
-          expect(article.link).to.equal('http://n.example.com');
-          expect(article._feed + "").to.be.like(this.user.id + "");
+    describe("when the data does not have a guid", function() {
+      beforeEach(function() {
+        delete this.data.guid;
+      });
 
-          expect(article.date).to.be.a('Date');
-          expect(article.date.getTime()).to.equal(86400 * 1000);
+      it("looks up the article by a hash-derived guid", function(done) {
+        Article.getByData(this.data, function(err, article){
+          expect(err).to.not.exist;
+          expect(Article.getHashForData).to.have.been.calledWith(this.data);
+          expect(Article.getByGuid).to.have.been.calledWith('1795a1c34c403122f44a4d655cf862f6');
 
           done();
         }.bind(this));
-      }.bind(this));
+      });
+    });
+  });
+
+  describe("#getOrCreate", function() {
+    beforeEach(function() {
+      this.sinon.spy(Article, 'create');
     });
 
     describe("when a matching article does not exist", function() {
@@ -56,7 +121,7 @@ describe("Article model", function() {
           expect(article.description).to.equal('desc here');
           expect(article.link).to.equal('http://n.example.com');
           expect(article.date.getTime()).to.equal(86400 * 1000);
-          expect(article._feed).to.be.like(this.user._id);
+          expect(article._feed + "").to.be.like(this.dummyFeedId);
 
           expect(created).to.be.true;
 
@@ -82,7 +147,7 @@ describe("Article model", function() {
           expect(article.description).to.equal('desc here');
           expect(article.link).to.equal('http://n.example.com');
           expect(article.date.getTime()).to.equal(86400 * 1000);
-          expect(article._feed).to.be.like(this.user._id);
+          expect(article._feed + "").to.be.like(this.dummyFeedId);
           expect(created).to.be.false;
 
           done();
@@ -152,7 +217,7 @@ describe("Article model", function() {
           description: '<p>some content</p>'
           , title:     "my: article's title"
           , link:      'http://p.example.com/an_article'
-          , hash:      'fake hash'
+          , guid:      'a guid'
           , date:      this.articleDate
           , _feed:     this.feed.id
         }, function(err, article) {
