@@ -7,9 +7,7 @@ Use your mail client as your RSS reader
 ## Why?
 
 * Google reader is shutting down
+* Getting your feed in your email means offline is free (other than images)
+* You don't have to think about installing an additional piece of software
+* You can share easily by forwarding the email you receive
 * Other rss to email gateways require yet another password or cost or something else
-* I'm experimenting
-
-## Why not rss2email?
-
-* I'd rather have it run on a server with a web interface that my wife can use without having to wait for me

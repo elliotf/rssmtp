@@ -10,6 +10,7 @@ html {
 
 body {
   margin: 0;
+  font-size: 26px;
 }
 
 .header {
@@ -23,26 +24,29 @@ body {
 }
 
 a {
-  text-decoration: none;
+  color: #55a;
 }
 
-a:hover {
-  background-color
+.title {
+  font-weight: bold;
 }
 
-.header .title {
-  font-size: 40px;
+.site-footer .source-link {
+  text-align: right;
+  font-size: 14px;
 }
 
 input, button, .button {
   font-size: 20px;
 }
 
-ul, ol {
+ol, ul {
+  margin: 0;
+  padding: 0;
+  list-style-position: inside;
 }
 
 li {
-  font-size: 30px;
   margin: 6px 0;
   padding: 0;
 }
