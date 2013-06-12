@@ -25,6 +25,7 @@ supper: test
 	bash -c "time git push origin master" # use bash for human-readable timing
 
 test:
+	npm install .
 	NODE_ENV=test \
 					 GOOGLE_OAUTH_SECRET="test" \
 					 GOOGLE_OAUTH_ID="test" \
