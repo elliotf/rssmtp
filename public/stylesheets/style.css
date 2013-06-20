@@ -31,6 +31,10 @@ a {
   font-weight: bold;
 }
 
+.item-title {
+  display: inline-block;
+}
+
 .site-footer .source-link {
   text-align: right;
   font-size: 14px;
