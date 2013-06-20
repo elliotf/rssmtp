@@ -22,27 +22,29 @@ module.exports = function register(app){
     });
   }
 
-  app.namespace('/feed/:feed', loginRequired, function(){
-    app.get('/', loadFeed, function(req, res, next){
-      res.render('feed/show.jade');
-    });
-
-    app.del('/', function(req, res, next){
-      req.user.removeFeed(req.params.feed, function(err, user){
-        if (err) return next(err);
-
-        res.redirect('/');
+  app.namespace('/feed', loginRequired, function(){
+    app.namespace('/:feed', function() {
+      app.get('/', loadFeed, function(req, res, next){
+        res.render('feed/show.jade');
       });
-    });
 
-    if (app.get('isDev')) {
-      app.get('/refetch', loadFeed, function(req, res, next){
-        res.locals.feed.pull(function(err){
+      app.del('/', function(req, res, next){
+        req.user.removeFeed(req.params.feed, function(err, user){
           if (err) return next(err);
 
-          res.send('ok');
+          res.redirect('/');
         });
       });
-    }
+
+      if (app.get('isDev')) {
+        app.get('/refetch', loadFeed, function(req, res, next){
+          res.locals.feed.pull(function(err){
+            if (err) return next(err);
+
+            res.send('ok');
+          });
+        });
+      }
+    });
   });
 };
