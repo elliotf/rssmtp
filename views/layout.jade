@@ -16,7 +16,7 @@ html
                 != csrf_form_tag()
                 input(name="_method", type="hidden", value="delete")
             - else
-              form.session(action="/auth/google", method="get")
+              form.session(action="/login", method="get")
                 button.button Sign in
           .clear
 

@@ -110,7 +110,7 @@ describe("Main routes", function() {
 
             var form = $('form.session');
             expect(form).to.have.length(1);
-            expect(form.attr('action')).to.equal('/auth/google');
+            expect(form.attr('action')).to.equal('/login');
             expect(form.attr('method')).to.equal('get');
             expect(form.text()).to.equal('Sign in');
 
@@ -245,7 +245,7 @@ describe("Main routes", function() {
           .post('/')
           .send('http://www.google.com')
           .expect(302)
-          .expect('location', '/')
+          .expect('location', '/login')
           .end(function(err, res){
             expect(err).to.not.exist;
 

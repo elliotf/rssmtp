@@ -42,7 +42,7 @@ module.exports = function AuthMiddleware(app) {
 module.exports.loginRequired = function(req, res, next) {
   if (req.isAuthenticated()) return next();
 
-  // FIXME:: store something in the session to record where they were trying to go
+  // TODO:: store something in the session to record where they were trying to go
 
-  res.redirect('/');
+  res.redirect('/login');
 };

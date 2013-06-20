@@ -95,7 +95,7 @@ describe("Feed routes", function() {
           .get('/feed/' + this.feed.id)
           .send('http://www.google.com')
           .expect(302)
-          .expect('location', '/', done);
+          .expect('location', '/login', done);
       });
     });
   });

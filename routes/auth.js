@@ -11,20 +11,22 @@ module.exports = function(app) {
     return res.redirect('/');
   });
 
+  app.namespace('/login', function(){
+    app.get(
+      '/'
+      , passport.authenticate(
+        'google', {
+          scope: [
+            'https://www.googleapis.com/auth/userinfo.profile'
+            , 'https://www.googleapis.com/auth/userinfo.email'
+          ]
+        }
+      )
+    );
+  });
+
   app.namespace('/auth', function(){
     app.namespace('/google', function(){
-      app.get(
-        '/'
-        , passport.authenticate(
-          'google', {
-            scope: [
-              'https://www.googleapis.com/auth/userinfo.profile'
-              , 'https://www.googleapis.com/auth/userinfo.email'
-            ]
-          }
-        )
-      );
-
       app.get(
         '/callback'
         , passport.authenticate(
