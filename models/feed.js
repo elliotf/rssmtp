@@ -73,6 +73,19 @@ schema.statics.getOutdated = function(done){
     });
 };
 
+schema.methods.updateURL = function(url, done) {
+  if (this.url === url) return done(null, this);
+
+  Feed.fetch(url, function(err, meta, articles){
+    if (!err) {
+      this.url = url;
+      this.save(done);
+    } else {
+      done(err, this);
+    }
+  }.bind(this));
+};
+
 schema.methods.getLock = function(expireTime, done){
   var now = new Date().getTime();
   if (this.lockExpire >= now) return done(null, false, this);
