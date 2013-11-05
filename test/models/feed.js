@@ -136,12 +136,12 @@ describe("Feed model", function() {
         expect(err).to.not.exist;
 
         expect(Feed.create).to.have.been.calledWith({
-          url: 'https://redirected.example.com/rss'
+          url: 'http://d.example.com/rss'
           , name: 'A <i>fake</i> feed'
         });
 
         expect(feed).to.exist;
-        expect(feed.url).to.equal('https://redirected.example.com/rss');
+        expect(feed.url).to.equal('http://d.example.com/rss');
         expect(feed.name).to.equal('A <i>fake</i> feed');
 
         done();

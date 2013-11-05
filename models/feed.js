@@ -53,7 +53,7 @@ schema.statics.createFromURL = function(url, done){
 
     var args = {
       name:  metadata.title  || url
-      , url: metadata.xmlUrl || url
+      , url: url
     };
 
     this.create(args, done);
