@@ -6,7 +6,7 @@ var helper  = require('../../support/spec_helper')
   , Scraper = helper.model('scraper')
 ;
 
-describe.only("Scraper model", function() {
+describe("Scraper model", function() {
   beforeEach(function() {
     var self = this;
 
@@ -14,12 +14,19 @@ describe.only("Scraper model", function() {
       done(self.request_error, self.request_response, self.request_body);
     });
 
-    self.scrape_error = null;
-    self.scrape_feeds = [];
+    self.request_error    = null;
+    self.request_response = {
+        fake: 'request response'
+      , statusCode: 200
+    };
+    self.request_body     = '<html><head></head><body></body></html>';
 
     this.fakeRequest = {
-      get: this.sinon.stub().callsArgWith(1, self.scrape_error, self.scrape_feeds)
+      get: function(url, done) {
+        done(self.request_error, self.request_response, self.request_body);
+      }
     };
+    this.sinon.spy(this.fakeRequest, 'get');
   });
 
   beforeEach(function() {
@@ -53,6 +60,53 @@ describe.only("Scraper model", function() {
         done();
 
       }.bind(this));
+    });
+
+    it("looks for feeds in the response body", function(done) {
+      this.sinon.spy(this.model, 'feedsInHTML');
+
+      this.request_body = '#feedsForURL dummy request body';
+
+      this.model.feedsForURL('http://example.com', function(err, feeds){
+        expect(err).to.not.exist;
+
+        expect(this.model.feedsInHTML).to.have.been.calledWith('#feedsForURL dummy request body');
+
+        done();
+
+      }.bind(this));
+    });
+  });
+
+  describe("#feedsInHTML", function() {
+    describe("when provided an HTML string", function() {
+      beforeEach(function() {
+        this.sampleHTML = '';
+      });
+
+      describe("with RSS alternate links", function() {
+        beforeEach(function() {
+          this.sampleHTML = [
+            '<html>'
+            , '<head>'
+            , '<link rel="alternate" type="application/atom+xml" title="Atom comments feed" href="/feeds/comments.xml">'
+            , '<link type="application/rss+xml" rel="alternate" title="RSS articles feed" href="/feeds/articles.xml">'
+            , '<link rel="icon" href="/whatever.png">'
+            , '</head>'
+            , '<body>'
+            , 'can haz body'
+            , '</body></html>'
+          ].join('');
+        });
+
+        it("returns an array of feeds", function() {
+          var feeds = this.model.feedsInHTML(this.sampleHTML);
+
+          expect(feeds).to.have.length(2);
+          expect(_.pluck(feeds, 'title')).to.be.like(['Atom comments feed', 'RSS articles feed']);
+          expect(_.pluck(feeds, 'href')).to.be.like(['/feeds/comments.xml', '/feeds/articles.xml']);
+        });
+      });
     });
   });
 });

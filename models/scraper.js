@@ -1,5 +1,6 @@
 var _       = require('underscore')
   , request = require('request')
+  , cheerio = require('cheerio')
 ;
 
 function Scraper(input) {
@@ -16,7 +17,25 @@ function Scraper(input) {
 }
 
 Scraper.prototype.feedsForURL = function(url, done) {
-  this.fetcher.get(url, done);
+  var self = this;
+
+  this.fetcher.get(url, function(err, response, body){
+    done(err, self.feedsInHTML(body));
+  });
+};
+
+Scraper.prototype.feedsInHTML = function(input) {
+  var $ = cheerio.load(input);
+
+  var links = $('link[rel="alternate"]');
+  var feeds = links.map(function(i,el) {
+    return {
+      title: this.attr('title')
+      , href: this.attr('href')
+    };
+  });
+
+  return feeds;
 };
 
 module.exports = Scraper;

@@ -22,7 +22,8 @@
     "underscore": "~1.4.4",
     "moment": "~2.0.0",
     "murmurhash3": "~0.1.7",
-    "connect-flash": "~0.1.0"
+    "connect-flash": "~0.1.0",
+    "cheerio": "~0.10.8"
   },
   "devDependencies": {
     "sinon-chai": "~2.3",
