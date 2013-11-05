@@ -401,7 +401,7 @@ describe("Feed model", function() {
         Feed.fetch.restore();
 
         this.sinon.stub(Feed, 'fetch', function(url, done) {
-          done(null, {}, {});
+          done(null, {}, []);
         });
       });
 
