@@ -56,7 +56,11 @@ schema.statics.createFromURL = function(url, done){
       , url: url
     };
 
-    this.create(args, done);
+    this.create(args, function(err, feed) {
+      if (err) return done(err);
+
+      feed.updateURL(metadata.xmlUrl || url, done);
+    });
   }.bind(this));
 };
 

@@ -130,7 +130,6 @@ describe("Feed model", function() {
 
     it("creates a feed based on the contents of the url", function(done) {
       this.feedMetadata.title  = 'A <i>fake</i> feed';
-      this.feedMetadata.xmlUrl = 'https://redirected.example.com/rss';
 
       Feed.createFromURL('http://d.example.com/rss', function(err, feed){
         expect(err).to.not.exist;
@@ -144,6 +143,16 @@ describe("Feed model", function() {
         expect(feed.url).to.equal('http://d.example.com/rss');
         expect(feed.name).to.equal('A <i>fake</i> feed');
 
+        done();
+      });
+    });
+
+    it("attempts to update the URL based on the contents of the feed", function(done) {
+      this.feedMetadata.xmlUrl = 'https://anUpdatedURL.example.com/rss';
+      this.sinon.spy(Feed.prototype, 'updateURL');
+
+      Feed.createFromURL('http://d.example.com/rss', function(err, feed){
+        expect(Feed.prototype.updateURL).to.have.been.calledWith('https://anUpdatedURL.example.com/rss');
         done();
       });
     });
