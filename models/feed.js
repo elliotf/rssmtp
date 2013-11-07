@@ -53,10 +53,14 @@ schema.statics.createFromURL = function(url, done){
 
     var args = {
       name:  metadata.title  || url
-      , url: metadata.xmlUrl || url
+      , url: url
     };
 
-    this.create(args, done);
+    this.create(args, function(err, feed) {
+      if (err) return done(err);
+
+      feed.updateURL(metadata.xmlUrl || url, done);
+    });
   }.bind(this));
 };
 
@@ -71,6 +75,19 @@ schema.statics.getOutdated = function(done){
     .exec(function(err, feeds){
       done(err, feeds[0]);
     });
+};
+
+schema.methods.updateURL = function(url, done) {
+  if (this.url === url) return done(null, this);
+
+  Feed.fetch(url, function(err, meta, articles){
+    if (!err) {
+      this.url = url;
+      this.save(done);
+    } else {
+      done(err, this);
+    }
+  }.bind(this));
 };
 
 schema.methods.getLock = function(expireTime, done){
