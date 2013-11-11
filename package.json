@@ -23,7 +23,7 @@
     "moment": "~2.0.0",
     "murmurhash3": "~0.1.7",
     "connect-flash": "~0.1.0",
-    "sequelize": "~2",
+    "sequelize": "git+https://github.com/elliotf/sequelize.git#elliotf_stop_global_leak_smart",
     "sqlite3": "~2.1.19",
     "lodash": "~2.2.1"
   },

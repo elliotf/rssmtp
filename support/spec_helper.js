@@ -22,7 +22,7 @@ exports.setupRequestSpec = function(done) {
     var orig = this.request[method];
     this.request[method] = function(){
       var request = orig.apply(request, arguments);
-      if (this._csrf)   request.set('X-CSRF-Token', this._csrf);
+      if (this._csrfToken)   request.set('X-CSRF-Token', this._csrfToken);
       if (this._cookie) request.set('Cookie',       this._cookie);
       return request;
     }.bind(this);
@@ -34,7 +34,7 @@ exports.setupRequestSpec = function(done) {
       .send({userId: user.id})
       .end(function(err, res){
         this._cookie = res.header['set-cookie'];
-        this._csrf   = res.body._csrf;
+        this._csrfToken   = res.body._csrfToken;
 
         done(err);
       }.bind(this));

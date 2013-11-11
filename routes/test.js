@@ -1,5 +1,14 @@
 var User = require('../models/user')
+  , _    = require('lodash')
 ;
+
+function req_to_data(req) {
+  var data = {};
+
+  _.extend(data, req.session, { _csrfToken: req.csrfToken()});
+
+  return data;
+}
 
 module.exports = function(app) {
   app.namespace('/test', function(){
@@ -11,10 +20,10 @@ module.exports = function(app) {
 
         if (user) {
           req.logIn(user, function(err){
-            res.json(req.session);
+            res.json(req_to_data(req));
           });
         } else {
-          res.json(req.session);
+          res.json(req_to_data(req));
         }
       });
     });

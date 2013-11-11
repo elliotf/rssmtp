@@ -5,7 +5,7 @@ module.exports = function(app) {
   app.use(express.csrf());
 
   app.use(function(req, res, next){
-    var token = req.session._csrf;
+    var token = req.csrfToken();
 
     res.locals.csrf_form_tag = function() {
       return '<input type="hidden" name="_csrf" value="' + token + '">';
