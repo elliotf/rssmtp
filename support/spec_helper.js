@@ -56,7 +56,6 @@ before(function(done){
 });
 
 beforeEach(function(done) {
-  //models._sequelize.sync({force: true}).done(done);
   var todo = [];
 
   _.forEach(models, function(model, name){
