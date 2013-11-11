@@ -3,6 +3,8 @@ var app     = require('../app')
   , chai    = require('chai')
   , cheerio = require('cheerio')
   , async   = require('async')
+  , _       = require('lodash')
+  , models  = require('../models')
 ;
 
 require('mocha-mongoose')(app.get('db uri'));
@@ -48,6 +50,25 @@ exports.$ = function(html){
 exports.model = function(model) {
   return require('../models/' + model);
 };
+
+before(function(done){
+  models._sequelize.sync({force: true}).done(done);
+});
+
+beforeEach(function(done) {
+  //models._sequelize.sync({force: true}).done(done);
+  var todo = [];
+
+  _.forEach(models, function(model, name){
+    if (model && 'function' === typeof model['destroy']) {
+      todo.push(function(done){
+        model.destroy().done(done);
+      });
+    }
+  });
+
+  async.parallel(todo, done);
+});
 
 beforeEach(function(done) {
   var todo = [];
