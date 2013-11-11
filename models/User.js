@@ -12,6 +12,8 @@ function init(Sequelize, sequelize, name) {
 };
 
 init.relate = function(self, models) {
+  self.hasMany(models.Feed);
+  models.Feed.hasMany(self);
 }
 
 module.exports = init;
