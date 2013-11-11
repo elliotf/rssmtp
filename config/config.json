@@ -9,6 +9,7 @@
   },
   "test": {
     "dialect": "sqlite",
+    "storage": "rssmtp_test.sqlite",
     "username": "root",
     "password": null,
     "database": "database_test",
