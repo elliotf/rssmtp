@@ -24,6 +24,6 @@ module.exports = {
       .success(done)
   },
   down: function(migration, DataTypes, done) {
-    migration.dropTable('users').success(done);
+    //migration.dropTable('users').success(done);
   }
 }
