@@ -6,4 +6,3 @@ node_js:
 services:
   - mongodb
 before_install:
-  - 'npm install'
