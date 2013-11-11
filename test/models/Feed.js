@@ -1,15 +1,16 @@
 var helper = require('../../support/spec_helper')
   , models = require('../../models')
-  , User   = models.User
+  , Feed   = models.Feed
   , expect = require('chai').expect
   , async  = require('async')
   , _      = require('lodash')
 ;
 
-describe("User model (RDBMS)", function() {
+describe("Feed model (RDBMS)", function() {
   it("can be saved", function(done) {
-    User.create({
-      email: "waffles@example.com"
+    Feed.create({
+      url: "http://example.com"
     }).done(done);
   });
 });
+
