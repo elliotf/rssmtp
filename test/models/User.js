@@ -46,7 +46,7 @@ describe("User model (RDBMS)", function() {
         User.findOrCreateFromOAUTH(this.dummyProfileData, function(err, user, created) {
           expect(err).to.not.exist;
 
-          expect(created).to.be.ok;
+          expect(created).to.be.true;
           expect(user.email).to.equal("bob.foster@example.com");
           done();
         });
@@ -63,7 +63,7 @@ describe("User model (RDBMS)", function() {
         User.findOrCreateFromOAUTH(this.dummyProfileData, function(err, user, created) {
           expect(err).to.not.exist;
 
-          expect(created).not.to.be.ok;
+          expect(created).to.be.false;
           expect(user.email).to.equal("bob@example.com");
           done();
         });
