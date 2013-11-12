@@ -1,3 +1,6 @@
+var instanceMethods = {};
+var classMethods = {};
+
 function init(Sequelize, sequelize, name) {
   return sequelize.define(name, {
     link: {
@@ -24,10 +27,8 @@ function init(Sequelize, sequelize, name) {
     }
   }, {
     tableName: 'articles'
-    , instanceMethods: {
-    }
-    , classMethods: {
-    }
+    , instanceMethods: instanceMethods
+    , classMethods: classMethods
   });
 };
 
