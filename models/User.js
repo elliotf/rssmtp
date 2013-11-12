@@ -2,12 +2,11 @@ function init(Sequelize, sequelize, name) {
   return sequelize.define(name, {
     email: Sequelize.STRING(2048)
   }, {
-    instanceMethods: {
+    tableName: 'users'
+    , instanceMethods: {
     }
     , classMethods: {
     }
-  }, {
-    tableName: 'users'
   });
 };
 

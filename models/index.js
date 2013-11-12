@@ -9,6 +9,7 @@ var Sequelize = require('sequelize')
 var options = _.merge({}, config, {
   define: {
     underscored: true
+    , freezeTableName: true
   }
   , logging: false
 });
