@@ -31,11 +31,9 @@ function init(Sequelize, sequelize, name) {
   });
 };
 
-// unique key on feed,guid
+// unique key on feed_id,guid
 
 init.relate = function(self, models) {
-  // model.belongsTo(models.Feed);
-  // models.Feed.hasMany(model);
 }
 
 module.exports = init;

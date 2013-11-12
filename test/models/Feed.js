@@ -1,9 +1,10 @@
-var helper = require('../../support/spec_helper')
-  , models = require('../../models')
-  , Feed   = models.Feed
-  , expect = require('chai').expect
-  , async  = require('async')
-  , _      = require('lodash')
+var helper  = require('../../support/spec_helper')
+  , models  = require('../../models')
+  , Feed    = models.Feed
+  , Article = models.Article
+  , expect  = require('chai').expect
+  , async   = require('async')
+  , _       = require('lodash')
 ;
 
 describe("Feed model (RDBMS)", function() {
@@ -11,6 +12,40 @@ describe("Feed model (RDBMS)", function() {
     Feed.create({
       url: "http://example.com"
     }).done(done);
+  });
+
+  describe("hasMany Articles", function() {
+    beforeEach(function(done) {
+      var todo = []
+        , self = this
+      ;
+
+      Feed.create({
+        url: "http://example.com"
+      })
+        .error(done)
+        .success(function(model){
+          self.feed = model;
+          done();
+        })
+    });
+
+    it("#addArticle", function(done) {
+      var self = this
+      ;
+
+      Article.create({
+        link: 'http://example.com'
+        , title: 'an article'
+        , description: 'more details here'
+        , date: Date.now()
+        , guid: 'asdfasdf123'
+      })
+      .error(done)
+      .success(function(article){
+        self.feed.addArticle(article).done(done);
+      });
+    });
   });
 });
 
