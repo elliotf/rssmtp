@@ -1,5 +1,5 @@
 var passport       = require('passport')
-  , User           = require('../models/user')
+  , User           = require('../models').User
   , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 ;
 
@@ -15,10 +15,8 @@ module.exports = function AuthMiddleware(app) {
       , callbackURL: redirect
     },
     function(accessToken, refreshToken, profile, done) {
-      User.getOrCreateByProfileData(profile, function(err, user){
-        if (err) return done(err);
-
-        done(null, user);
+      User.findOrCreateFromOAUTH(profile, function(err, user){
+        done(err, user);
       });
     }
   ));
@@ -28,7 +26,10 @@ module.exports = function AuthMiddleware(app) {
   });
 
   passport.deserializeUser(function(id, done){
-    User.findById(id).populate('_pools').exec(done);
+    User.find(id).done(function(err, user) {
+      console.log("USER THAWED!");
+      done(err, user);
+    });
   });
 
   app.use(passport.initialize());

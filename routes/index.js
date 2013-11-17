@@ -9,7 +9,7 @@ module.exports = function register(app){
       return res.render('splash');
     }
 
-    req.user.getFeeds(function(err, feeds){
+    req.user.getFeeds().done(function(err, feeds){
       if (err) return next(err);
 
       res.locals.feeds = feeds;
