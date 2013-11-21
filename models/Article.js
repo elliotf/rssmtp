@@ -35,6 +35,11 @@ function init(Sequelize, sequelize, name) {
     cleanAttrs: function(input) {
       return _.pick(input, _.keys(attrs));
     }
+    , attrStringToHash: function(attrs) {
+      return _.keys(attrs).sort().map(function(k){
+        return [k, attrs[k]].join(': ');
+      }).join(' & ');
+    }
   };
 
   var model = sequelize.define(

@@ -45,6 +45,13 @@ describe("Article model (RDBMS)", function() {
       expect(Article.cleanAttrs(this.data)).to.not.have.key('discarded');
     });
   });
+
+  describe(".attrStringToHash", function() {
+    it("concatenates attr key/value, sorted by key", function() {
+      var expected = 'a: apple & c: capybara & z: zebra';
+      expect(Article.attrStringToHash({z: 'zebra', a: 'apple', c: 'capybara'})).to.equal(expected);
+    });
+  });
 });
 
 
