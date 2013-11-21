@@ -104,6 +104,22 @@ describe("Article model (RDBMS)", function() {
       });
     });
   });
+
+  describe("#findOrCreateFromData", function() {
+    it("calls sequelize's findOrCreate using processed input", function(done) {
+      this.sinon.spy(Article, 'findOrCreate');
+
+      Article.findOrCreateFromData(this.data, function(err, article, created){
+        expect(Article.findOrCreate).to.have.been.called;
+
+        expect(created).to.be.true;
+        expect(article).to.be.ok;
+        expect(article.title).to.equal(this.data.title);
+
+        done();
+      }.bind(this));
+    });
+  });
 });
 
 

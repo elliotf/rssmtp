@@ -55,6 +55,11 @@ function init(Sequelize, sequelize, name) {
         });
       }
     }
+    , findOrCreateFromData: function(data, done) {
+      this.setGUID(data, function(err, attrs){
+        this.findOrCreate(attrs).done(done);
+      }.bind(this));
+    }
   };
 
   var model = sequelize.define(
