@@ -1,8 +1,9 @@
-var instanceMethods = {};
-var classMethods = {};
+var mmh3 = require('murmurhash3')
+  , _    = require('lodash')
+;
 
 function init(Sequelize, sequelize, name) {
-  return sequelize.define(name, {
+  var attrs = {
     link: {
       type: Sequelize.STRING(2048)
     }
@@ -25,11 +26,25 @@ function init(Sequelize, sequelize, name) {
       type: Sequelize.STRING
       , allowNull: false
     }
-  }, {
-    tableName: 'articles'
-    , instanceMethods: instanceMethods
-    , classMethods: classMethods
-  });
+  };
+
+  var instanceMethods = {
+  };
+
+  var classMethods    = {
+  };
+
+  var model = sequelize.define(
+    name
+    , attrs
+    , {
+      tableName: 'articles'
+      , instanceMethods: instanceMethods
+      , classMethods: classMethods
+    }
+  );
+
+  return model;
 };
 
 // unique key on feed_id,guid
