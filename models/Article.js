@@ -32,6 +32,9 @@ function init(Sequelize, sequelize, name) {
   };
 
   var classMethods    = {
+    cleanAttrs: function(input) {
+      return _.pick(input, _.keys(attrs));
+    }
   };
 
   var model = sequelize.define(
