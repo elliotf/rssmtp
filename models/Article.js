@@ -40,6 +40,21 @@ function init(Sequelize, sequelize, name) {
         return [k, attrs[k]].join(': ');
       }).join(' & ');
     }
+    , setGUID: function(input, done) {
+      var attrs = this.cleanAttrs(input);
+
+      if (attrs.hasOwnProperty('guid')) {
+        process.nextTick(function(){
+          done(null, attrs);
+        });
+      } else {
+        var toHash = this.attrStringToHash(attrs);
+        mmh3.murmur128Hex(toHash, function(err, hash){
+          attrs.guid = hash;
+          done(err, attrs);
+        });
+      }
+    }
   };
 
   var model = sequelize.define(

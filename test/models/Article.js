@@ -5,6 +5,7 @@ var helper  = require('../../support/spec_helper')
   , expect  = require('chai').expect
   , async   = require('async')
   , _       = require('lodash')
+  , mmh3    = require('murmurhash3')
 ;
 
 describe("Article model (RDBMS)", function() {
@@ -25,7 +26,7 @@ describe("Article model (RDBMS)", function() {
       , title: 'article title here'
       , link: 'http://example.com/whatever'
       , date: new Date(86400 * 1000)
-      , guid: 'a guid'
+      , guid: 'a guid here'
       , discarded: 'this will be thrown away'
     }
   });
@@ -36,7 +37,7 @@ describe("Article model (RDBMS)", function() {
       , title: 'an article'
       , description: 'more details here'
       , date: Date.now()
-      , guid: 'asdfasdf123'
+      , guid: 'a guid here'
     }).done(done);
   });
 
@@ -50,6 +51,57 @@ describe("Article model (RDBMS)", function() {
     it("concatenates attr key/value, sorted by key", function() {
       var expected = 'a: apple & c: capybara & z: zebra';
       expect(Article.attrStringToHash({z: 'zebra', a: 'apple', c: 'capybara'})).to.equal(expected);
+    });
+  });
+
+  describe(".setGUID", function() {
+    beforeEach(function() {
+      this.sinon.spy(Article, 'cleanAttrs');
+      this.sinon.spy(mmh3, 'murmur128Hex');
+    });
+
+    it("cleans the input before hashing", function(done) {
+      Article.setGUID(this.data, function(err, attrs){
+        expect(err).to.not.exist;
+
+        expect(Article.cleanAttrs).to.have.been.calledWith(this.data);
+
+        expect(attrs).to.be.ok;
+        expect(attrs).to.not.equal(this.data);
+
+        done();
+      }.bind(this));
+    });
+
+    describe("when the input already has a guid", function() {
+      it("does not overwrite it", function(done) {
+        Article.setGUID(this.data, function(err, attrs){
+          expect(err).to.not.exist;
+
+          expect(attrs.guid).to.equal('a guid here');
+          expect(mmh3.murmur128Hex).to.not.have.been.called;
+
+          done();
+        });
+      });
+    });
+
+    describe("when the input does not have a guid", function() {
+      beforeEach(function() {
+        delete this.data['guid'];
+      });
+
+      it("generates a guid", function(done) {
+        Article.setGUID(this.data, function(err, attrs){
+          expect(err).to.not.exist;
+
+          expect(attrs.guid).to.equal('2a9e4433ab0e80af1048e3eb5fa7ac28');
+
+          expect(mmh3.murmur128Hex).to.have.been.called;
+
+          done();
+        });
+      });
     });
   });
 });
