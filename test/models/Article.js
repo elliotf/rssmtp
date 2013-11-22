@@ -27,30 +27,30 @@ describe("Article model (RDBMS)", function() {
       , link: 'http://example.com/whatever'
       , date: new Date(86400 * 1000)
       , guid: 'a guid here'
+      , feed_id: this.feed.id
     }
   });
 
   it("can be saved", function(done) {
-    Article.create({
-      link: 'http://example.com'
-      , title: 'an article'
-      , description: 'more details here'
-      , date: Date.now()
-      , guid: 'a guid here'
-    }).done(done);
+    Article.create(this.data).done(done);
   });
 
-  it("returns an error with an invalid feed", function(done) {
-    Article.create({
-      link: 'http://example.com'
-      , title: 'an article'
-      , description: 'more details here'
-      , date: Date.now()
-      , guid: 'a guid here'
-      , feed_id: 6
-    }).done(function(err, article){
+  it("errors with an invalid feed", function(done) {
+    this.data.feed_id = 9000000;
+    Article.create(this.data).done(function(err, article){
       expect(err).to.exist;
       expect(err).to.match(/foreign key constraint/i);
+
+      done();
+    });
+  });
+
+  it("errors with a missing feed_id", function(done) {
+    delete this.data.feed_id;
+    Article.create(this.data).done(function(err, article){
+      expect(err).to.exist;
+      expect(err).to.match(/null/i);
+      expect(err).to.match(/feed_id/i);
 
       done();
     });
@@ -126,6 +126,8 @@ describe("Article model (RDBMS)", function() {
       this.sinon.spy(Article, 'findOrCreate');
 
       Article.findOrCreateFromData(this.data, function(err, article, created){
+        expect(err).to.not.exist;
+
         expect(Article.findOrCreate).to.have.been.called;
 
         expect(created).to.be.true;

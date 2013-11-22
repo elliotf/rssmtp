@@ -35,17 +35,19 @@ describe("Feed model (RDBMS)", function() {
         var self = this
         ;
 
-        Article.create({
+        var article = Article.build({
           link: 'http://example.com'
           , title: 'an article'
           , description: 'more details here'
           , date: Date.now()
           , guid: 'asdfasdf123'
-        })
-        .error(done)
-        .success(function(article){
-          self.feed.addArticle(article).done(done);
         });
+
+        this.feed.addArticle(article)
+          .error(done)
+          .success(function(article){
+            done();
+          });
       });
     });
   });

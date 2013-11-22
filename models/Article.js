@@ -30,6 +30,7 @@ function init(Sequelize, sequelize, name) {
       type: Sequelize.INTEGER
       , references: "feeds"
       , referencesKey: "id"
+      , allowNull: false
     }
   };
 
