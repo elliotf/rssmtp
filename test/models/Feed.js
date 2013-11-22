@@ -30,20 +30,22 @@ describe("Feed model (RDBMS)", function() {
         })
     });
 
-    it("#addArticle", function(done) {
-      var self = this
-      ;
+    describe("#addArticle", function() {
+      it("adds articles", function(done) {
+        var self = this
+        ;
 
-      Article.create({
-        link: 'http://example.com'
-        , title: 'an article'
-        , description: 'more details here'
-        , date: Date.now()
-        , guid: 'asdfasdf123'
-      })
-      .error(done)
-      .success(function(article){
-        self.feed.addArticle(article).done(done);
+        Article.create({
+          link: 'http://example.com'
+          , title: 'an article'
+          , description: 'more details here'
+          , date: Date.now()
+          , guid: 'asdfasdf123'
+        })
+        .error(done)
+        .success(function(article){
+          self.feed.addArticle(article).done(done);
+        });
       });
     });
   });
