@@ -35,7 +35,7 @@ describe("Article model (RDBMS)", function() {
     Article.create(this.data).done(done);
   });
 
-  it("errors with an invalid feed", function(done) {
+  it("cannot be created with an invalid feed_id ", function(done) {
     this.data.feed_id = 9000000;
     Article.create(this.data).done(function(err, article){
       expect(err).to.exist;
@@ -45,7 +45,7 @@ describe("Article model (RDBMS)", function() {
     });
   });
 
-  it("errors with a missing feed_id", function(done) {
+  it("cannot be created without a feed_id", function(done) {
     delete this.data.feed_id;
     Article.create(this.data).done(function(err, article){
       expect(err).to.exist;
