@@ -26,6 +26,11 @@ function init(Sequelize, sequelize, name) {
       type: Sequelize.STRING
       , allowNull: false
     }
+    , feed_id: {
+      type: Sequelize.INTEGER
+      , references: "feeds"
+      , referencesKey: "id"
+    }
   };
 
   var instanceMethods = {

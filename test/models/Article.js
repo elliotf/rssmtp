@@ -41,6 +41,22 @@ describe("Article model (RDBMS)", function() {
     }).done(done);
   });
 
+  it("returns an error with an invalid feed", function(done) {
+    Article.create({
+      link: 'http://example.com'
+      , title: 'an article'
+      , description: 'more details here'
+      , date: Date.now()
+      , guid: 'a guid here'
+      , feed_id: 6
+    }).done(function(err, article){
+      expect(err).to.exist;
+      expect(err).to.match(/foreign key constraint/i);
+
+      done();
+    });
+  });
+
   describe(".cleanAttrs", function() {
     it("strips out unsupported attributes", function() {
       expect(Article.cleanAttrs(this.data)).to.not.have.key('discarded');
