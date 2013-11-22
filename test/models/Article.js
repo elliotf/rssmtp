@@ -121,7 +121,7 @@ describe("Article model (RDBMS)", function() {
     });
   });
 
-  describe("#findOrCreateFromData", function() {
+  describe(".findOrCreateFromData", function() {
     it("calls sequelize's findOrCreate using processed input", function(done) {
       this.sinon.spy(Article, 'findOrCreate');
 
