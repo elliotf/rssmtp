@@ -27,7 +27,6 @@ describe("Article model (RDBMS)", function() {
       , link: 'http://example.com/whatever'
       , date: new Date(86400 * 1000)
       , guid: 'a guid here'
-      , discarded: 'this will be thrown away'
     }
   });
 
@@ -59,6 +58,7 @@ describe("Article model (RDBMS)", function() {
 
   describe(".cleanAttrs", function() {
     it("strips out unsupported attributes", function() {
+      this.data.discarded = 'this will be thrown away';
       expect(Article.cleanAttrs(this.data)).to.not.have.key('discarded');
     });
   });
