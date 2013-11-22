@@ -95,7 +95,7 @@ describe("Article model (RDBMS)", function() {
         Article.setGUID(this.data, function(err, attrs){
           expect(err).to.not.exist;
 
-          expect(attrs.guid).to.equal('2a9e4433ab0e80af1048e3eb5fa7ac28');
+          expect(attrs.guid).to.match(/[0-9a-f]{32}/);
 
           expect(mmh3.murmur128Hex).to.have.been.called;
 
