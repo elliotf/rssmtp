@@ -12,6 +12,7 @@ describe("Article model (RDBMS)", function() {
   beforeEach(function(done) {
     Feed.create({
       url: "http://example.com/article.rss"
+      , name: "Feed's name here, plus rocks, paper, & <shotguns>"
     })
     .error(done)
     .success(function(feed) {
@@ -22,8 +23,8 @@ describe("Article model (RDBMS)", function() {
 
   beforeEach(function() {
     this.data = {
-      description: 'article description here'
-      , title: 'article title here'
+      description: "article description here, with <brackets> and &'s"
+      , title: "article title here, with <brackets & such>"
       , link: 'http://example.com/whatever'
       , date: new Date(86400 * 1000)
       , guid: 'a guid here'
