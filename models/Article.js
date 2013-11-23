@@ -37,9 +37,8 @@ function init(Sequelize, sequelize, name) {
 
   var instanceMethods = {};
 
-  instanceMethods.asEmailOptions = function(feed, users) {
-    var recipients = _.pluck(users, 'email')
-      , feedName = feed.name.replace(/[:<@>,]+/g, '_')
+  instanceMethods.asEmailOptions = function(feed, emails) {
+    var feedName = feed.name.replace(/[:<@>,]+/g, '_')
       , title = this.title || 'untitled article'
       , link  = this.link
       , description = this.description || 'this article does not have content'
@@ -55,7 +54,7 @@ function init(Sequelize, sequelize, name) {
     var data = {
       from:      senderAddress
       , to:      senderAddress
-      , bcc:     _.pluck(users || [], 'email')
+      , bcc:     emails
       , subject: title
       , date:    this.date
       , headers: {

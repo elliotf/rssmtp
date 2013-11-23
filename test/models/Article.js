@@ -158,28 +158,16 @@ describe("Article model (RDBMS)", function() {
             });
         });
 
-        self.users = [];
-        ['default_user@localhost', 'other_user@localhost'].forEach(function(email){
-          todo.push(function(done){
-            User
-              .create({
-                email: "default_user@localhost"
-              })
-              .error(done)
-              .success(function(user){
-                self.users.push(user);
-                done();
-              });
-          });
-        });
+        self.emails = [
+          'default_user@example.com'
+          , 'other_user@example.com'
+        ];
 
         async.parallel(todo, done);
       });
 
       it("generates a nodemailer-ready message", function() {
-        var users = [this.user, this.other_user];
-
-        var emailData = this.article.asEmailOptions(this.feed, users);
+        var emailData = this.article.asEmailOptions(this.feed, this.emails);
 
         expect(emailData).to.exist;
 
