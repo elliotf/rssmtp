@@ -5,8 +5,8 @@ var mmh3       = require('murmurhash3')
 ;
 
 function init(Sequelize, sequelize, name) {
-  var classMethods    = {}
-    , instanceMethods = {}
+  var statics = {}
+    , methods = {}
   ;
 
   var attrs = {
@@ -40,7 +40,7 @@ function init(Sequelize, sequelize, name) {
     }
   };
 
-  instanceMethods.asEmailOptions = function(feed, emails) {
+  methods.asEmailOptions = function(feed, emails) {
     var feedName = feed.name.replace(/[:<@>,]+/g, '_')
       , title = this.title || 'untitled article'
       , link  = this.link
@@ -72,7 +72,7 @@ function init(Sequelize, sequelize, name) {
     return data;
   };
 
-  instanceMethods.sendTo = function(feed, users, done) {
+  methods.sendTo = function(feed, users, done) {
     var emails    = _.pluck(users, 'email')
       , emailData = this.asEmailOptions(feed, emails)
     ;
@@ -98,17 +98,17 @@ function init(Sequelize, sequelize, name) {
     });
   };
 
-  classMethods.cleanAttrs = function(input) {
+  statics.cleanAttrs = function(input) {
     return _.pick(input, _.keys(attrs));
   };
 
-  classMethods.attrStringToHash = function(attrs) {
+  statics.attrStringToHash = function(attrs) {
     return _.keys(attrs).sort().map(function(k){
       return [k, attrs[k]].join(': ');
     }).join(' & ');
   };
 
-  classMethods.setGUID = function(input, done) {
+  statics.setGUID = function(input, done) {
     var attrs = this.cleanAttrs(input);
 
     if (attrs.hasOwnProperty('guid')) {
@@ -123,7 +123,7 @@ function init(Sequelize, sequelize, name) {
       });
     }
   };
-  classMethods.findOrCreateFromData = function(data, done) {
+  statics.findOrCreateFromData = function(data, done) {
     this.setGUID(data, function(err, attrs){
       this.findOrCreate(attrs).done(done);
     }.bind(this));
@@ -134,8 +134,8 @@ function init(Sequelize, sequelize, name) {
     , attrs
     , {
       tableName: 'articles'
-      , instanceMethods: instanceMethods
-      , classMethods: classMethods
+      , instanceMethods: methods
+      , classMethods: statics
     }
   );
 

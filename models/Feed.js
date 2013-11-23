@@ -1,6 +1,6 @@
 function init(Sequelize, sequelize, name) {
-  var instanceMethods = {}
-    , classMethods    = {}
+  var statics = {}
+    , methods = {}
   ;
 
   var attrs = {
@@ -17,8 +17,8 @@ function init(Sequelize, sequelize, name) {
     , attrs
     , {
       tableName: 'feeds'
-      , instanceMethods: instanceMethods
-      , classMethods: classMethods
+      , instanceMethods: methods
+      , classMethods: statics
     }
   );
 };

@@ -1,6 +1,6 @@
 function init(Sequelize, sequelize, name) {
-  var instanceMethods = {}
-    , classMethods    = {}
+  var statics = {}
+    , methods = {}
   ;
 
   var attrs = {
@@ -9,7 +9,7 @@ function init(Sequelize, sequelize, name) {
     , oauth_id: Sequelize.STRING(2048)
   };
 
-  classMethods.findOrCreateFromOAUTH = function(oauth, done) {
+  statics.findOrCreateFromOAUTH = function(oauth, done) {
     var self = this;
 
     var data = {
@@ -40,8 +40,8 @@ function init(Sequelize, sequelize, name) {
     , attrs
     , {
       tableName: 'users'
-      , instanceMethods: instanceMethods
-      , classMethods: classMethods
+      , instanceMethods: methods
+      , classMethods: statics
     }
   );
 };
