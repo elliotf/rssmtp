@@ -1,6 +1,7 @@
-var mmh3 = require('murmurhash3')
-  , _    = require('lodash')
-  , ent  = require('ent')
+var mmh3       = require('murmurhash3')
+  , _          = require('lodash')
+  , ent        = require('ent')
+  , nodemailer = require('nodemailer')
 ;
 
 function init(Sequelize, sequelize, name) {
@@ -67,7 +68,33 @@ function init(Sequelize, sequelize, name) {
     };
 
     return data;
-  }
+  };
+
+  instanceMethods.sendTo = function(feed, users, done) {
+    var emails    = _.pluck(users, 'email')
+      , emailData = this.asEmailOptions(feed, emails)
+    ;
+
+    var settings = {
+      secureConnection: process.env.APP_SMTP_SSL || ''
+      , host: process.env.APP_SMTP_HOST || ''
+      , port: process.env.APP_SMTP_PORT || ''
+    };
+
+    var auth = {
+      user: process.env.APP_SMTP_FROM || ''
+      , pass: process.env.APP_SMTP_PASS || ''
+    };
+
+    if (auth.user && auth.pass) {
+      settings.auth = auth;
+    }
+
+    var mailer = nodemailer.createTransport("SMTP", settings);
+    mailer.sendMail(emailData, function(err){
+      done(err);
+    });
+  };
 
   var classMethods    = {
     cleanAttrs: function(input) {
