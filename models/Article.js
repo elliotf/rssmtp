@@ -10,12 +10,12 @@ function init(Sequelize, sequelize, name) {
     , title: {
       type: Sequelize.STRING(2048)
       , allowNull: false
-      , defaultValue: 'no title'
+      , defaultValue: 'untitled article'
     }
     , description: {
       type: Sequelize.TEXT
       , allowNull: false
-      , defaultValue: 'no description'
+      , defaultValue: 'this article does not have content'
     }
     , date: {
       type: Sequelize.DATE
