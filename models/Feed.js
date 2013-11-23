@@ -1,6 +1,3 @@
-var instanceMethods = {};
-var classMethods = {};
-
 function init(Sequelize, sequelize, name) {
   var instanceMethods = {}
     , classMethods    = {}

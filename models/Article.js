@@ -5,6 +5,10 @@ var mmh3       = require('murmurhash3')
 ;
 
 function init(Sequelize, sequelize, name) {
+  var classMethods    = {}
+    , instanceMethods = {}
+  ;
+
   var attrs = {
     link: {
       type: Sequelize.STRING(2048)
@@ -35,8 +39,6 @@ function init(Sequelize, sequelize, name) {
       , allowNull: false
     }
   };
-
-  var instanceMethods = {};
 
   instanceMethods.asEmailOptions = function(feed, emails) {
     var feedName = feed.name.replace(/[:<@>,]+/g, '_')
@@ -96,35 +98,35 @@ function init(Sequelize, sequelize, name) {
     });
   };
 
-  var classMethods    = {
-    cleanAttrs: function(input) {
-      return _.pick(input, _.keys(attrs));
-    }
-    , attrStringToHash: function(attrs) {
-      return _.keys(attrs).sort().map(function(k){
-        return [k, attrs[k]].join(': ');
-      }).join(' & ');
-    }
-    , setGUID: function(input, done) {
-      var attrs = this.cleanAttrs(input);
+  classMethods.cleanAttrs = function(input) {
+    return _.pick(input, _.keys(attrs));
+  };
 
-      if (attrs.hasOwnProperty('guid')) {
-        process.nextTick(function(){
-          done(null, attrs);
-        });
-      } else {
-        var toHash = this.attrStringToHash(attrs);
-        mmh3.murmur128Hex(toHash, function(err, hash){
-          attrs.guid = hash;
-          done(err, attrs);
-        });
-      }
+  classMethods.attrStringToHash = function(attrs) {
+    return _.keys(attrs).sort().map(function(k){
+      return [k, attrs[k]].join(': ');
+    }).join(' & ');
+  };
+
+  classMethods.setGUID = function(input, done) {
+    var attrs = this.cleanAttrs(input);
+
+    if (attrs.hasOwnProperty('guid')) {
+      process.nextTick(function(){
+        done(null, attrs);
+      });
+    } else {
+      var toHash = this.attrStringToHash(attrs);
+      mmh3.murmur128Hex(toHash, function(err, hash){
+        attrs.guid = hash;
+        done(err, attrs);
+      });
     }
-    , findOrCreateFromData: function(data, done) {
-      this.setGUID(data, function(err, attrs){
-        this.findOrCreate(attrs).done(done);
-      }.bind(this));
-    }
+  };
+  classMethods.findOrCreateFromData = function(data, done) {
+    this.setGUID(data, function(err, attrs){
+      this.findOrCreate(attrs).done(done);
+    }.bind(this));
   };
 
   var model = sequelize.define(
