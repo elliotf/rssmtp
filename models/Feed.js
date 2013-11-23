@@ -2,13 +2,23 @@ var instanceMethods = {};
 var classMethods = {};
 
 function init(Sequelize, sequelize, name) {
-  return sequelize.define(name, {
+  var instanceMethods = {}
+    , classMethods    = {}
+  ;
+
+  var attrs = {
     url: Sequelize.STRING(2048)
-  }, {
-    tableName: 'feeds'
-    , instanceMethods: instanceMethods
-    , classMethods: classMethods
-  });
+  }
+
+  return sequelize.define(
+    name
+    , attrs
+    , {
+      tableName: 'feeds'
+      , instanceMethods: instanceMethods
+      , classMethods: classMethods
+    }
+  );
 };
 
 init.relate = function(self, models) {
