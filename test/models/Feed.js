@@ -11,6 +11,7 @@ describe("Feed model (RDBMS)", function() {
   it("can be saved", function(done) {
     Feed.create({
       url: "http://example.com"
+      , name: "an example feed"
     }).done(done);
   });
 

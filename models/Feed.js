@@ -8,6 +8,11 @@ function init(Sequelize, sequelize, name) {
 
   var attrs = {
     url: Sequelize.STRING(2048)
+    , name: {
+      type: Sequelize.STRING(2048)
+      , allowNull: false
+      , defaultValue: 'unnamed feed'
+    }
   }
 
   return sequelize.define(
