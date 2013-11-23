@@ -25,7 +25,8 @@
     "connect-flash": "~0.1.0",
     "sequelize": "git+https://github.com/elliotf/sequelize.git#f43943113f889be8b457fbe7dab074e49ea107d5",
     "sqlite3": "~2.1.19",
-    "lodash": "~2.2.1"
+    "lodash": "~2.2.1",
+    "ent": "~0.1.0"
   },
   "devDependencies": {
     "sinon-chai": "~2.3",

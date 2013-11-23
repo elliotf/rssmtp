@@ -1,5 +1,6 @@
 var helper  = require('../../support/spec_helper')
   , models  = require('../../models')
+  , User    = models.User
   , Feed    = models.Feed
   , Article = models.Article
   , expect  = require('chai').expect
@@ -12,7 +13,7 @@ describe("Article model (RDBMS)", function() {
   beforeEach(function(done) {
     Feed.create({
       url: "http://example.com/article.rss"
-      , name: "Feed's name here, plus rocks, paper, & <shotguns>"
+      , name: "my: feed's <name>, plus shotguns"
     })
     .error(done)
     .success(function(feed) {
@@ -23,10 +24,10 @@ describe("Article model (RDBMS)", function() {
 
   beforeEach(function() {
     this.data = {
-      description: "article description here, with <brackets> and &'s"
-      , title: "article title here, with <brackets & such>"
-      , link: 'http://example.com/whatever'
-      , date: new Date(86400 * 1000)
+      title: "article title here: with <brackets & such>"
+      , description: "<p>article content here, with <brackets> and &'s</p>"
+      , link: 'http://example.com/an_article'
+      , date: new Date(2010,0)
       , guid: 'a guid here'
       , feed_id: this.feed.id
     }
@@ -137,6 +138,78 @@ describe("Article model (RDBMS)", function() {
 
         done();
       }.bind(this));
+    });
+  });
+
+  describe("#asEmailOptions", function() {
+    describe("when there is content", function() {
+      beforeEach(function(done) {
+        var self = this
+          , todo = []
+        ;
+
+        todo.push(function(done){
+          Article
+            .create(self.data)
+            .error(done)
+            .success(function(article){
+              self.article = article;
+              done();
+            });
+        });
+
+        self.users = [];
+        ['default_user@localhost', 'other_user@localhost'].forEach(function(email){
+          todo.push(function(done){
+            User
+              .create({
+                email: "default_user@localhost"
+              })
+              .error(done)
+              .success(function(user){
+                self.users.push(user);
+                done();
+              });
+          });
+        });
+
+        async.parallel(todo, done);
+      });
+
+      it("generates a nodemailer-ready message", function() {
+        var users = [this.user, this.other_user];
+
+        var emailData = this.article.asEmailOptions(this.feed, users);
+
+        expect(emailData).to.exist;
+
+        var expectedHTML = [
+          "<h1><a href=\"http://example.com/an_article\">article title here&colon; with &lt;brackets &amp; such&gt;</a></h1>",
+          "<p>article content here, with <brackets> and &'s</p>",
+          "<br><br>",
+          "<a href=\"http://rssmtp.firetaco.com/feed/", this.feed.id, "\">unsubscribe</a>"
+        ].join('');
+
+        expect(emailData.bcc).to.have.length(2);
+        emailData.bcc.sort();
+
+        var expected = {
+          from: "RSS - my_ feed's _name_ plus shotguns <no-reply@example.com>"
+          , to: "RSS - my_ feed's _name_ plus shotguns <no-reply@example.com>"
+          , bcc: ['default_user@example.com', 'other_user@example.com']
+          , subject: "article title here: with <brackets & such>"
+          , date:  this.data.date
+          , headers: {
+            "List-ID": this.feed.id + '.rssmtp.firetaco.com'
+            , "List-Unsubscribe": 'http://rssmtp.firetaco.com/feed/' + this.feed.id
+            , "List-Subscribe": 'http://rssmtp.firetaco.com/feed/' + this.feed.id
+          }
+          , html: expectedHTML
+          , generateTextFromHTML: true
+        }
+
+        expect(emailData).to.be.like(expected);
+      });
     });
   });
 });

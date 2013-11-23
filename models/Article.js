@@ -1,5 +1,6 @@
 var mmh3 = require('murmurhash3')
   , _    = require('lodash')
+  , ent  = require('ent')
 ;
 
 function init(Sequelize, sequelize, name) {
@@ -34,8 +35,40 @@ function init(Sequelize, sequelize, name) {
     }
   };
 
-  var instanceMethods = {
-  };
+  var instanceMethods = {};
+
+  instanceMethods.asEmailOptions = function(feed, users) {
+    var recipients = _.pluck(users, 'email')
+      , feedName = feed.name.replace(/[:<@>,]+/g, '_')
+      , title = this.title || 'untitled article'
+      , link  = this.link
+      , description = this.description || 'this article does not have content'
+      , senderAddress = ['RSS - ', feedName, " <", process.env.APP_SMTP_FROM, ">"].join('')
+    ;
+
+    var htmlBody = [
+      "<h1><a href=\"", link, "\">", ent.encode(title) , "</a></h1>",
+      description,
+      "<br><br><a href=\"http://", process.env.APP_FQDN, "/feed/", feed.id, "\">unsubscribe</a>"
+    ].join('');
+
+    var data = {
+      from:      senderAddress
+      , to:      senderAddress
+      , bcc:     _.pluck(users || [], 'email')
+      , subject: title
+      , date:    this.date
+      , headers: {
+        "List-ID": [feed.id, process.env.APP_FQDN].join('.')
+        , "List-Unsubscribe": ['http://', process.env.APP_FQDN, '/feed/', feed.id].join('')
+        , "List-Subscribe": ['http://', process.env.APP_FQDN, '/feed/', feed.id].join('')
+      }
+      , html: htmlBody
+      , generateTextFromHTML: true
+    };
+
+    return data;
+  }
 
   var classMethods    = {
     cleanAttrs: function(input) {
