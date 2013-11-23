@@ -790,10 +790,6 @@
     "lodash": {
       "version": "2.2.1",
       "from": "lodash@2.2.1"
-    },
-    "ent": {
-      "version": "0.1.0",
-      "from": "ent@"
     }
   }
 }

@@ -173,7 +173,7 @@ describe("Article model (RDBMS)", function() {
         expect(emailData).to.exist;
 
         var expectedHTML = [
-          "<h1><a href=\"http://example.com/an_article\">article title here&colon; with &lt;brackets &amp; such&gt;</a></h1>",
+          "<h1><a href=\"http://example.com/an_article\">article title here: with &lt;brackets &amp; such&gt;</a></h1>",
           "<p>article content here, with <brackets> and &'s</p>",
           "<br><br>",
           "<a href=\"http://rssmtp.firetaco.com/feed/", this.feed.id, "\">unsubscribe</a>"

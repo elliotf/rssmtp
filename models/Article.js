@@ -1,6 +1,5 @@
 var mmh3       = require('murmurhash3')
   , _          = require('lodash')
-  , ent        = require('ent')
   , nodemailer = require('nodemailer')
 ;
 
@@ -49,7 +48,7 @@ function init(Sequelize, sequelize, name) {
     ;
 
     var htmlBody = [
-      "<h1><a href=\"", link, "\">", ent.encode(title) , "</a></h1>",
+      "<h1><a href=\"", link, "\">", _.escape(title) , "</a></h1>",
       description,
       "<br><br><a href=\"http://", process.env.APP_FQDN, "/feed/", feed.id, "\">unsubscribe</a>"
     ].join('');
