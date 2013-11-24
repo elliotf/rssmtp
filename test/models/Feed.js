@@ -48,22 +48,23 @@ describe("Feed model (RDBMS)", function() {
     });
   });
 
-  describe(".createFromURL", function() {
+  describe(".getOrCreateFromURL", function() {
     beforeEach(function() {
       this.sinon.spy(Feed, 'fetch');
-      this.sinon.spy(Feed, 'create');
+      this.sinon.spy(Feed, 'findOrCreate');
     });
 
-    it("creates a feed based on the contents of the url", function(done) {
-      Feed.createFromURL('a fake url', function(err, feed, meta, articles){
+    it("findsOrCreate()s a Feed based on the URL", function(done) {
+      Feed.getOrCreateFromURL('a fake url', function(err, feed, created, meta, articles){
         expect(err).to.not.exist;
 
         expect(Feed.fetch).to.have.been.calledWith('a fake url');
-        expect(Feed.create).to.have.been.calledWith({
-          url: 'a fake url'
-          , name: 'a title'
+        expect(Feed.findOrCreate).to.have.been.calledWith({
+          name: 'a title'
+          , url: 'a fake url'
         });
 
+        expect(created).to.be.true;
         expect(meta.title).to.equal('a title');
         expect(articles).to.be.like([]);
 

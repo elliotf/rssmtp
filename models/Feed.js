@@ -26,18 +26,18 @@ function init(Sequelize, sequelize, name) {
     });
   };
 
-  statics.createFromURL = function(url, done){
+  statics.getOrCreateFromURL = function(url, done){
     var self = this;
     self.fetch(url, function(err, meta, articles){
       var attrs = {
-        url: url
-        , name: meta.title || 'untitled feed'
+        name: meta.title || 'untitled feed'
+        , url: url
       };
 
       self
-        .create(attrs)
-        .done(function(err, feed){
-          done(err, feed, meta, articles);
+        .findOrCreate(attrs)
+        .done(function(err, feed, created){
+          done(err, feed, created, meta, articles);
         });
     });
   };
