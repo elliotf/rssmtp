@@ -142,5 +142,50 @@ describe("Feed model (RDBMS)", function() {
       });
     });
   });
+
+  describe(".getOutdated", function() {
+    beforeEach(function(done) {
+      var todo = [];
+
+      var updatedSecondsAgo = 5 * 1000;
+
+      todo.push(function(done){
+        Feed
+          .create({
+            name: "Updated more recently"
+            , url: "http://example.com/more_recent"
+            , lastUpdated: (moment().subtract(updatedSecondsAgo).toDate())
+          })
+          .done(done);
+      });
+
+      todo.push(function(done){
+        Feed
+          .create({
+            name: "Never been updated"
+            , url: "http://example.com/less_recent"
+          })
+          .done(done);
+      });
+
+      async.series(todo, done);
+    });
+
+    it("returns the least recently updated N feeds in ascending updated order", function(done) {
+      var numToGet = 2;
+
+      Feed
+        .getOutdated(numToGet, function(err, feeds){
+          expect(err).to.not.exist;
+
+          expect(feeds).to.have.length(numToGet);
+
+          expect(feeds[0].name).to.equal("Never been updated");
+          expect(feeds[1].name).to.equal("Updated more recently");
+
+          done();
+        });
+    });
+  });
 });
 

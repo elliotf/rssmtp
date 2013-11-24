@@ -50,6 +50,14 @@ function init(Sequelize, sequelize, name) {
     });
   };
 
+  statics.getOutdated = function(secondsAgo, done) {
+    this
+      .findAll({where: {}, order: 'lastUpdated ASC'})
+      .done(function(err, feeds){
+        done(err, feeds);
+      });
+  };
+
   return sequelize.define(
     name
     , attrs
