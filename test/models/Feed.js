@@ -11,20 +11,6 @@ var helper     = require('../../support/spec_helper')
 ;
 
 describe("Feed model (RDBMS)", function() {
-  it("can be saved", function(done) {
-    Feed
-      .create({
-        url: "http://example.com"
-        , name: "an example feed"
-      })
-      .error(done)
-      .success(function(feed){
-        expect(feed.lastUpdated).to.be.below(Date.now());
-
-        done();
-      });
-  });
-
   beforeEach(function() {
     this.feedTitle = 'a title';
 
@@ -39,6 +25,20 @@ describe("Feed model (RDBMS)", function() {
     }.bind(this));
 
     this.sinon.spy(feedparser, 'parseString');
+  });
+
+  it("can be saved", function(done) {
+    Feed
+      .create({
+        url: "http://example.com"
+        , name: "an example feed"
+      })
+      .error(done)
+      .success(function(feed){
+        expect(feed.lastUpdated).to.be.below(Date.now());
+
+        done();
+      });
   });
 
   describe(".fetch", function() {
