@@ -7,14 +7,22 @@ var helper     = require('../../support/spec_helper')
   , _          = require('lodash')
   , request    = require('request')
   , feedparser = require('feedparser')
+  , moment     = require('moment')
 ;
 
 describe("Feed model (RDBMS)", function() {
   it("can be saved", function(done) {
-    Feed.create({
-      url: "http://example.com"
-      , name: "an example feed"
-    }).done(done);
+    Feed
+      .create({
+        url: "http://example.com"
+        , name: "an example feed"
+      })
+      .error(done)
+      .success(function(feed){
+        expect(feed.lastUpdated).to.be.below(Date.now());
+
+        done();
+      });
   });
 
   beforeEach(function() {

@@ -1,5 +1,6 @@
 var request    = require('request')
   , feedparser = require('feedparser')
+  , moment     = require('moment')
 ;
 
 function init(Sequelize, sequelize, name) {
@@ -13,6 +14,11 @@ function init(Sequelize, sequelize, name) {
       type: Sequelize.STRING(2048)
       , allowNull: false
       , defaultValue: 'unnamed feed'
+    }
+    , lastUpdated: {
+      type: Sequelize.DATE
+      , allowNull: false
+      , defaultValue: function() { return moment(0).toDate(); }
     }
   }
 
