@@ -26,6 +26,22 @@ function init(Sequelize, sequelize, name) {
     });
   };
 
+  statics.createFromURL = function(url, done){
+    var self = this;
+    self.fetch(url, function(err, meta, articles){
+      var attrs = {
+        url: url
+        , name: meta.title || 'untitled feed'
+      };
+
+      self
+        .create(attrs)
+        .done(function(err, feed){
+          done(err, feed, meta, articles);
+        });
+    });
+  };
+
   return sequelize.define(
     name
     , attrs

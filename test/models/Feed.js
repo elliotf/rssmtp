@@ -10,11 +10,19 @@ var helper     = require('../../support/spec_helper')
 ;
 
 describe("Feed model (RDBMS)", function() {
+  it("can be saved", function(done) {
+    Feed.create({
+      url: "http://example.com"
+      , name: "an example feed"
+    }).done(done);
+  });
+
   beforeEach(function() {
+    this.feedTitle = 'a title';
+
     this.fakeHttpErr      = null; //{fake: 'HttpErr'};
     this.fakeHttpResponse = {fake: 'HttpResponse'};
-    this.fakeHttpBody     = {fake: 'HttpBody'};
-    this.fakeRssString    = [
+    this.fakeHttpBody     = [
       '<rss version="2.0"><channel><title>a title</title></channel></rss>'
     ].join('');
 
@@ -27,13 +35,11 @@ describe("Feed model (RDBMS)", function() {
 
   describe(".fetch", function() {
     it("is a wrapper around 'request' and 'feedparser'", function(done) {
-      this.fakeHttpBody = this.fakeRssString;
-
       Feed.fetch('http://example.com/rss.xml', function(err, meta, articles){
         expect(err).to.not.exist;
         expect(request.get).to.have.been.calledWith('http://example.com/rss.xml');
 
-        expect(feedparser.parseString).to.have.been.calledWith(this.fakeRssString);
+        expect(feedparser.parseString).to.have.been.calledWith(this.fakeHttpBody);
         expect(meta.title).to.equal('a title');
         expect(articles).to.be.like([]);
 
@@ -42,11 +48,28 @@ describe("Feed model (RDBMS)", function() {
     });
   });
 
-  it("can be saved", function(done) {
-    Feed.create({
-      url: "http://example.com"
-      , name: "an example feed"
-    }).done(done);
+  describe(".createFromURL", function() {
+    beforeEach(function() {
+      this.sinon.spy(Feed, 'fetch');
+      this.sinon.spy(Feed, 'create');
+    });
+
+    it("creates a feed based on the contents of the url", function(done) {
+      Feed.createFromURL('a fake url', function(err, feed, meta, articles){
+        expect(err).to.not.exist;
+
+        expect(Feed.fetch).to.have.been.calledWith('a fake url');
+        expect(Feed.create).to.have.been.calledWith({
+          url: 'a fake url'
+          , name: 'a title'
+        });
+
+        expect(meta.title).to.equal('a title');
+        expect(articles).to.be.like([]);
+
+        done();
+      });
+    });
   });
 
   describe("hasMany Articles", function() {
