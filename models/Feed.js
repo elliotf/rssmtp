@@ -29,6 +29,8 @@ function init(Sequelize, sequelize, name) {
   statics.getOrCreateFromURL = function(url, done){
     var self = this;
     self.fetch(url, function(err, meta, articles){
+      if (err) return done(err);
+
       var attrs = {
         name: meta.title || 'untitled feed'
         , url: url

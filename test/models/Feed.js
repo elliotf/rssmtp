@@ -71,6 +71,30 @@ describe("Feed model (RDBMS)", function() {
         done();
       });
     });
+
+    describe("when an invalid URL is provided", function() {
+      it("returns an error", function(done) {
+        request.get.restore();
+
+        Feed.getOrCreateFromURL('an invalid format url', function(err, feed, created, meta, articles){
+          expect(err).to.exist;
+
+          done();
+        });
+      });
+    });
+
+    describe("when non-feed URL is provided", function() {
+      it("returns an error", function(done) {
+        this.fakeHttpBody = 'not a valid feed body';
+
+        Feed.getOrCreateFromURL('http://example.com', function(err, feed, created, meta, articles){
+          expect(err).to.exist;
+
+          done();
+        });
+      });
+    });
   });
 
   describe("hasMany Articles", function() {
