@@ -70,6 +70,8 @@ function init(Sequelize, sequelize, name, models) {
       todo.push(function(done){
         models.Article
           .findOrCreateFromData(attrs, function(err, article, created){
+            if (err) return done(err);
+
             if (created) newArticles.push(article);
 
             done();
