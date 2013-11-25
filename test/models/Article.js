@@ -131,7 +131,7 @@ describe("Article model (RDBMS)", function() {
       Article.findOrCreateFromData(this.data, function(err, article, created){
         expect(err).to.not.exist;
 
-        expect(Article.findOrCreate).to.have.been.called;
+        expect(Article.findOrCreate).to.have.been.calledWith({guid: this.data.guid, feed_id: this.data.feed_id}, this.data);
 
         expect(created).to.be.true;
         expect(article).to.be.ok;

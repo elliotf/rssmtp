@@ -122,9 +122,15 @@ function init(Sequelize, sequelize, name) {
       });
     }
   };
+
   statics.findOrCreateFromData = function(data, done) {
     this.setGUID(data, function(err, attrs){
-      this.findOrCreate(attrs).done(done);
+      var findAttrs = {
+        guid: attrs.guid
+        , feed_id: attrs.feed_id
+      };
+
+      this.findOrCreate(findAttrs, attrs).done(done);
     }.bind(this));
   };
 
