@@ -1,9 +1,10 @@
 var request    = require('request')
   , feedparser = require('feedparser')
   , moment     = require('moment')
+  , async      = require('async')
 ;
 
-function init(Sequelize, sequelize, name) {
+function init(Sequelize, sequelize, name, models) {
   var statics = {}
     , methods = {}
   ;
@@ -56,6 +57,29 @@ function init(Sequelize, sequelize, name) {
       .done(function(err, feeds){
         done(err, feeds);
       });
+  };
+
+  methods.merge = function(articlesData, done) {
+    var self        = this
+      , todo        = []
+      , newArticles = []
+    ;
+
+    articlesData.forEach(function(attrs){
+      attrs.feed_id = self.id;
+      todo.push(function(done){
+        models.Article
+          .findOrCreateFromData(attrs, function(err, article, created){
+            if (created) newArticles.push(article);
+
+            done();
+          });
+      });
+    });
+
+    async.parallel(todo, function(err){
+      done(err, newArticles);
+    });
   };
 
   return sequelize.define(

@@ -190,5 +190,61 @@ describe("Feed model (RDBMS)", function() {
         });
     });
   });
+
+  describe("#merge", function() {
+    beforeEach(function(done) {
+      var self = this
+        , todo = []
+      ;
+
+      self.articles = [
+        {
+          description: 'article exists description'
+          , title: 'article exists title'
+          , link: 'http://example.com/exists'
+          , guid: 'article exists guid'
+        }
+        , {
+          description: 'new article'
+          , title: 'new article title'
+          , link: 'http://example.com/new_article'
+          , guid: 'new article guid'
+        }
+      ];
+
+      todo.push(function(done){
+        Feed
+          .create({
+          })
+          .error(done)
+          .success(function(feed){
+            self.feed = feed;
+            done();
+          });
+      });
+
+      todo.push(function(done){
+        var attrs = self.articles[0];
+        attrs.feed_id = self.feed.id;
+
+        Article
+          .create(attrs)
+          .done(done);
+      });
+
+      async.series(todo, done);
+    });
+
+    it("findOrCreate()s articles passed in, calling the callback with created articles", function(done) {
+      this.feed.merge(this.articles, function(err, newArticles){
+        expect(err).to.not.exist;
+        expect(newArticles).to.be.ok;
+        expect(newArticles).to.have.length(1);
+        expect(newArticles[0].title).to.equal('new article title')
+
+        done();
+      });
+    });
+  });
 });
 

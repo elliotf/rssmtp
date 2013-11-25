@@ -40,7 +40,7 @@ files.forEach(function(filename){
   }
 
   if ('function' === typeof model) {
-    model = model(Sequelize, sequelize, filename);
+    model = model(Sequelize, sequelize, filename, models);
   }
 
   models[filename] = model;
