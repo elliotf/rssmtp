@@ -17,7 +17,10 @@ describe("Feed model (RDBMS)", function() {
     this.fakeHttpErr      = null; //{fake: 'HttpErr'};
     this.fakeHttpResponse = {fake: 'HttpResponse'};
     this.fakeHttpBody     = [
-      '<rss version="2.0"><channel><title>a title</title></channel></rss>'
+      '<?xml version="1.0" encoding="utf-8"?>'
+      , '<feed xmlns="http://www.w3.org/2005/Atom">'
+        , '<title>a title</title>'
+      , '</feed>'
     ].join('');
 
     this.sinon.stub(request, 'get', function(args, done){
