@@ -644,8 +644,8 @@
     },
     "sequelize": {
       "version": "1.7.0-beta.1",
-      "from": "sequelize@git+https://github.com/elliotf/sequelize.git#f43943113f889be8b457fbe7dab074e49ea107d5",
-      "resolved": "git+https://github.com/elliotf/sequelize.git#f43943113f889be8b457fbe7dab074e49ea107d5",
+      "from": "sequelize@git+https://github.com/elliotf/sequelize.git#elliotf_customized",
+      "resolved": "git+https://github.com/elliotf/sequelize.git#0d4bdc9874d3d2ac602e28064796f1ca4eb15c6d",
       "dependencies": {
         "underscore.string": {
           "version": "2.3.3",
