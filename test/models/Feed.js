@@ -192,13 +192,20 @@ describe("Feed model (RDBMS)", function() {
   });
 
   describe("methods", function() {
+    beforeEach(function(done) {
+      Feed
+        .create({
+        })
+        .error(done)
+        .success(function(feed){
+          this.feed = feed;
+          done();
+        }.bind(this));
+    });
+
     describe("#merge", function() {
       beforeEach(function(done) {
-        var self = this
-          , todo = []
-        ;
-
-        self.articles = [
+        this.articles = [
           {
             description: 'article exists description'
             , title: 'article exists title'
@@ -213,27 +220,11 @@ describe("Feed model (RDBMS)", function() {
           }
         ];
 
-        todo.push(function(done){
-          Feed
-            .create({
-            })
-            .error(done)
-            .success(function(feed){
-              self.feed = feed;
-              done();
-            });
-        });
+        var attrs = _.merge({}, this.articles[0], { feed_id: this.feed.id});
 
-        todo.push(function(done){
-          var attrs = self.articles[0];
-          attrs.feed_id = self.feed.id;
-
-          Article
-            .create(attrs)
-            .done(done);
-        });
-
-        async.series(todo, done);
+        Article
+          .create(attrs)
+          .done(done);
       });
 
       it("findOrCreate()s articles passed in, calling the callback with created articles", function(done) {
