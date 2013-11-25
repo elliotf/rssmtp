@@ -195,12 +195,27 @@ describe("Feed model (RDBMS)", function() {
     beforeEach(function(done) {
       Feed
         .create({
+          name: 'Feed methods feed'
+          , url: 'http://example.com/feed_methods'
         })
         .error(done)
         .success(function(feed){
           this.feed = feed;
           done();
         }.bind(this));
+
+      this.fakeHttpBody     = [
+        '<?xml version="1.0" encoding="utf-8"?>'
+        , '<feed xmlns="http://www.w3.org/2005/Atom">'
+          , '<title>a title</title>'
+          , '<entry>'
+            , '<id>article guid</id>'
+            , '<title>article title</title>'
+            , '<content>article content</content>'
+            , '<updated>2013-11-24T00:00:00-08:00</updated>'
+          , '</entry>'
+        , '</feed>'
+      ].join('');
     });
 
     describe("#merge", function() {
@@ -236,6 +251,26 @@ describe("Feed model (RDBMS)", function() {
 
           done();
         });
+      });
+    });
+
+    describe("#pull", function() {
+      beforeEach(function() {
+
+        this.sinon.spy(Feed, 'fetch');
+        this.sinon.spy(this.feed, 'merge');
+      });
+
+      it("fetches and merges", function(done) {
+        this.feed.pull(function(err, articles){
+          expect(err).to.not.exist;
+
+          expect(Feed.fetch).to.have.been.calledWith('http://example.com/feed_methods');
+          expect(this.feed.merge).to.have.been.called;
+
+          expect(articles).to.have.length(1);
+          done();
+        }.bind(this));
       });
     });
   });

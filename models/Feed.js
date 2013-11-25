@@ -84,6 +84,18 @@ function init(Sequelize, sequelize, name, models) {
     });
   };
 
+  methods.pull = function(done) {
+    Klass.fetch(this.url, function(err, meta, articles){
+      if (err) return done(err);
+
+      this.merge(articles, function(err, newArticles){
+        if (err) return done(err);
+
+        done(err, newArticles);
+      });
+    }.bind(this));
+  };
+
   var Klass = sequelize.define(
     name
     , attrs
