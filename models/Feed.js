@@ -60,13 +60,13 @@ function init(Sequelize, sequelize, name, models) {
   };
 
   methods.merge = function(articlesData, done) {
-    var self        = this
-      , todo        = []
+    var todo        = []
       , newArticles = []
     ;
 
     articlesData.forEach(function(attrs){
-      attrs.feed_id = self.id;
+      attrs.feed_id = this.id;
+
       todo.push(function(done){
         models.Article
           .findOrCreateFromData(attrs, function(err, article, created){
@@ -77,7 +77,7 @@ function init(Sequelize, sequelize, name, models) {
             done();
           });
       });
-    });
+    }.bind(this));
 
     async.parallel(todo, function(err){
       done(err, newArticles);
