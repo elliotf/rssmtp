@@ -84,7 +84,7 @@ function init(Sequelize, sequelize, name, models) {
     });
   };
 
-  return sequelize.define(
+  var Klass = sequelize.define(
     name
     , attrs
     , {
@@ -93,6 +93,8 @@ function init(Sequelize, sequelize, name, models) {
       , classMethods: statics
     }
   );
+
+  return Klass;
 };
 
 init.relate = function(self, models) {
