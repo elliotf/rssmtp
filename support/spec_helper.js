@@ -7,7 +7,6 @@ var app     = require('../app')
   , models  = require('../models')
 ;
 
-require('mocha-mongoose')(app.get('db uri'));
 require('mocha-sinon');
 
 // chai setup
