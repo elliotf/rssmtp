@@ -96,6 +96,31 @@ function init(Sequelize, sequelize, name, models) {
     }.bind(this));
   };
 
+  methods.publish = function(done){
+    this
+      .getUsers()
+      .error(done)
+      .success(function(users){
+        if (!users.length) return done();
+
+        this.pull(function(err, newArticles){
+          var todo   = []
+            , mailer = new models.mailer()
+          ;
+
+          newArticles.forEach(function(article){
+            todo.push(function(done){
+              mailer.sendMail(article.asEmailOptions, done);
+            })
+          });
+
+          async.parallel(todo, function(err){
+            done(err, newArticles);
+          });
+        });
+      }.bind(this));
+  };
+
   var Klass = sequelize.define(
     name
     , attrs

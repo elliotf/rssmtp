@@ -1,5 +1,6 @@
 var helper     = require('../../support/spec_helper')
   , models     = require('../../models')
+  , User       = models.User
   , Feed       = models.Feed
   , Article    = models.Article
   , expect     = require('chai').expect
@@ -8,6 +9,7 @@ var helper     = require('../../support/spec_helper')
   , request    = require('request')
   , feedparser = require('feedparser')
   , moment     = require('moment')
+  , Mailer     = models.mailer
 ;
 
 describe("Feed model (RDBMS)", function() {
@@ -214,6 +216,12 @@ describe("Feed model (RDBMS)", function() {
             , '<content>article content</content>'
             , '<updated>2013-11-24T00:00:00-08:00</updated>'
           , '</entry>'
+          , '<entry>'
+            , '<id>article 2 guid</id>'
+            , '<title>article 2 title</title>'
+            , '<content>article 2 content</content>'
+            , '<updated>2013-11-25T00:00:00-08:00</updated>'
+          , '</entry>'
         , '</feed>'
       ].join('');
     });
@@ -268,9 +276,59 @@ describe("Feed model (RDBMS)", function() {
           expect(Feed.fetch).to.have.been.calledWith('http://example.com/feed_methods');
           expect(this.feed.merge).to.have.been.called;
 
-          expect(articles).to.have.length(1);
+          expect(articles).to.have.length(2);
           done();
         }.bind(this));
+      });
+    });
+
+    describe("#publish", function() {
+      beforeEach(function(done) {
+        this.sinon.spy(this.feed, 'pull');
+
+        User
+          .create({
+          })
+          .done(function(err, user){
+            this.user = user;
+            done(err);
+          }.bind(this));
+      });
+
+      describe("when users are subscribed", function() {
+        beforeEach(function(done) {
+          this.user.addFeed(this.feed).done(done);
+
+          this.sinon.stub(Mailer.prototype, 'sendMail', function(emailData, done){
+            done();
+          });
+        });
+
+        it("sends new articles to subscribed users", function(done) {
+          this.feed.publish(function(err, articles){
+            expect(err).to.not.exist;
+            expect(this.feed.pull).to.have.been.called;
+
+            expect(articles).to.be.a('array');
+            expect(articles).to.have.length(2);
+            expect(Mailer.prototype.sendMail).to.have.been.calledTwice;
+            expect(Mailer.prototype.sendMail).to.have.been.calledWith(articles[0].asEmailOptions);
+            expect(Mailer.prototype.sendMail).to.have.been.calledWith(articles[1].asEmailOptions);
+
+            done();
+          }.bind(this));
+        });
+      });
+
+      describe("when no users are subscribed", function() {
+        it("does not pull", function(done) {
+          this.feed.publish(function(err){
+            expect(err).to.not.exist;
+            expect(this.feed.pull).to.not.have.been.called;
+
+            done();
+          }.bind(this));
+        });
       });
     });
   });
