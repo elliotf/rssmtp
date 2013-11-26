@@ -1,4 +1,4 @@
-function init(Sequelize, sequelize, name) {
+function init(Sequelize, sequelize, name, models) {
   var statics = {}
     , methods = {}
   ;

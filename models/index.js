@@ -39,7 +39,7 @@ files.forEach(function(filename){
     relations[filename] = model.relate;
   }
 
-  if ('function' === typeof model) {
+  if ('function' === typeof model && model.length === 4) {
     model = model(Sequelize, sequelize, filename, models);
   }
 

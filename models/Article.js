@@ -3,7 +3,7 @@ var mmh3       = require('murmurhash3')
   , nodemailer = require('nodemailer')
 ;
 
-function init(Sequelize, sequelize, name) {
+function init(Sequelize, sequelize, name, models) {
   var statics = {}
     , methods = {}
   ;
