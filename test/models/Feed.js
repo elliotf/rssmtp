@@ -191,6 +191,21 @@ describe("Feed model (RDBMS)", function() {
           done();
         });
     });
+
+    it("does not return more than requested", function(done) {
+      var numToGet = 1;
+
+      Feed
+        .getOutdated(numToGet, function(err, feeds){
+          expect(err).to.not.exist;
+
+          expect(feeds).to.have.length(numToGet);
+
+          expect(feeds[0].name).to.equal("Never been updated");
+
+          done();
+        });
+    });
   });
 
   describe("methods", function() {

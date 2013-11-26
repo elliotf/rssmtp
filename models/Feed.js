@@ -52,9 +52,9 @@ function init(Sequelize, sequelize, name, models) {
     });
   };
 
-  statics.getOutdated = function(secondsAgo, done) {
+  statics.getOutdated = function(numToGet, done) {
     this
-      .findAll({where: {}, order: 'lastUpdated ASC'})
+      .findAll({where: {}, order: 'lastUpdated ASC', limit: numToGet})
       .done(function(err, feeds){
         done(err, feeds);
       });
