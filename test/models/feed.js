@@ -9,7 +9,7 @@ var helper     = require('../../support/spec_helper')
   , moment     = require('moment')
 ;
 
-describe("Feed model", function() {
+describe.skip("Feed model", function() {
   beforeEach(function() {
     this.sinon.stub(request, 'get', function(url, done){
       done(null, 'fake response', 'fake body');

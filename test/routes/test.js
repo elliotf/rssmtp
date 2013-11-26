@@ -25,7 +25,7 @@ describe("Test routes", function() {
       it("generates a valid session for that user", function(done) {
         this.request
           .get('/test/session')
-          .send({userId: this.user._id})
+          .send({userId: this.user.id})
           .end(function(err, res){
             expect(err).to.not.exist;
 
@@ -33,7 +33,7 @@ describe("Test routes", function() {
             expect(res.body).to.include.keys(['passport', '_csrfToken', 'cookie']);
             expect(res.body._csrfToken).to.match(/^\S+$/);
             expect(res.body.passport).to.be.like({
-              user: this.user._id + ""
+              user: this.user.id
             });
 
             done();

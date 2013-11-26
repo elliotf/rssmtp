@@ -1,7 +1,7 @@
 var helper = require('../../support/spec_helper')
   , expect = require('chai').expect
-  , Feed   = helper.model('feed')
-  , User   = helper.model('user')
+  , Feed   = helper.models.Feed
+  , User   = helper.models.User
 ;
 
 describe("Feed routes", function() {
@@ -14,15 +14,22 @@ describe("Feed routes", function() {
       });
 
       describe("when the provided feed exists", function() {
-        beforeEach(function() {
-          var feed = this.feed = new Feed({
-            name: 'GET /feed/:feed feed name'
-            , url: 'http://r.example.com/rss'
-          });
+        beforeEach(function(done) {
+          var self = this;
 
-          this.sinon.stub(Feed, 'findById', function(id, done){
-            done(null, feed);
-          });
+          this.sinon.spy(Feed, 'find');
+
+          Feed
+            .create({
+              name: 'GET /feed/:feed feed name'
+              , url: 'http://r.example.com/rss'
+            })
+            .error(done)
+            .success(function(feed){
+              self.feed = feed;
+
+              done();
+            });
         });
 
         it("has a form to unsubscribe", function(done) {
@@ -33,7 +40,7 @@ describe("Feed routes", function() {
 
               expect(res.status).to.equal(200);
 
-              expect(Feed.findById).to.have.been.calledWith(this.feed.id + "");
+              expect(Feed.find).to.have.been.calledWith(this.feed.id + "");
 
               var $ = helper.$(res.text);
 
@@ -79,15 +86,22 @@ describe("Feed routes", function() {
     });
 
     describe("when not logged in", function() {
-      beforeEach(function() {
-        var feed = this.feed = new Feed({
-          name: 'GET /feed/:feed feed name'
-          , url: 'http://r.example.com/rss'
-        });
+      beforeEach(function(done) {
+        var self = this;
 
-        this.sinon.stub(Feed, 'findById', function(id, done){
-          done(null, feed);
-        });
+        Feed
+          .create({
+            name: 'GET /feed/:feed feed name'
+            , url: 'http://r.example.com/rss'
+          })
+          .error(done)
+          .success(function(feed){
+            self.feed = feed;
+
+            done();
+          });
+
+        this.sinon.spy(Feed, 'find');
       });
 
       it("redirects to the main page for login", function(done) {
@@ -108,71 +122,42 @@ describe("Feed routes", function() {
 
       describe("when the provided feed exists", function() {
         beforeEach(function(done) {
-          var feed = this.feed = new Feed({
-            name: 'DEL /feed/:feed'
-            , url: 'http://s.example.com'
-          });
+          var self = this;
 
-          this.user.addFeed(this.feed.id, done);
+          Feed
+            .create({
+              name: 'DEL /feed/:feed'
+              , url: 'http://s.example.com'
+            })
+            .error(done)
+            .success(function(feed){
+              self.feed = feed;
+
+              self.user.addFeed(feed).done(done);
+            });
         });
 
         it("removes the feed from the user", function(done) {
-          this.request
-            .del('/feed/' + this.feed.id)
+          var self = this;
+
+          self.request
+            .del('/feed/' + self.feed.id)
             .expect(302)
             .expect('location', '/')
             .end(function(err, res){
               expect(err).to.not.exist;
 
-              User.findById(this.user.id, function(err, user){
-                expect(user._feeds).to.have.length(0);
-              });
+              self.user
+                .getFeeds()
+                .error(done)
+                .success(function(feeds){
+                  expect(feeds).to.have.length(0);
 
-              done();
-            }.bind(this));
+                  done();
+                });
+            });
         });
       });
-    });
-  });
-
-  describe("GET /feed/:feed/refetch", function() {
-    beforeEach(function(done) {
-      this.loginAs(this.user, done);
-    });
-
-    beforeEach(function(done) {
-      Feed.create({
-        name: 'GET /feed/:feed'
-        , url: 'http://t.example.com'
-      }, function(err, feed){
-        if (err) return done(err);
-
-        this.feed = feed;
-
-        this.user.addFeed(feed.id, done);
-      }.bind(this));
-    });
-
-    beforeEach(function() {
-      this.sinon.stub(Feed.prototype, 'pull', function(done){
-        done();
-      });
-    });
-
-    it("refetches the selected feed", function(done) {
-      this.request
-        .get('/feed/' + this.feed.id + '/refetch')
-        .end(function(err, res){
-          expect(err).to.not.exist;
-          expect(res.status).to.equal(200);
-
-          expect(Feed.prototype.pull).to.have.been.calledOnce;
-          var feed = Feed.prototype.pull.thisValues[0];
-
-          expect(feed.id).to.equal(this.feed.id);
-
-          done();
-        }.bind(this));
     });
   });
 });

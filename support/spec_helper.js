@@ -47,6 +47,7 @@ exports.$ = function(html){
   return cheerio.load(html);
 };
 
+exports.models = models;
 exports.model = function(model) {
   return require('../models/' + model);
 };
@@ -70,25 +71,33 @@ beforeEach(function(done) {
 });
 
 beforeEach(function(done) {
-  var todo = [];
+  var self = this
+    , todo = []
+  ;
 
   todo.push(function(done){
-    exports.model('user').create({
-      email: 'default_user@example.com'
-    }, function(err, user){
-      this.user = user;
-      done(err);
-    }.bind(this));
-  }.bind(this));
+    models.User
+      .create({
+        email: 'default_user@example.com'
+      })
+      .error(done)
+      .success(function(user){
+        self.user = user;
+        done();
+      });
+  });
 
   todo.push(function(done){
-    exports.model('user').create({
-      email: 'other_user@example.com'
-    }, function(err, user){
-      this.other_user = user;
-      done(err);
-    }.bind(this));
-  }.bind(this));
+    models.User
+      .create({
+        email: 'other_user@example.com'
+      })
+      .error(done)
+      .success(function(user){
+        self.other_user = user;
+        done();
+      });
+  });
 
   async.parallel(todo, done);
 });

@@ -1,4 +1,4 @@
-var User = require('../models/user')
+var User = require('../models').User
   , _    = require('lodash')
 ;
 
@@ -15,7 +15,7 @@ module.exports = function(app) {
     app.get('/session', function (req, res, next) {
       var userId = req.param('userId');
 
-      User.findById(userId, function(err, user) {
+      User.find(userId).done(function(err, user) {
         if (err) return next(err);
 
         if (user) {

@@ -6,7 +6,7 @@ var helper     = require('../../support/spec_helper')
   , nodemailer = require('nodemailer')
 ;
 
-describe("Article model", function() {
+describe.skip("Article model", function() {
   beforeEach(function() {
     this.dummyFeedId = '51b7ace85c9d23e775000008';
     this.data = {

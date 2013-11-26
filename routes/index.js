@@ -1,6 +1,5 @@
 var loginRequired = require('../middleware/auth').loginRequired
-  , Feed          = require('../models/feed')
-  , Article       = require('../models/article')
+  , Feed          = require('../models').Feed
 ;
 
 module.exports = function register(app){
@@ -9,7 +8,7 @@ module.exports = function register(app){
       return res.render('splash');
     }
 
-    req.user.getFeeds(function(err, feeds){
+    req.user.getFeeds().done(function(err, feeds){
       if (err) return next(err);
 
       res.locals.feeds = feeds;
@@ -42,7 +41,7 @@ module.exports = function register(app){
         return next(err);
       }
 
-      req.user.addFeed(feed.id, function(err){
+      req.user.addFeed(feed).done(function(err){
         if (err) return next(err);
 
         res.redirect('/');

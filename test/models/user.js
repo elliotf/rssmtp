@@ -6,7 +6,7 @@ var helper = require('../../support/spec_helper')
   , _      = require('underscore')
 ;
 
-describe("User model", function() {
+describe.skip("User model", function() {
   it("has basic attributes", function() {
     expect(this.user.email).to.exist;
     expect(this.user.email).to.be.like('default_user@example.com');
