@@ -4,6 +4,7 @@ var helper = require('../support/spec_helper')
   , Poller = models.poller
   , app    = require('../app')
   , expect = require('chai').expect
+  , server = require('../server')
 ;
 
 describe("Server", function() {
@@ -21,14 +22,16 @@ describe("Server", function() {
   });
 
   it("starts up services", function(done) {
-    var server = require('../server')
+    server(function(err){
+      expect(err).to.not.exist;
 
-    expect(http.createServer).to.have.been.calledWith(app);
-    expect(this.fakeServer.listen).to.have.been.calledWith(3000);
+      expect(http.createServer).to.have.been.calledWith(app);
+      expect(this.fakeServer.listen).to.have.been.calledWith(3000);
 
-    expect(models.poller).to.have.been.calledWith(models.Feed);
-    expect(Poller.prototype.start).to.have.been.called;
+      expect(models.poller).to.have.been.calledWith(models.Feed);
+      expect(Poller.prototype.start).to.have.been.called;
 
-    done();
+      done();
+    }.bind(this));
   });
 });
