@@ -149,44 +149,68 @@ describe("Feed model (RDBMS)", function() {
   });
 
   describe(".getOutdated", function() {
-    beforeEach(function(done) {
-      var todo = [];
+    describe("when there are stale feeds", function() {
+      beforeEach(function(done) {
+        var todo = [];
 
-      var updatedSecondsAgo = 5 * 1000;
+        var updatedSecondsAgo = 5 * 1000;
 
-      todo.push(function(done){
-        Feed
-          .create({
-            name: "Updated more recently"
-            , url: "http://example.com/more_recent"
-            , lastUpdated: (moment().subtract(updatedSecondsAgo).toDate())
-          })
-          .done(done);
+        todo.push(function(done){
+          Feed
+            .create({
+              name: "Updated more recently"
+              , url: "http://example.com/more_recent"
+              , lastUpdated: (moment().subtract(updatedSecondsAgo).toDate())
+            })
+            .done(done);
+        });
+
+        todo.push(function(done){
+          Feed
+            .create({
+              name: "Never been updated"
+              , url: "http://example.com/less_recent"
+            })
+            .done(done);
+        });
+
+        async.series(todo, done);
       });
 
-      todo.push(function(done){
+      it("returns the least recently updated feed", function(done) {
+        Feed
+          .getOutdated(function(err, feed){
+            expect(err).to.not.exist;
+
+            expect(feed).to.be.ok;
+
+            expect(feed.name).to.equal("Never been updated");
+
+            done();
+          });
+      });
+    });
+
+    describe("when all feeds have been updated recently", function() {
+      beforeEach(function(done) {
         Feed
           .create({
             name: "Never been updated"
             , url: "http://example.com/less_recent"
+            , lastUpdated: new Date()
           })
           .done(done);
       });
 
-      async.series(todo, done);
-    });
-
-    it("returns the least recently updated feed", function(done) {
-      Feed
-        .getOutdated(function(err, feed){
+      it("does not return a feed", function(done) {
+        Feed.getOutdated(function(err, feed){
           expect(err).to.not.exist;
 
-          expect(feed).to.be.ok;
-
-          expect(feed.name).to.equal("Never been updated");
+          expect(feed).to.be.undefined;
 
           done();
         });
+      });
     });
   });
 

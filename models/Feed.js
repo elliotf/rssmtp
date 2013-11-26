@@ -53,10 +53,13 @@ function init(Sequelize, sequelize, name, models) {
   };
 
   statics.getOutdated = function(done) {
+    var interval  = moment.duration(2, 'hours');
+    var threshold = moment().utc().subtract(interval);
+
     this
-      .findAll({where: {}, order: 'lastUpdated ASC', limit: 1})
+      .findAll({where: ["lastUpdated < ?", threshold.toDate()], order: 'lastUpdated ASC', limit: 1})
       .done(function(err, feeds){
-        done(err, feeds[0]);
+        done(err, (feeds || [])[0]);
       });
   };
 
