@@ -176,32 +176,14 @@ describe("Feed model (RDBMS)", function() {
       async.series(todo, done);
     });
 
-    it("returns the least recently updated N feeds in ascending updated order", function(done) {
-      var numToGet = 2;
-
+    it("returns the least recently updated feed", function(done) {
       Feed
-        .getOutdated(numToGet, function(err, feeds){
+        .getOutdated(function(err, feed){
           expect(err).to.not.exist;
 
-          expect(feeds).to.have.length(numToGet);
+          expect(feed).to.be.ok;
 
-          expect(feeds[0].name).to.equal("Never been updated");
-          expect(feeds[1].name).to.equal("Updated more recently");
-
-          done();
-        });
-    });
-
-    it("does not return more than requested", function(done) {
-      var numToGet = 1;
-
-      Feed
-        .getOutdated(numToGet, function(err, feeds){
-          expect(err).to.not.exist;
-
-          expect(feeds).to.have.length(numToGet);
-
-          expect(feeds[0].name).to.equal("Never been updated");
+          expect(feed.name).to.equal("Never been updated");
 
           done();
         });
