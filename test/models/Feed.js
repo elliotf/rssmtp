@@ -288,6 +288,7 @@ describe("Feed model (RDBMS)", function() {
 
         User
           .create({
+            email: 'default_user@example.com'
           })
           .done(function(err, user){
             this.user = user;
@@ -312,8 +313,8 @@ describe("Feed model (RDBMS)", function() {
             expect(articles).to.be.a('array');
             expect(articles).to.have.length(2);
             expect(Mailer.prototype.sendMail).to.have.been.calledTwice;
-            expect(Mailer.prototype.sendMail).to.have.been.calledWith(articles[0].asEmailOptions);
-            expect(Mailer.prototype.sendMail).to.have.been.calledWith(articles[1].asEmailOptions);
+            expect(Mailer.prototype.sendMail).to.have.been.calledWith(articles[0].asEmailOptions(this.feed, ['default_user@example.com']));
+            expect(Mailer.prototype.sendMail).to.have.been.calledWith(articles[1].asEmailOptions(this.feed, ['default_user@example.com']));
 
             done();
           }.bind(this));

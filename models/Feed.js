@@ -2,6 +2,7 @@ var request    = require('request')
   , feedparser = require('feedparser')
   , moment     = require('moment')
   , async      = require('async')
+  , _          = require('lodash')
 ;
 
 function init(Sequelize, sequelize, name, models) {
@@ -97,11 +98,15 @@ function init(Sequelize, sequelize, name, models) {
   };
 
   methods.publish = function(done){
+    var self = this;
+
     this
       .getUsers()
       .error(done)
       .success(function(users){
         if (!users.length) return done();
+
+        var emails = _.pluck(users, 'email');
 
         this.pull(function(err, newArticles){
           var todo   = []
@@ -110,7 +115,7 @@ function init(Sequelize, sequelize, name, models) {
 
           newArticles.forEach(function(article){
             todo.push(function(done){
-              mailer.sendMail(article.asEmailOptions, done);
+              mailer.sendMail(article.asEmailOptions(self, emails), done);
             })
           });
 
