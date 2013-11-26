@@ -201,52 +201,6 @@ describe("Article model (RDBMS)", function() {
       });
     });
   });
-
-  describe("#sendTo", function() {
-    it("sends the article as an email", function(done) {
-      var feed       = {fake: "feed"}
-        , article    = Article.build(this.data)
-        , users      = []
-        , fakeMailer = nodemailer.createTransport("Gmail", {});
-      ;
-
-      users.push(User.build({email: 'sendTo@example.com'}));
-      users.push(User.build({email: 'another@example.com'}));
-
-      this.sinon.stub(fakeMailer, 'sendMail', function(options, done){
-        done();
-      });
-
-      this.sinon.stub(nodemailer, 'createTransport', function(type, options){
-        return fakeMailer;
-      });
-
-      var fakeEmailOptions = {fake: 'emailOptions'};
-      this.sinon.stub(article, 'asEmailOptions', function(feed, users){
-        return fakeEmailOptions;
-      });
-
-      article.sendTo(feed, users, function(err){
-        expect(err).to.not.exist;
-
-        expect(article.asEmailOptions).to.have.been.calledWith(feed, ['sendTo@example.com', 'another@example.com']);
-
-        expect(nodemailer.createTransport).to.have.been.calledWith("SMTP", {
-          host: "smtp.example.com"
-          , secureConnection: "true"
-          , port: "465"
-          , auth: {
-            user: "no-reply@example.com"
-            , pass: "dummy password"
-          }
-        });
-
-        expect(fakeMailer.sendMail).to.have.been.calledWith(fakeEmailOptions);
-
-        done();
-      });
-    });
-  });
 });
 
 
