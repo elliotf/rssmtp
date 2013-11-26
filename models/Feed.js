@@ -123,7 +123,7 @@ function init(Sequelize, sequelize, name, models) {
           });
 
           async.parallel(todo, function(err){
-            done(err, newArticles);
+            done(err, self, newArticles);
           });
         });
       }.bind(this));

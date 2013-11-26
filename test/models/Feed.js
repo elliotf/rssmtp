@@ -327,9 +327,11 @@ describe("Feed model (RDBMS)", function() {
         });
 
         it("sends new articles to subscribed users", function(done) {
-          this.feed.publish(function(err, articles){
+          this.feed.publish(function(err, feed, articles){
             expect(err).to.not.exist;
             expect(this.feed.pull).to.have.been.called;
+
+            expect(feed.name).to.equal(this.feed.name);
 
             expect(articles).to.be.a('array');
             expect(articles).to.have.length(2);
