@@ -40,7 +40,7 @@ describe("Feed model (RDBMS)", function() {
       })
       .error(done)
       .success(function(feed){
-        expect(feed.lastUpdated).to.be.below(Date.now());
+        expect(feed.last_fetched).to.be.below(Date.now());
 
         done();
       });
@@ -160,7 +160,7 @@ describe("Feed model (RDBMS)", function() {
             .create({
               name: "Updated more recently"
               , url: "http://example.com/more_recent"
-              , lastUpdated: (moment().subtract(updatedSecondsAgo).toDate())
+              , last_fetched: (moment().subtract(updatedSecondsAgo).toDate())
             })
             .done(done);
         });
@@ -197,7 +197,7 @@ describe("Feed model (RDBMS)", function() {
           .create({
             name: "Never been updated"
             , url: "http://example.com/less_recent"
-            , lastUpdated: new Date()
+            , last_fetched: new Date()
           })
           .done(done);
       });

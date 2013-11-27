@@ -17,7 +17,7 @@ function init(Sequelize, sequelize, name, models) {
       , allowNull: false
       , defaultValue: 'unnamed feed'
     }
-    , lastUpdated: {
+    , last_fetched: {
       type: Sequelize.DATE
       , allowNull: false
       , defaultValue: function() { return moment(0).toDate(); }
@@ -57,7 +57,7 @@ function init(Sequelize, sequelize, name, models) {
     var threshold = moment().utc().subtract(interval);
 
     this
-      .findAll({where: ["lastUpdated < ?", threshold.toDate()], order: 'lastUpdated ASC', limit: 1})
+      .findAll({where: ["last_fetched < ?", threshold.toDate()], order: 'last_fetched ASC', limit: 1})
       .done(function(err, feeds){
         done(err, (feeds || [])[0]);
       });
