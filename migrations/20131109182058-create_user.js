@@ -21,9 +21,10 @@ module.exports = {
           , allowNull: false
         }
       })
-      .success(done)
+      .done(done)
   },
   down: function(migration, DataTypes, done) {
     //migration.dropTable('users').success(done);
+    done();
   }
 }
