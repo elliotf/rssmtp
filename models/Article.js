@@ -72,7 +72,10 @@ function init(Sequelize, sequelize, name, models) {
   };
 
   statics.cleanAttrs = function(input) {
-    return _.pick(input, _.keys(attrs));
+    var cleaned = _.pick(input, _.keys(attrs));
+    delete cleaned['id'];
+
+    return cleaned;
   };
 
   statics.attrStringToHash = function(attrs) {

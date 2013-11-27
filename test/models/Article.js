@@ -61,8 +61,10 @@ describe("Article model (RDBMS)", function() {
 
   describe(".cleanAttrs", function() {
     it("strips out unsupported attributes", function() {
+      this.data.id        = 'a non numeric key that will be discarded';
       this.data.discarded = 'this will be thrown away';
       expect(Article.cleanAttrs(this.data)).to.not.have.key('discarded');
+      expect(Article.cleanAttrs(this.data)).to.not.have.key('id');
     });
   });
 
