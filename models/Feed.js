@@ -94,14 +94,10 @@ function init(Sequelize, sequelize, name, models) {
     Klass.fetch(self.url, function(fetchErr, meta, articles){
       self
         .touch(function(err) {
-          if (fetchErr) return done(fetchErr);
-          if (err) return done(err);
+          if (fetchErr) return done(fetchErr, []);
+          if (err) return done(err, []);
 
-          self.merge(articles, function(err, newArticles){
-            if (err) return done(err);
-
-            done(err, newArticles);
-          });
+          self.merge(articles, done);
         });
     });
   };
@@ -118,6 +114,8 @@ function init(Sequelize, sequelize, name, models) {
         var emails = _.pluck(users, 'email');
 
         this.pull(function(err, newArticles){
+          if (err) return done(err);
+
           var todo   = []
             , mailer = new models.mailer()
           ;

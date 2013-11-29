@@ -326,6 +326,7 @@ describe("Feed model (RDBMS)", function() {
 
           feed.pull(function(err, articles){
             expect(err).to.exist;
+            expect(articles).to.be.like([]);
 
             expect(feed.touch).to.have.been.called;
 
