@@ -322,6 +322,24 @@ describe("Feed model (RDBMS)", function() {
             });
         });
       });
+
+      describe("when there is a problem fetching", function() {
+        it("still updates last_fetched", function(done) {
+          var feed   = this.feed
+            , before = feed.last_fetched
+          ;
+
+          this.fakeHttpBody     = 'not valid rss or atom';
+
+          feed.pull(function(err, articles){
+            expect(err).to.exist;
+
+            expect(feed.last_fetched).to.be.above(before);
+
+            done();
+          });
+        });
+      });
     });
 
     describe("#publish", function() {
