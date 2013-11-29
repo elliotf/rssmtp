@@ -301,6 +301,27 @@ describe("Feed model (RDBMS)", function() {
           done();
         }.bind(this));
       });
+
+      it("updates the 'last_fetched' column", function(done) {
+        var feed   = this.feed
+          , before = feed.last_fetched
+        ;
+
+        feed.pull(function(err, articles){
+          expect(err).to.not.exist;
+
+          expect(moment(feed.last_fetched).toDate()).to.be.above(moment(before).toDate());
+
+          feed
+            .reload()
+            .error(done)
+            .success(function(){
+              expect(moment(feed.last_fetched).toDate()).to.be.above(moment(before).toDate());
+
+              done();
+            });
+        });
+      });
     });
 
     describe("#publish", function() {

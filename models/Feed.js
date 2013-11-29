@@ -89,15 +89,23 @@ function init(Sequelize, sequelize, name, models) {
   };
 
   methods.pull = function(done) {
-    Klass.fetch(this.url, function(err, meta, articles){
+    var self = this;
+
+    Klass.fetch(self.url, function(err, meta, articles){
       if (err) return done(err);
 
-      this.merge(articles, function(err, newArticles){
-        if (err) return done(err);
+      self.last_fetched = moment().toDate();
+      self
+        .save()
+        .error(done)
+        .success(function() {
+          self.merge(articles, function(err, newArticles){
+            if (err) return done(err);
 
-        done(err, newArticles);
-      });
-    }.bind(this));
+            done(err, newArticles);
+          });
+        });
+    });
   };
 
   methods.publish = function(done){
