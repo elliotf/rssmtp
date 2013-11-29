@@ -77,15 +77,17 @@ todo.push(function(done){
             .error(done)
             .success(function(feed){
               console.log("FEED CREATED: ", feed.name);
-              feeds[mongoFeed._id].sql = feed;
+              feeds[mongoFeed._id + ""].sql = feed;
 
-              done();
+              feed
+                .addUser(users[mongoUser._id].sql)
+                .done(done);
             });
         });
       });
     });
 
-    async.parallel(todo, done);
+    async.series(todo, done);
   });
 });
 
@@ -134,13 +136,5 @@ todo.push(function(done){
 
 async.series(todo, function(err){
   console.log("Migration finished, err: ", err);
-  //console.log(users);
   process.exit(0);
 });
-
-// iterate over users
-//   collect feeds (keyed by url)
-// iterate over collected feeds
-//   add articles
-// iterate over users
-//   add feeds to users
