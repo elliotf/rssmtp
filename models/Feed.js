@@ -91,7 +91,6 @@ function init(Sequelize, sequelize, name, models) {
   methods.pull = function(done) {
     var self = this;
 
-
     Klass.fetch(self.url, function(fetchErr, meta, articles){
       self.last_fetched = moment().toDate();
       self
@@ -136,6 +135,12 @@ function init(Sequelize, sequelize, name, models) {
           });
         });
       }.bind(this));
+  };
+
+  methods.touch = function(done){
+    this.last_fetched = moment().toDate();
+
+    this.save().done(done);
   };
 
   var Klass = sequelize.define(

@@ -394,6 +394,29 @@ describe("Feed model (RDBMS)", function() {
         });
       });
     });
+
+    describe("#touch", function() {
+      it("updates the last_fetched column", function(done) {
+        var feed   = this.feed
+          , before = feed.last_fetched
+        ;
+
+        feed.touch(function(err){
+          expect(err).to.not.exist;
+
+          expect(feed.last_fetched).to.be.above(before);
+
+          feed
+            .reload()
+            .error(done)
+            .success(function(){
+            expect(feed.last_fetched).to.be.above(before);
+
+            done();
+          });
+        });
+      });
+    });
   });
 });
 
