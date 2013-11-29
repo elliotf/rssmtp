@@ -285,9 +285,9 @@ describe("Feed model (RDBMS)", function() {
 
     describe("#pull", function() {
       beforeEach(function() {
-
         this.sinon.spy(Feed, 'fetch');
         this.sinon.spy(this.feed, 'merge');
+        this.sinon.spy(this.feed, 'touch')
       });
 
       it("fetches and merges", function(done) {
@@ -310,16 +310,9 @@ describe("Feed model (RDBMS)", function() {
         feed.pull(function(err, articles){
           expect(err).to.not.exist;
 
-          expect(moment(feed.last_fetched).toDate()).to.be.above(moment(before).toDate());
+          expect(feed.touch).to.have.been.called;
 
-          feed
-            .reload()
-            .error(done)
-            .success(function(){
-              expect(moment(feed.last_fetched).toDate()).to.be.above(moment(before).toDate());
-
-              done();
-            });
+          done();
         });
       });
 
@@ -334,7 +327,7 @@ describe("Feed model (RDBMS)", function() {
           feed.pull(function(err, articles){
             expect(err).to.exist;
 
-            expect(feed.last_fetched).to.be.above(before);
+            expect(feed.touch).to.have.been.called;
 
             done();
           });

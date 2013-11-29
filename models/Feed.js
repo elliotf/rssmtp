@@ -92,12 +92,10 @@ function init(Sequelize, sequelize, name, models) {
     var self = this;
 
     Klass.fetch(self.url, function(fetchErr, meta, articles){
-      self.last_fetched = moment().toDate();
       self
-        .save()
-        .error(done)
-        .success(function() {
+        .touch(function(err) {
           if (fetchErr) return done(fetchErr);
+          if (err) return done(err);
 
           self.merge(articles, function(err, newArticles){
             if (err) return done(err);
