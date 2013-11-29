@@ -302,7 +302,7 @@ describe("Feed model (RDBMS)", function() {
         }.bind(this));
       });
 
-      it("updates the 'last_fetched' column", function(done) {
+      it("touches itself", function(done) {
         var feed   = this.feed
           , before = feed.last_fetched
         ;
@@ -317,7 +317,7 @@ describe("Feed model (RDBMS)", function() {
       });
 
       describe("when there is a problem fetching", function() {
-        it("still updates last_fetched", function(done) {
+        it("still touches itself", function(done) {
           var feed   = this.feed
             , before = feed.last_fetched
           ;
@@ -384,6 +384,21 @@ describe("Feed model (RDBMS)", function() {
 
             done();
           }.bind(this));
+        });
+
+        it("touches itself", function(done) {
+          var feed = this.feed
+          ;
+
+          this.sinon.spy(feed, 'touch');
+
+          feed.publish(function(err){
+            expect(err).to.not.exist;
+
+            expect(feed.touch).to.have.been.called;
+
+            done();
+          });
         });
       });
     });

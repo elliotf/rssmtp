@@ -113,7 +113,7 @@ function init(Sequelize, sequelize, name, models) {
       .getUsers()
       .error(done)
       .success(function(users){
-        if (!users.length) return done();
+        if (!users.length) return this.touch(done);
 
         var emails = _.pluck(users, 'email');
 
