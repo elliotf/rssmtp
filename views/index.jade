@@ -13,7 +13,3 @@ block content
         li.feed.item
           .item-title
             a.manage-feed(href="/feed/#{feed.id}")= feed.name
-
-            if isDev
-              span  /
-              a(href="/feed/#{feed.id}/refetch")  refetch
