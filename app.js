@@ -21,6 +21,7 @@ if (!mongoose.connection.db) {
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
+  app.set('bindip', process.env.BINDIP || '127.0.0.1');
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.favicon());
