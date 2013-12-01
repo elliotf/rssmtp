@@ -10,7 +10,7 @@ var helper = require('../support/spec_helper')
 describe("Server", function() {
   beforeEach(function() {
     var fakeServer = this.fakeServer = {
-      listen: this.sinon.stub().callsArg(1)
+      listen: this.sinon.stub().callsArg(2)
     };
 
     this.sinon.stub(http, 'createServer', function(app){
@@ -26,7 +26,7 @@ describe("Server", function() {
       expect(err).to.not.exist;
 
       expect(http.createServer).to.have.been.calledWith(app);
-      expect(this.fakeServer.listen).to.have.been.calledWith(3000);
+      expect(this.fakeServer.listen).to.have.been.calledWith(3000, '127.0.0.1');
 
       expect(models.poller).to.have.been.calledWith(models.Feed);
       expect(Poller.prototype.start).to.have.been.called;
