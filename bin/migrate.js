@@ -31,7 +31,7 @@ todo.push(function(done){
 });
 
 todo.push(function(done){
-  oldUser.find({}).limit(1).populate('_feeds').exec(function(err, results){
+  oldUser.find({}).populate('_feeds').exec(function(err, results){
     if (err) return done(err);
 
     var todo = [];
