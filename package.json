@@ -24,8 +24,8 @@
     "murmurhash3": "~0.1.7",
     "connect-flash": "~0.1.0",
     "sequelize": "git+https://github.com/elliotf/sequelize.git#elliotf_customized",
-    "sqlite3": "~2.1.19",
-    "lodash": "~2.2.1"
+    "lodash": "~2.2.1",
+    "pg": "~2.8.3"
   },
   "devDependencies": {
     "sinon-chai": "~2.3",
@@ -40,6 +40,7 @@
     "blanket": "~1.0.8",
     "nodemon": "~0.7.2",
     "cookie": "0.0.5",
+    "sqlite3": "~2.1.19",
     "connect": "~2.7.3"
   }
 }

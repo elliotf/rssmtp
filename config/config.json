@@ -1,12 +1,4 @@
 {
-  "development": {
-    "dialect": "sqlite",
-    "storage": "rssmtp_dev.sqlite",
-    "username": "root",
-    "password": null,
-    "database": "database_development",
-    "host": "127.0.0.1"
-  },
   "test": {
     "dialect": "sqlite",
     "username": "root",
@@ -14,12 +6,18 @@
     "database": "database_test",
     "host": "127.0.0.1"
   },
+  "development": {
+    "dialect": "postgres",
+    "username": "rssmtp",
+    "password": "password_here",
+    "database": "rssmtp_development",
+    "host": "127.0.0.1"
+  },
   "production": {
-    "dialect": "sqlite",
-    "storage": "/var/tmp/rssmtp_prod.sqlite",
-    "username": "root",
-    "password": null,
-    "database": "database_production",
+    "dialect": "postgres",
+    "username": "rssmtp",
+    "password": "password_here",
+    "database": "rssmtp_production",
     "host": "127.0.0.1"
   }
 }
