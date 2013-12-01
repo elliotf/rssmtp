@@ -1,0 +1,23 @@
+{
+  "test": {
+    "dialect": "sqlite",
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1"
+  },
+  "development": {
+    "dialect": "postgres",
+    "username": "rssmtp",
+    "password": "password_here",
+    "database": "rssmtp_development",
+    "host": "127.0.0.1"
+  },
+  "production": {
+    "dialect": "postgres",
+    "username": "rssmtp",
+    "password": "password_here",
+    "database": "rssmtp_production",
+    "host": "127.0.0.1"
+  }
+}

@@ -1,22 +1,33 @@
 var helper = require('../../support/spec_helper')
   , expect = require('chai').expect
   , Poller = helper.model('poller')
-  , Feed   = helper.model('feed')
+  , models = require('../../models')
+  , Feed   = models.Feed
 ;
 
 describe("Poller model", function() {
   beforeEach(function() {
-    this.poller = new Poller();
+    this.poller = new Poller(Feed);
     this.sinon.stub(this.poller, 'requeue', function(){});
   });
 
   describe("#updateOneFeed", function() {
-    beforeEach(function() {
-      this.feed = new Feed();
+    beforeEach(function(done) {
+      var self = this;
 
-      this.sinon.stub(this.feed, 'pull', function(done){
-        done();
-      });
+      Feed
+        .create({
+          url: 'http://example.com/#updateOneFeed'
+        })
+        .error(done)
+        .success(function(feed){
+          self.sinon.stub(feed, 'publish', function(done){
+            done();
+          });
+          self.feed = feed;
+
+          done();
+        });
 
       this.sinon.stub(Feed, 'getOutdated', function(done){
         done(null, this.feed);
@@ -28,7 +39,7 @@ describe("Poller model", function() {
         expect(err).to.not.exist;
 
         expect(Feed.getOutdated).to.have.been.called;
-        expect(this.feed.pull).to.have.been.called;
+        expect(this.feed.publish).to.have.been.called;
 
         done();
       }.bind(this));
@@ -46,7 +57,7 @@ describe("Poller model", function() {
 
     describe("when there are no outdated feeds", function() {
       beforeEach(function() {
-        this.feed = null;
+        this.feed = undefined;
       });
 
       it("queues itself up to run again", function(done) {

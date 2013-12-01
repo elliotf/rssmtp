@@ -13,8 +13,8 @@ describe("Test routes", function() {
           expect(err).to.not.exist;
 
           expect(res.status).to.equal(200);
-          expect(res.body).to.have.keys(['passport', '_csrf', 'cookie']);
-          expect(res.body._csrf).to.match(/^\S+$/);
+          expect(res.body).to.include.keys(['passport', '_csrfToken', 'cookie']);
+          expect(res.body._csrfToken).to.match(/^\S+$/);
           expect(res.body.passport).to.be.like({});
 
           done();
@@ -25,15 +25,15 @@ describe("Test routes", function() {
       it("generates a valid session for that user", function(done) {
         this.request
           .get('/test/session')
-          .send({userId: this.user._id})
+          .send({userId: this.user.id})
           .end(function(err, res){
             expect(err).to.not.exist;
 
             expect(res.status).to.equal(200);
-            expect(res.body).to.have.keys(['passport', '_csrf', 'cookie']);
-            expect(res.body._csrf).to.match(/^\S+$/);
+            expect(res.body).to.include.keys(['passport', '_csrfToken', 'cookie']);
+            expect(res.body._csrfToken).to.match(/^\S+$/);
             expect(res.body.passport).to.be.like({
-              user: this.user._id + ""
+              user: this.user.id
             });
 
             done();

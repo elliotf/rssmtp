@@ -1,11 +1,9 @@
-var Feed = require('./feed')
-;
-
-function Poller() {
+function Poller(FeedClass) {
+  this.FeedClass = FeedClass;
 }
 
 Poller.prototype.updateOneFeed = function(done){
-  Feed.getOutdated(function(err, feed){
+  this.FeedClass.getOutdated(function(err, feed){
     if (err) return done(err);
 
     if (!feed) {
@@ -13,7 +11,7 @@ Poller.prototype.updateOneFeed = function(done){
       return done();
     }
 
-    feed.pull(function(err){
+    feed.publish(function(err){
       this.requeue(0);
 
       done(err, feed);

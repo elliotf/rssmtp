@@ -1,5 +1,5 @@
 var loginRequired = require('../middleware/auth').loginRequired
-  , Feed          = require('../models/feed')
+  , Feed          = require('../models').Feed
 ;
 
 module.exports = function register(app){
@@ -9,7 +9,7 @@ module.exports = function register(app){
       res.render('404');
     }
 
-    Feed.findById(req.params.feed, function(err, feed){
+    Feed.find(req.params.feed).done(function(err, feed){
       if (err) {
         if ('CastError' == err.name) return notfound();
         return next(err);
@@ -28,21 +28,16 @@ module.exports = function register(app){
     });
 
     app.del('/', function(req, res, next){
-      req.user.removeFeed(req.params.feed, function(err, user){
-        if (err) return next(err);
+      Feed
+        .find(req.params.feed)
+        .error(next)
+        .success(function(feed){
+          req.user.removeFeed(feed).done(function(err, user){
+            if (err) return next(err);
 
-        res.redirect('/');
-      });
-    });
-
-    if (app.get('isDev')) {
-      app.get('/refetch', loadFeed, function(req, res, next){
-        res.locals.feed.pull(function(err){
-          if (err) return next(err);
-
-          res.send('ok');
+            res.redirect('/');
+          });
         });
-      });
-    }
+    });
   });
 };

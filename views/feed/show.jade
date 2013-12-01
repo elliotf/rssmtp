@@ -9,6 +9,3 @@ block content
     != csrf_form_tag()
     input(name="_method", value="delete", type="hidden")
     button.button(type="submit") Unsubscribe
-
-    if isDev
-      a(href="/feed/#{feed.id}/refetch") refetch

@@ -3,9 +3,10 @@ var app     = require('../app')
   , chai    = require('chai')
   , cheerio = require('cheerio')
   , async   = require('async')
+  , _       = require('lodash')
+  , models  = require('../models')
 ;
 
-require('mocha-mongoose')(app.get('db uri'));
 require('mocha-sinon');
 
 // chai setup
@@ -20,7 +21,7 @@ exports.setupRequestSpec = function(done) {
     var orig = this.request[method];
     this.request[method] = function(){
       var request = orig.apply(request, arguments);
-      if (this._csrf)   request.set('X-CSRF-Token', this._csrf);
+      if (this._csrfToken)   request.set('X-CSRF-Token', this._csrfToken);
       if (this._cookie) request.set('Cookie',       this._cookie);
       return request;
     }.bind(this);
@@ -32,7 +33,7 @@ exports.setupRequestSpec = function(done) {
       .send({userId: user.id})
       .end(function(err, res){
         this._cookie = res.header['set-cookie'];
-        this._csrf   = res.body._csrf;
+        this._csrfToken   = res.body._csrfToken;
 
         done(err);
       }.bind(this));
@@ -45,30 +46,57 @@ exports.$ = function(html){
   return cheerio.load(html);
 };
 
+exports.models = models;
 exports.model = function(model) {
   return require('../models/' + model);
 };
 
+before(function(done){
+  models._sequelize.sync({force: true}).done(done);
+});
+
 beforeEach(function(done) {
   var todo = [];
 
-  todo.push(function(done){
-    exports.model('user').create({
-      email: 'default_user@example.com'
-    }, function(err, user){
-      this.user = user;
-      done(err);
-    }.bind(this));
-  }.bind(this));
+  _.forEach(models, function(model, name){
+    if (model && 'function' === typeof model['destroy']) {
+      todo.push(function(done){
+        model.destroy().done(done);
+      });
+    }
+  });
+
+  async.parallel(todo, done);
+});
+
+beforeEach(function(done) {
+  var self = this
+    , todo = []
+  ;
 
   todo.push(function(done){
-    exports.model('user').create({
-      email: 'other_user@example.com'
-    }, function(err, user){
-      this.other_user = user;
-      done(err);
-    }.bind(this));
-  }.bind(this));
+    models.User
+      .create({
+        email: 'default_user@example.com'
+      })
+      .error(done)
+      .success(function(user){
+        self.user = user;
+        done();
+      });
+  });
+
+  todo.push(function(done){
+    models.User
+      .create({
+        email: 'other_user@example.com'
+      })
+      .error(done)
+      .success(function(user){
+        self.other_user = user;
+        done();
+      });
+  });
 
   async.parallel(todo, done);
 });
