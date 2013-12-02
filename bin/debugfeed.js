@@ -14,7 +14,7 @@ args
 ;
 
 if (!args.url)
-  return program.help();
+  return args.help();
 
 var url = args.url;
 
