@@ -10,6 +10,7 @@ args
   .option('-u, --url <value>', 'Url to fetch')
   //.option('-a, --all', 'Show all attributes of feed')
   .option('-l, --limit <n>', 'Only show N articles', parseInt)
+  .option('-f, --full', 'Show a raw dump of the feed object')
   .parse(process.argv)
 ;
 
@@ -56,6 +57,10 @@ request.get(url, function(err, response, body){
 
     for (var i = 0; i < maxArticles; ++i) {
       console.log(prettyjson.render(dataFor('article', articles[i])), "\n");
+      if(args.full) {
+        console.log("FULL DUMP: \n");
+        console.log(articles[i], "\n");
+      }
     }
 
     process.exit(0);
