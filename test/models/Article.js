@@ -63,8 +63,19 @@ describe("Article model (RDBMS)", function() {
     it("strips out unsupported attributes", function() {
       this.data.id        = 'a non numeric key that will be discarded';
       this.data.discarded = 'this will be thrown away';
-      expect(Article.cleanAttrs(this.data)).to.not.have.key('discarded');
-      expect(Article.cleanAttrs(this.data)).to.not.have.key('id');
+
+      var cleaned = Article.cleanAttrs(this.data);
+      expect(_.keys(cleaned)).to.include('description');
+      expect(_.keys(cleaned)).to.not.include('discarded');
+      expect(_.keys(cleaned)).to.not.include('id');
+    });
+
+    it("removes empty attributes to allow defaults to be set", function() {
+      this.data.title = '';
+
+      var cleaned = Article.cleanAttrs(this.data);
+      expect(_.keys(cleaned)).to.include('description');
+      expect(_.keys(cleaned)).to.not.include('title');
     });
   });
 

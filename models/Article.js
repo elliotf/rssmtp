@@ -75,6 +75,10 @@ function init(Sequelize, sequelize, name, models) {
     var cleaned = _.pick(input, _.keys(attrs));
     delete cleaned['id'];
 
+    _(input).each(function(v,k){
+      if (!v) delete cleaned[k];
+    });
+
     return cleaned;
   };
 
