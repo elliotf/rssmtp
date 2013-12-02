@@ -9,7 +9,7 @@ var args       = require('commander')
 args
   .option('-u, --url <value>', 'Url to fetch')
   //.option('-a, --all', 'Show all attributes of feed')
-  //.option('-l, --limit <n>', 'Only show N articles', parseInt)
+  .option('-l, --limit <n>', 'Only show N articles', parseInt)
   .parse(process.argv)
 ;
 
@@ -49,12 +49,14 @@ request.get(url, function(err, response, body){
       process.exit(1);
     }
 
-    console.log("Feed metadata: \n", prettyjson.render(dataFor('feed', meta)));
-    console.log("Feed articles: ");
+    console.log("Feed metadata: \n\n", prettyjson.render(dataFor('feed', meta)), "\n");
+    console.log("Feed articles: (" + articles.length + " total)", "\n");
 
-    articles.forEach(function(article){
-      console.log("\n", prettyjson.render(dataFor('article', article)));
-    });
+    var maxArticles = args.limit || articles.length;
+
+    for (var i = 0; i < maxArticles; ++i) {
+      console.log(prettyjson.render(dataFor('article', articles[i])), "\n");
+    }
 
     process.exit(0);
   });
