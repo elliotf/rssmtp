@@ -82,6 +82,18 @@ function init(Sequelize, sequelize, name, models) {
     return cleaned;
   };
 
+  statics.setDefaults = function(input) {
+    var defaulted     = _.merge({}, input)
+      , snippetLength = 60
+    ;
+
+    if (!defaulted.title) {
+      defaulted.title = (defaulted.description || 'empty article').substring(0,snippetLength) + '(...)';
+    }
+
+    return defaulted;
+  };
+
   statics.attrStringToHash = function(attrs) {
     return _.keys(attrs).sort().map(function(k){
       return [k, attrs[k]].join(': ');

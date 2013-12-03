@@ -79,6 +79,33 @@ describe("Article model (RDBMS)", function() {
     });
   });
 
+  describe(".setDefaults", function() {
+    describe("when there is no title", function() {
+      beforeEach(function() {
+        delete this.data['title'];
+      });
+
+      describe("but there is content", function() {
+        beforeEach(function() {
+          this.data.description = 'defaulted to content that is fairly long but will be truncated to some length';
+        });
+
+        it("sets the title to be the first N char of the content", function() {
+          var defaulted = Article.setDefaults(this.data);
+
+          expect(defaulted.title).to.equal('defaulted to content that is fairly long but will be truncat(...)');
+        });
+      });
+    });
+
+    it("does not modify pre-existing values", function() {
+      var defaulted = Article.setDefaults(this.data);
+
+      expect(defaulted === this.data).to.be.false;
+      expect(defaulted).to.deep.equal(this.data);
+    });
+  });
+
   describe(".attrStringToHash", function() {
     it("concatenates attr key/value, sorted by key", function() {
       var expected = 'a: apple & c: capybara & z: zebra';
