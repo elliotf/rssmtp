@@ -87,12 +87,7 @@ function init(Sequelize, sequelize, name, models) {
       , snippetLength = 60
     ;
 
-    if (!defaulted.title) {
-      defaulted.title = (defaulted.description || 'empty article')
-        .replace(/<[^>]+>/g, '');
-      defaulted.title = _.unescape(defaulted.title)
-        .substring(0,snippetLength) + '(...)';
-    }
+    defaulted.title = defaulted.title || defaulted.link || 'untitled article';
 
     return defaulted;
   };
