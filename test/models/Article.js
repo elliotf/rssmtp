@@ -87,13 +87,13 @@ describe("Article model (RDBMS)", function() {
 
       describe("but there is content", function() {
         beforeEach(function() {
-          this.data.description = 'defaulted to content that is fairly long but will be truncated to some length';
+          this.data.description = "<p>Article's content <b>here</b> &amp; more will be truncated because it's too long";
         });
 
         it("sets the title to be the first N char of the content", function() {
           var defaulted = Article.setDefaults(this.data);
 
-          expect(defaulted.title).to.equal('defaulted to content that is fairly long but will be truncat(...)');
+          expect(defaulted.title).to.equal("Article's content here & more will be truncated because it's(...)");
         });
       });
     });

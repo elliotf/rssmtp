@@ -88,7 +88,10 @@ function init(Sequelize, sequelize, name, models) {
     ;
 
     if (!defaulted.title) {
-      defaulted.title = (defaulted.description || 'empty article').substring(0,snippetLength) + '(...)';
+      defaulted.title = (defaulted.description || 'empty article')
+        .replace(/<[^>]+>/g, '');
+      defaulted.title = _.unescape(defaulted.title)
+        .substring(0,snippetLength) + '(...)';
     }
 
     return defaulted;
