@@ -104,6 +104,18 @@ describe("Article model (RDBMS)", function() {
       expect(defaulted === this.data).to.be.false;
       expect(defaulted).to.deep.equal(this.data);
     });
+
+    it("cleans attributes before setting defaults", function() {
+      var fakeCleaned = {fake: 'cleaned'};
+
+      this.sinon.stub(Article, 'cleanAttrs', function() { return fakeCleaned});
+
+      var defaulted = Article.setDefaults(this.data);
+
+      expect(Article.cleanAttrs).to.have.been.calledWith(this.data);
+
+      expect(defaulted.fake).to.equal('cleaned');
+    });
   });
 
   describe(".attrStringToHash", function() {

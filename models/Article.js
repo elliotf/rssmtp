@@ -83,7 +83,7 @@ function init(Sequelize, sequelize, name, models) {
   };
 
   statics.setDefaults = function(input) {
-    var defaulted     = _.merge({}, input)
+    var defaulted     = this.cleanAttrs(input)
       , snippetLength = 60
     ;
 
