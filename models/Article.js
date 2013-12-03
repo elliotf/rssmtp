@@ -101,7 +101,7 @@ function init(Sequelize, sequelize, name, models) {
   };
 
   statics.setGUID = function(input, done) {
-    var attrs = this.cleanAttrs(input);
+    var attrs = this.setDefaults(input);
 
     if (attrs.hasOwnProperty('guid')) {
       process.nextTick(function(){

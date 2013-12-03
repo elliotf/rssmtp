@@ -127,15 +127,17 @@ describe("Article model (RDBMS)", function() {
 
   describe(".setGUID", function() {
     beforeEach(function() {
-      this.sinon.spy(Article, 'cleanAttrs');
       this.sinon.spy(mmh3, 'murmur128Hex');
     });
 
     it("cleans the input before hashing", function(done) {
+      this.sinon.stub(Article, 'setDefaults', function(){ return { fake: 'defaulted' };});
+
       Article.setGUID(this.data, function(err, attrs){
         expect(err).to.not.exist;
 
-        expect(Article.cleanAttrs).to.have.been.calledWith(this.data);
+        expect(Article.setDefaults).to.have.been.calledWith(this.data);
+        expect(mmh3.murmur128Hex).to.have.been.calledWith('fake: defaulted');
 
         expect(attrs).to.be.ok;
         expect(attrs).to.not.equal(this.data);
