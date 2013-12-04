@@ -7,7 +7,15 @@ var helper = require('../../support/spec_helper')
 
 describe("Poller model", function() {
   beforeEach(function() {
-    this.poller = new Poller(Feed);
+    this.fakeMailer = {
+      sendMail: this.sinon.stub()
+    };
+    this.fakeMailer.sendMail.callsArg(1)
+
+    this.poller = new Poller({
+      FeedClass: Feed
+      , mailer:  this.fakeMailer
+    });
     this.sinon.stub(this.poller, 'requeue', function(){});
   });
 
@@ -21,9 +29,7 @@ describe("Poller model", function() {
         })
         .error(done)
         .success(function(feed){
-          self.sinon.stub(feed, 'publish', function(done){
-            done();
-          });
+          self.sinon.spy(feed, 'publish');
           self.feed = feed;
 
           done();
@@ -40,6 +46,7 @@ describe("Poller model", function() {
 
         expect(Feed.getOutdated).to.have.been.called;
         expect(this.feed.publish).to.have.been.called;
+        expect(this.feed.publish).to.have.been.calledWith(this.fakeMailer);
 
         done();
       }.bind(this));

@@ -1,9 +1,10 @@
-function Poller(FeedClass) {
-  this.FeedClass = FeedClass;
+function Poller(args) {
+  this._FeedClass = args.FeedClass;
+  this._mailer    = args.mailer;
 }
 
 Poller.prototype.updateOneFeed = function(done){
-  this.FeedClass.getOutdated(function(err, feed){
+  this._FeedClass.getOutdated(function(err, feed){
     if (err) return done(err);
 
     if (!feed) {
@@ -11,7 +12,7 @@ Poller.prototype.updateOneFeed = function(done){
       return done();
     }
 
-    feed.publish(function(err){
+    feed.publish(this._mailer, function(err){
       this.requeue(0);
 
       done(err, feed);
