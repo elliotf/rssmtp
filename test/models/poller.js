@@ -64,7 +64,7 @@ describe("Poller model", function() {
         this.poller.updateOneFeed(function(err, feed){
           expect(err).to.not.exist;
 
-          expect(this.poller.requeue).to.have.been.calledWith(30 * 1000);
+          expect(this.poller.requeue.getCall(0).args[0]).to.be.above(1000);
 
           done();
         }.bind(this));
