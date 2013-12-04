@@ -1,8 +1,8 @@
 var expect     = require('chai').expect
-  , parseFeed  = require('../../lib/parsefeed')
+  , FeedParser  = require('../../lib/feedparser')
 ;
 
-describe("parseFeed", function() {
+describe("FeedParser", function() {
   beforeEach(function() {
     this.feedStr = [
       '<?xml version="1.0" encoding="utf-8"?>'
@@ -25,7 +25,7 @@ describe("parseFeed", function() {
   });
 
   it("returns metadata in feed XML", function(done) {
-    parseFeed(this.feedStr, function(err, meta, articles){
+    FeedParser.parseString(this.feedStr, function(err, meta, articles){
       expect(err).to.not.exist;
 
       expect(meta.title).to.equal('feed title');
@@ -35,7 +35,7 @@ describe("parseFeed", function() {
   });
 
   it("returns articles in feed XML", function(done) {
-    parseFeed(this.feedStr, function(err, meta, articles){
+    FeedParser.parseString(this.feedStr, function(err, meta, articles){
       expect(err).to.not.exist;
 
       expect(articles).to.be.a('Array');
@@ -47,7 +47,7 @@ describe("parseFeed", function() {
 
   describe("when given garbage", function() {
     it("returns an error", function(done) {
-      parseFeed('this is not a valid feed string', function(err, meta, articles){
+      FeedParser.parseString('this is not a valid feed string', function(err, meta, articles){
         expect(err).to.exist;
 
         expect(meta).to.not.exist;
