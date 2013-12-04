@@ -15,7 +15,10 @@ function start(done) {
     models._sequelize.sync(syncArgs).done(function(err){
       if (err) throw err;
 
-      var poller = new models.poller(models.Feed);
+      var poller = new models.poller({
+        FeedClass: models.Feed
+        , mailer:  models.mailer
+      });
       poller.start();
 
       console.log("POLLING FEEDS");

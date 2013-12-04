@@ -17,6 +17,8 @@ describe("Server", function() {
       return fakeServer;
     });
 
+    this.sinon.spy(models, 'mailer');
+
     this.sinon.stub(Poller.prototype, 'start', function(){});
     this.sinon.spy(models, 'poller');
   });
@@ -28,7 +30,10 @@ describe("Server", function() {
       expect(http.createServer).to.have.been.calledWith(app);
       expect(this.fakeServer.listen).to.have.been.calledWith(3000, '127.0.0.1');
 
-      expect(models.poller).to.have.been.calledWith(models.Feed);
+      expect(models.poller).to.have.been.calledWith({
+        FeedClass: models.Feed
+        , mailer:  models.mailer
+      });
       expect(Poller.prototype.start).to.have.been.called;
 
       done();
