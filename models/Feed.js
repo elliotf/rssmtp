@@ -1,5 +1,5 @@
 var request    = require('request')
-  , feedparser = require('feedparser')
+  , feedparser = require('../lib/feedparser')
   , moment     = require('moment')
   , async      = require('async')
   , _          = require('lodash')

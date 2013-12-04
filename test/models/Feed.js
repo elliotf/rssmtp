@@ -7,7 +7,7 @@ var helper     = require('../../support/spec_helper')
   , async      = require('async')
   , _          = require('lodash')
   , request    = require('request')
-  , feedparser = require('feedparser')
+  , feedparser = require('../../lib/feedparser')
   , moment     = require('moment')
   , Mailer     = models.mailer
 ;
