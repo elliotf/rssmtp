@@ -17,7 +17,7 @@ function start(done) {
 
       var poller = new models.poller({
         FeedClass: models.Feed
-        , mailer:  models.mailer
+        , mailer:  new models.mailer()
       });
       poller.start();
 
