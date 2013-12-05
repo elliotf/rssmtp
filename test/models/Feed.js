@@ -9,7 +9,6 @@ var helper     = require('../../support/spec_helper')
   , request    = require('request')
   , feedparser = require('../../lib/feedparser')
   , moment     = require('moment')
-  , Mailer     = models.mailer
 ;
 
 describe("Feed model (RDBMS)", function() {
@@ -354,13 +353,15 @@ describe("Feed model (RDBMS)", function() {
         beforeEach(function(done) {
           this.user.addFeed(this.feed).done(done);
 
-          this.sinon.stub(Mailer.prototype, 'sendMail', function(emailData, done){
-            done();
-          });
+          this.mailer = {
+            sendMail: this.sinon.stub()
+          };
+
+          this.mailer.sendMail.callsArg(1);
         });
 
         it("sends new articles to subscribed users", function(done) {
-          this.feed.publish(function(err, feed, articles){
+          this.feed.publish(this.mailer, function(err, feed, articles){
             expect(err).to.not.exist;
             expect(this.feed.pull).to.have.been.called;
 
@@ -368,9 +369,9 @@ describe("Feed model (RDBMS)", function() {
 
             expect(articles).to.be.a('array');
             expect(articles).to.have.length(2);
-            expect(Mailer.prototype.sendMail).to.have.been.calledTwice;
-            expect(Mailer.prototype.sendMail).to.have.been.calledWith(articles[0].asEmailOptions(this.feed, ['default_user@example.com']));
-            expect(Mailer.prototype.sendMail).to.have.been.calledWith(articles[1].asEmailOptions(this.feed, ['default_user@example.com']));
+            expect(this.mailer.sendMail).to.have.been.calledTwice;
+            expect(this.mailer.sendMail).to.have.been.calledWith(articles[0].asEmailOptions(this.feed, ['default_user@example.com']));
+            expect(this.mailer.sendMail).to.have.been.calledWith(articles[1].asEmailOptions(this.feed, ['default_user@example.com']));
 
             done();
           }.bind(this));
@@ -379,7 +380,7 @@ describe("Feed model (RDBMS)", function() {
 
       describe("when no users are subscribed", function() {
         it("does not pull", function(done) {
-          this.feed.publish(function(err){
+          this.feed.publish(this.mailer, function(err){
             expect(err).to.not.exist;
             expect(this.feed.pull).to.not.have.been.called;
 
@@ -393,7 +394,7 @@ describe("Feed model (RDBMS)", function() {
 
           this.sinon.spy(feed, 'touch');
 
-          feed.publish(function(err){
+          feed.publish(this.mailer, function(err){
             expect(err).to.not.exist;
 
             expect(feed.touch).to.have.been.called;

@@ -102,7 +102,7 @@ function init(Sequelize, sequelize, name, models) {
     });
   };
 
-  methods.publish = function(done){
+  methods.publish = function(mailer, done){
     var self = this;
 
     this
@@ -117,7 +117,6 @@ function init(Sequelize, sequelize, name, models) {
           if (err) return done(err);
 
           var todo   = []
-            , mailer = new models.mailer()
           ;
 
           newArticles.forEach(function(article){
