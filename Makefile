@@ -4,7 +4,7 @@ coverage:
 					 GOOGLE_OAUTH_SECRET="test" \
 					 GOOGLE_OAUTH_ID="test" \
 					 GOOGLE_OAUTH_FQDN="test" \
-					 APP_FQDN="rssmtp.firetaco.com" \
+					 APP_FQDN="testing-fqdn.rssmtp.example.com" \
 					 APP_SECRET="test" \
 					 APP_SMTP_HOST="smtp.example.com" \
 					 APP_SMTP_PORT="465" \
@@ -29,7 +29,7 @@ test:
 					 GOOGLE_OAUTH_SECRET="test" \
 					 GOOGLE_OAUTH_ID="test" \
 					 GOOGLE_OAUTH_FQDN="test" \
-					 APP_FQDN="rssmtp.firetaco.com" \
+					 APP_FQDN="testing-fqdn.rssmtp.example.com" \
 					 APP_SECRET="test" \
 					 APP_SMTP_HOST="smtp.example.com" \
 					 APP_SMTP_PORT="465" \
