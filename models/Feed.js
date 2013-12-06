@@ -138,6 +138,15 @@ function init(Sequelize, sequelize, name, models) {
     this.save().done(done);
   };
 
+  methods.asRequestOptions = function() {
+    return {
+      url: this.url
+      , headers: {
+        'Last-Modified': moment(this.last_fetched).format("ddd, DD MMM YYYY HH:mm:ss ZZ")
+      }
+    }
+  };
+
   var Klass = sequelize.define(
     name
     , attrs

@@ -427,6 +427,19 @@ describe("Feed model (RDBMS)", function() {
         });
       });
     });
+
+    describe("#asRequestOptions", function() {
+      it("returns a `request` ready options object", function() {
+        var options = this.feed.asRequestOptions();
+
+        expect(options).to.have.keys(['url', 'headers']);
+        expect(options.url).to.equal('http://example.com/feed_methods');
+        expect(options.headers).to.have.keys(['Last-Modified']);
+
+        // This assertion is stupid.  The reason for this stupidity is due to timezone differences.
+        expect(options.headers['Last-Modified']).to.match(/^\w{3}, \d{2} \w{3} \d{4} \d\d:\d\d:\d\d [-+]?\d{4}$/);
+      });
+    });
   });
 });
 
