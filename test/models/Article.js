@@ -238,7 +238,7 @@ describe("Article model (RDBMS)", function() {
           "<h1><a href=\"http://example.com/an_article\">article title here: with &lt;brackets &amp; such&gt;</a></h1>",
           "<p>article content here, with <brackets> and &'s</p>",
           "<br><br>",
-          "<a href=\"http://rssmtp.firetaco.com/feed/", this.feed.id, "\">unsubscribe</a>"
+          "<a href=\"http://testing-fqdn.rssmtp.example.com/feed/", this.feed.id, "\">unsubscribe</a>"
         ].join('');
 
         expect(emailData.bcc).to.have.length(2);
@@ -251,9 +251,9 @@ describe("Article model (RDBMS)", function() {
           , subject: "article title here: with <brackets & such>"
           , date:  this.data.date
           , headers: {
-            "List-ID": this.feed.id + '.rssmtp.firetaco.com'
-            , "List-Unsubscribe": 'http://rssmtp.firetaco.com/feed/' + this.feed.id
-            , "List-Subscribe": 'http://rssmtp.firetaco.com/feed/' + this.feed.id
+            "List-ID": this.feed.id + '.testing-fqdn.rssmtp.example.com'
+            , "List-Unsubscribe": 'http://testing-fqdn.rssmtp.example.com/feed/' + this.feed.id
+            , "List-Subscribe": 'http://testing-fqdn.rssmtp.example.com/feed/' + this.feed.id
           }
           , html: expectedHTML
           , generateTextFromHTML: true
