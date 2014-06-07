@@ -42,12 +42,6 @@ testwatch:
 	DB_TOKEN="testwatch" ./node_modules/.bin/chicken -c 'clear; time make test' .
 
 install:
-	# for node.js
-	sudo apt-get -y install python-software-properties
-	sudo add-apt-repository -y ppa:chris-lea/node.js
-	# install packages
-	sudo apt-get update
-	sudo apt-get install -y build-essential nodejs
 	npm install
 
 .PHONY: cov coverage dev supper test testwatch
