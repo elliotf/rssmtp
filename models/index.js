@@ -6,7 +6,7 @@ var Sequelize = require('sequelize')
   , _         = require('lodash')
 ;
 
-var options = _.merge({}, config, {
+var options = _.merge({}, config.database, {
   define: {
     underscored: true
     , freezeTableName: true
