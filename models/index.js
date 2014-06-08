@@ -2,7 +2,7 @@ var Sequelize = require('sequelize')
   , path      = require('path')
   , fs        = require('fs')
   , env       = process.env.NODE_ENV || 'development'
-  , config    = require(__dirname + '/../config/config.json')[env]
+  , config    = require('config')
   , _         = require('lodash')
 ;
 

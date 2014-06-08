@@ -1,4 +1,3 @@
 node_modules
 coverage.html
 *.sqlite
-config/config.json
