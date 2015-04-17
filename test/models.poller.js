@@ -1,7 +1,7 @@
-var helper = require('../../support/spec_helper')
+var helper = require('../support/spec_helper')
   , expect = require('chai').expect
   , Poller = helper.model('poller')
-  , models = require('../../models')
+  , models = require('../models')
   , Feed   = models.Feed
 ;
 

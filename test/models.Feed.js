@@ -1,5 +1,5 @@
-var helper     = require('../../support/spec_helper')
-  , models     = require('../../models')
+var helper     = require('../support/spec_helper')
+  , models     = require('../models')
   , User       = models.User
   , Feed       = models.Feed
   , Article    = models.Article
@@ -7,7 +7,7 @@ var helper     = require('../../support/spec_helper')
   , async      = require('async')
   , _          = require('lodash')
   , request    = require('request')
-  , feedparser = require('../../lib/feedparser')
+  , feedparser = require('../lib/feedparser')
   , moment     = require('moment')
 ;
 

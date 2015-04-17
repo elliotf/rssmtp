@@ -1,5 +1,5 @@
-var helper     = require('../../support/spec_helper')
-  , models     = require('../../models')
+var helper     = require('../support/spec_helper')
+  , models     = require('../models')
   , Mailer     = helper.model('mailer')
   , expect     = require('chai').expect
   , _          = require('lodash')
