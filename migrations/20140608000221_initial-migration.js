@@ -18,6 +18,8 @@ exports.up = function(knex, Promise) {
     table.string('url',2048).notNullable();
     table.string('name',2048).notNullable();
 
+    table.datetime('last_fetched').notNullable();
+
     table.timestamps();
   }));
 
@@ -27,11 +29,20 @@ exports.up = function(knex, Promise) {
     table.integer('user_id').notNullable().unsigned();
     table.integer('feed_id').notNullable().unsigned();
 
+    table.index(['user_id','feed_id'], 'ix_user_id_feed_id');
+    table.index(['feed_id','user_id'], 'ix_feed_id_user_id');
+
     table.timestamps();
   }));
 
   todo.push(knex.schema.createTable('articles', function(table){
     table.increments('id').primary().unsigned();
+
+    table.datetime('date').notNullable();
+    table.string('guid').notNullable();
+    table.string('link',2048);
+    table.string('title',2048).notNullable().defaultTo('untitled article');
+    table.text('description').defaultTo('this article does not have content');
 
     table.integer('feed_id').notNullable().unsigned();
 
@@ -43,35 +54,3 @@ exports.up = function(knex, Promise) {
 
 exports.down = function(knex, Promise) {
 };
-
-/*
-
-CREATE TABLE `feeds` (
-  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-  `url` VARCHAR(2048),
-  `name` VARCHAR(2048) NOT NULL DEFAULT 'unnamed feed',
-  `last_fetched` DATETIME NOT NULL,
-  `created_at` DATETIME NOT NULL,
-  `updated_at` DATETIME NOT NULL
-);
-
-CREATE TABLE `articles` (
-  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-  `link` VARCHAR(2048),
-  `title` VARCHAR(2048) NOT NULL DEFAULT 'untitled article',
-  `description` TEXT NOT NULL DEFAULT 'this article does not have content',
-  `date` DATETIME NOT NULL,
-  `guid` VARCHAR(255) NOT NULL,
-  `feed_id` INTEGER NOT NULL REFERENCES `feeds` (`id`),
-  `created_at` DATETIME NOT NULL,
-  `updated_at` DATETIME NOT NULL
-);
-
-CREATE TABLE `feedsusers` (
-  `created_at` DATETIME NOT NULL,
-  `updated_at` DATETIME NOT NULL,
-  `feed_id` INTEGER NOT NULL,
-  `user_id` INTEGER NOT NULL,
-  PRIMARY KEY (`feed_id`, `user_id`)
-);
-*/

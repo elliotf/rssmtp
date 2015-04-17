@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports.development = require('config');
+module.exports.development = require('config').database;

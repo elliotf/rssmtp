@@ -1,16 +1,20 @@
-var app     = require('../app')
-  , request = require('supertest')
-  , chai    = require('chai')
-  , cheerio = require('cheerio')
-  , async   = require('async')
-  , _       = require('lodash')
-  , models  = require('../models')
-;
+var _       = require('lodash');
+var app     = require('../app');
+var async   = require('async');
+var chai    = require('chai');
+var cheerio = require('cheerio');
+var config  = require('config');
+var db      = require('../db');
+var models  = require('../models');
+var Promise = require('../lib/promise');
+var request = require('supertest');
+var expect  = chai.expect;
 
 require('mocha-sinon');
 
 // chai setup
 chai.Assertion.includeStack = true;
+//chai.use(require('dirty-chai'));
 chai.use(require('chai-fuzzy'));
 chai.use(require('sinon-chai'));
 
@@ -51,10 +55,35 @@ exports.model = function(model) {
   return require('../models/' + model);
 };
 
-before(function(done){
-  models._sequelize.sync({force: true}).done(done);
+before(function(done) {
+  this.timeout(30 * 1000);
+
+  db.knex.migrate
+    .latest(config.database)
+    .exec(function(err) {
+      expect(err).to.not.exist;
+
+      setTimeout(done, 20);
+    });
 });
 
+beforeEach(function(done) {
+  var tables_to_clear = ['articles', 'feeds', 'feedsusers', 'users'];
+
+  Promise
+    .map(tables_to_clear, function(table_name) {
+      return db
+        .knex(table_name)
+        .del();
+    })
+    .exec(function(err) {
+      expect(err).to.not.exist;
+
+      done();
+    });
+});
+
+/*
 beforeEach(function(done) {
   var todo = [];
 
@@ -68,6 +97,7 @@ beforeEach(function(done) {
 
   async.parallel(todo, done);
 });
+*/
 
 beforeEach(function(done) {
   var self = this

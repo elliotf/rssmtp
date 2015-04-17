@@ -14,7 +14,7 @@ var options = _.merge({}, config.database, {
   , logging: false
 });
 
-var sequelize = new Sequelize(config.database, config.username, config.password, options);
+var sequelize = new Sequelize(config.database.database, config.database.username, config.database.password, options);
 
 var files = fs.readdirSync(__dirname)
   .filter(function(filename){
