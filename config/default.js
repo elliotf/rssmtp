@@ -4,13 +4,14 @@ module.exports = {
     dialect: "sqlite",
     username: "root",
     password: null,
-    database: "database_test",
+    database: "db.sqlite",
     host:     "127.0.0.1",
+    storage:  __dirname + "/../dev-db.sqlite",
 
     // for bookshelf
     client: 'sqlite',
     connection: {
-      filename: ':memory:'
+      filename: __dirname + "/../dev-db.sqlite",
     }
   }
 };
