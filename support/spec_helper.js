@@ -107,7 +107,9 @@ beforeEach(function(done) {
   todo.push(function(done){
     models.User
       .create({
-        email: 'default_user@example.com'
+        email:          'default_user@example.com',
+        oauth_provider: 'fake_oauth_provider',
+        oauth_id:       'default user'
       })
       .error(done)
       .success(function(user){
@@ -119,7 +121,9 @@ beforeEach(function(done) {
   todo.push(function(done){
     models.User
       .create({
-        email: 'other_user@example.com'
+        email:          'other_user@example.com',
+        oauth_provider: 'fake_oauth_provider',
+        oauth_id:       'other user'
       })
       .error(done)
       .success(function(user){

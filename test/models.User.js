@@ -15,21 +15,10 @@ describe("User model (RDBMS)", function() {
   });
 
   describe("findOrCreateFromOAUTH", function() {
-    beforeEach(function(done) {
-      User.create({
-        email: 'bob@example.com'
-        , oauth_provider: 'oauth_provider_here'
-        , oauth_id: 'oauth_id_here'
-      })
-      .error(done)
-      .success(function(model){
-        this.user = model;
-        done();
-      }.bind(this));
-
+    beforeEach(function() {
       this.dummyProfileData = {
-        provider: 'dummy_oauth_provider'
-        , id: '3.14159'
+        provider: 'oauth_provider_here'
+        , id: 'oauth_id_here'
         , displayName: 'Bob Foster'
         , name: {
           givenName: 'Bob'
@@ -48,15 +37,26 @@ describe("User model (RDBMS)", function() {
 
           expect(created).to.be.true;
           expect(user.email).to.equal("bob.foster@example.com");
+          expect(user.oauth_id).to.equal('oauth_id_here');
+          expect(user.oauth_provider).to.equal('oauth_provider_here');
+
           done();
         });
       });
     });
 
     describe("when the specified user EXISTS", function() {
-      beforeEach(function() {
-        this.dummyProfileData['provider'] = 'oauth_provider_here';
-        this.dummyProfileData['id'] = 'oauth_id_here';
+      beforeEach(function(done) {
+        User.create({
+          email:            'bob@example.com'
+          , oauth_provider: this.dummyProfileData.provider
+          , oauth_id:       this.dummyProfileData.id
+        })
+        .error(done)
+        .success(function(model){
+          this.user = model;
+          done();
+        }.bind(this));
       });
 
       it("returns the existing user", function(done) {
