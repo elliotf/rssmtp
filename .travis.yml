@@ -1,3 +1,7 @@
 language: node_js
 node_js:
   - "0.10"
+before_script:
+  - mysql -e 'create database rssmtp;'
+  - ./node_modules/.bin/knex migrate:latest
+env: NODE_ENV=ci
