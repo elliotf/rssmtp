@@ -83,22 +83,6 @@ beforeEach(function(done) {
     });
 });
 
-/*
-beforeEach(function(done) {
-  var todo = [];
-
-  _.forEach(models, function(model, name){
-    if (model && 'function' === typeof model['destroy']) {
-      todo.push(function(done){
-        model.destroy().done(done);
-      });
-    }
-  });
-
-  async.parallel(todo, done);
-});
-*/
-
 beforeEach(function(done) {
   var self = this
     , todo = []

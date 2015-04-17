@@ -1,11 +1,8 @@
 'use strict';
 
-var helper = require('../support/spec_helper')
-  , models = require('../bookmodels')
-  , expect = require('chai').expect
-  , async  = require('async')
-  , _      = require('lodash')
-;
+var expect = require('chai').expect;
+var models = require('../bookmodels');
+var helper = require('../support/spec_helper');
 
 describe("models.User (bookshelf)", function() {
   var minimum_attrs;
@@ -103,4 +100,3 @@ describe("models.User (bookshelf)", function() {
     });
   });
 });
-
