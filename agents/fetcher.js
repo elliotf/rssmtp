@@ -1,3 +1,7 @@
+'use strict';
+
+var request = require('request');
+
 function Fetcher() {
 }
 
@@ -10,7 +14,15 @@ Fetcher.fetchFeed = function fetchFeed(feed, done) {
         return done(err);
       }
 
-      done();
+      var url = feed.get('url');
+
+      request.get(url, function(err, response, body) {
+        if (err) {
+          return done(err);
+        }
+
+        done();
+      });
     });
 };
 

@@ -1,3 +1,5 @@
+'use strict';
+
 var _          = require('lodash');
 var request    = require('request');
 var expect     = require('chai').expect;
@@ -10,6 +12,7 @@ describe("agents.Fetcher", function() {
   var fetcher;
   var feed_title;
   var fake_http_err;
+  var fake_http_response;
   var fake_http_body;
 
   beforeEach(function() {
@@ -27,9 +30,7 @@ describe("agents.Fetcher", function() {
     ].join('');
 
     this.sinon.stub(request, 'get')
-      .yields(function(args, done){
-        done(fakeHttpErr, fakeHttpResponse, fakeHttpBody);
-      });
+      .yields(fake_http_err, fake_http_response, fake_http_body);
 
     this.sinon.spy(feedparser, 'parseString');
   });
@@ -75,6 +76,17 @@ describe("agents.Fetcher", function() {
 
           done();
         });
+      });
+    });
+
+    it('fetches the feed\'s url', function(done) {
+      agents.Fetcher.fetchFeed(feed, function(err, updated, articles) {
+        expect(err).to.not.exist;
+
+        expect(request.get).to.have.been.calledOnce;
+        expect(request.get).to.have.been.calledWith('http://example.com/rss.xml');
+
+        done();
       });
     });
 
