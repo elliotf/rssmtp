@@ -16,8 +16,6 @@ describe("agents.Fetcher", function() {
   var fake_http_body;
 
   beforeEach(function() {
-    fetcher = new agents.Fetcher();
-
     feed_title = 'a title';
 
     fake_http_err      = null; //{fake: 'HttpErr'};
@@ -33,9 +31,11 @@ describe("agents.Fetcher", function() {
       .yields(fake_http_err, fake_http_response, fake_http_body);
 
     this.sinon.spy(feedparser, 'parseString');
+
+    fetcher = new agents.Fetcher(request.get);
   });
 
-  describe('.fetchFeed', function() {
+  describe('#fetchFeed', function() {
     var feed;
 
     beforeEach(function(done) {
@@ -61,7 +61,7 @@ describe("agents.Fetcher", function() {
       var now = new Date();
       now.setMilliseconds(0);
       var clock = this.sinon.useFakeTimers(now.valueOf());
-      agents.Fetcher.fetchFeed(feed, function(err, updated, articles) {
+      fetcher.fetchFeed(feed, function(err, updated, articles) {
         clock.restore();
         expect(err).to.not.exist;
 
@@ -80,7 +80,7 @@ describe("agents.Fetcher", function() {
     });
 
     it('fetches the feed\'s url', function(done) {
-      agents.Fetcher.fetchFeed(feed, function(err, updated, articles) {
+      fetcher.fetchFeed(feed, function(err, updated, articles) {
         expect(err).to.not.exist;
 
         expect(request.get).to.have.been.calledOnce;
