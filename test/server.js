@@ -1,11 +1,10 @@
-var helper = require('../support/spec_helper')
-  , http   = require('http')
-  , models = require('../models')
-  , Poller = models.poller
-  , app    = require('../app')
-  , expect = require('chai').expect
-  , server = require('../server')
-;
+var helper = require('../support/spec_helper');
+var http   = require('http');
+var models = require('../models');
+var agents = require('../agents');
+var app    = require('../app');
+var expect = require('chai').expect;
+var server = require('../server');
 
 describe("Server", function() {
   beforeEach(function() {
@@ -22,8 +21,8 @@ describe("Server", function() {
       return fakeMailer;
     });
 
-    this.sinon.stub(Poller.prototype, 'start', function(){});
-    this.sinon.spy(models, 'poller');
+    this.sinon.stub(agents.Poller.prototype, 'start', function(){});
+    this.sinon.spy(agents, 'Poller');
   });
 
   it("starts up services", function(done) {
@@ -33,11 +32,11 @@ describe("Server", function() {
       expect(http.createServer).to.have.been.calledWith(app);
       expect(this.fakeServer.listen).to.have.been.calledWith(3000, '127.0.0.1');
 
-      expect(models.poller).to.have.been.calledWith({
+      expect(agents.Poller).to.have.been.calledWith({
         FeedClass: models.Feed
         , mailer:  this.fakeMailer
       });
-      expect(Poller.prototype.start).to.have.been.called;
+      expect(agents.Poller.prototype.start).to.have.been.called;
 
       done();
     }.bind(this));

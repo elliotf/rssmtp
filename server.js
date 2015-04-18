@@ -1,7 +1,7 @@
-var http = require('http')
-  , app  = require('./app')
-  , models = require('./models')
-;
+var http = require('http');
+var app  = require('./app');
+var models = require('./models');
+var agents = require('./agents');
 
 function start(done) {
   http.createServer(app).listen(app.get('port'), app.get('bindip'), function(){
@@ -15,7 +15,7 @@ function start(done) {
     models._sequelize.sync(syncArgs).done(function(err){
       if (err) throw err;
 
-      var poller = new models.poller({
+      var poller = new agents.Poller({
         FeedClass: models.Feed
         , mailer:  new models.mailer()
       });

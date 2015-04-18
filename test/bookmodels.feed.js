@@ -4,7 +4,7 @@ var expect = require('chai').expect;
 var models = require('../bookmodels');
 var helper = require('../support/spec_helper');
 
-describe.only("models.Feed (bookshelf)", function() {
+describe("models.Feed (bookshelf)", function() {
   var minimum_attrs;
 
   beforeEach(function() {
