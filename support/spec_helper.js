@@ -13,7 +13,7 @@ var expect  = chai.expect;
 require('mocha-sinon');
 
 // chai setup
-chai.Assertion.includeStack = true;
+chai.config.includeStack = true;
 //chai.use(require('dirty-chai'));
 chai.use(require('chai-fuzzy'));
 chai.use(require('sinon-chai'));
