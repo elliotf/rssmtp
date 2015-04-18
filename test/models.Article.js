@@ -1,14 +1,12 @@
-var helper     = require('../support/spec_helper')
-  , models     = require('../models')
-  , User       = models.User
-  , Feed       = models.Feed
-  , Article    = models.Article
-  , expect     = require('chai').expect
-  , async      = require('async')
-  , _          = require('lodash')
-  , mmh3       = require('murmurhash3')
-  , nodemailer = require('nodemailer')
-;
+var helper     = require('../support/spec_helper');
+var models     = require('../models');
+var User       = models.User;
+var Feed       = models.Feed;
+var Article    = models.Article;
+var expect     = require('chai').expect;
+var async      = require('async');
+var _          = require('lodash');
+var mmh3       = require('murmurhash3');
 
 describe("Article model (RDBMS)", function() {
   var data;

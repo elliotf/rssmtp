@@ -1,7 +1,5 @@
-var mmh3       = require('murmurhash3')
-  , _          = require('lodash')
-  , nodemailer = require('nodemailer')
-;
+var mmh3       = require('murmurhash3');
+var _          = require('lodash');
 
 function init(Sequelize, sequelize, name, models) {
   var statics = {}

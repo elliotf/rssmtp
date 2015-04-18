@@ -1,15 +1,14 @@
-var helper     = require('../support/spec_helper')
-  , models     = require('../models')
-  , User       = models.User
-  , Feed       = models.Feed
-  , Article    = models.Article
-  , expect     = require('chai').expect
-  , async      = require('async')
-  , _          = require('lodash')
-  , request    = require('request')
-  , feedparser = require('../lib/feedparser')
-  , moment     = require('moment')
-;
+var helper     = require('../support/spec_helper');
+var models     = require('../models');
+var User       = models.User;
+var Feed       = models.Feed;
+var Article    = models.Article;
+var expect     = require('chai').expect;
+var async      = require('async');
+var _          = require('lodash');
+var request    = require('request');
+var feedparser = require('../lib/feedparser');
+var moment     = require('moment');
 
 describe("Feed model (RDBMS)", function() {
   beforeEach(function() {
