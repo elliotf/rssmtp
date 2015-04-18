@@ -16,8 +16,8 @@ describe("Server", function() {
       return fakeServer;
     });
 
-    var fakeMailer = this.fakeMailer = new models.mailer();
-    this.sinon.stub(models, 'mailer', function() {
+    var fakeMailer = this.fakeMailer = new agents.Mailer();
+    this.sinon.stub(agents, 'Mailer', function() {
       return fakeMailer;
     });
 

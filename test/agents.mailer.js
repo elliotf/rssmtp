@@ -1,12 +1,10 @@
-var helper     = require('../support/spec_helper')
-  , models     = require('../models')
-  , Mailer     = helper.model('mailer')
-  , expect     = require('chai').expect
-  , _          = require('lodash')
-  , nodemailer = require('nodemailer')
-;
+var helper     = require('../support/spec_helper');
+var agents     = require('../agents');
+var expect     = require('chai').expect;
+var _          = require('lodash');
+var nodemailer = require('nodemailer');
 
-describe("Mailer model", function() {
+describe("agents.Mailer", function() {
   beforeEach(function() {
     var mockedMailer = this.mockedMailer = nodemailer.createTransport();
 
@@ -16,7 +14,7 @@ describe("Mailer model", function() {
   });
 
   it("is a wrapper around nodemailer", function() {
-    var mailer = new Mailer();
+    var mailer = new agents.Mailer();
 
     expect(nodemailer.createTransport).to.have.been.calledWith("SMTP", {
       host: "smtp.example.com"
@@ -31,7 +29,7 @@ describe("Mailer model", function() {
 
   describe("#sendMail", function() {
     beforeEach(function() {
-      this.mailer = new Mailer();
+      this.mailer = new agents.Mailer();
     });
 
     it("sends the given email via nodemailer", function(done) {

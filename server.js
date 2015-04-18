@@ -17,7 +17,7 @@ function start(done) {
 
       var poller = new agents.Poller({
         FeedClass: models.Feed
-        , mailer:  new models.mailer()
+        , mailer:  new agents.Mailer()
       });
       poller.start();
 
