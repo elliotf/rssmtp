@@ -3,7 +3,14 @@
 var db = require('../db');
 
 var Article = db.BaseModel.extend({
-  tableName: 'articles'
+  tableName: 'articles',
+  defaults:  function defaults() {
+    return {
+      link:        null,
+      description: null,
+      title:       'untitled article'
+    }
+  }
 }, {
 });
 

@@ -1,8 +1,21 @@
+var _         = require('lodash');
 var Bookshelf = require('bookshelf');
 var config    = require('config');
 var Knex      = require('knex');
 
-var knex      = Knex(config.database);
+var db_config = _.cloneDeep(config.database);
+if (db_config.client.match(/^mysql/)) {
+  // make mysql pay attention to schema and not "just go with it"
+  db_config.pool = {
+    afterCreate: function(connection, callback) {
+      connection.query("SET sql_MODE='STRICT_ALL_TABLES';", function(err) {
+        callback(err, connection);
+      });
+    }
+  };
+}
+
+var knex      = Knex(db_config);
 var bookshelf = Bookshelf.initialize(knex);
 
 bookshelf.plugin('registry');
