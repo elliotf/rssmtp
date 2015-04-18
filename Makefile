@@ -1,3 +1,6 @@
+clean:
+	rm -rf node_modules
+
 coverage:
 	NODE_ENV=test \
 					 DB_TOKEN="coverage" \
@@ -44,4 +47,4 @@ testwatch:
 install:
 	npm install
 
-.PHONY: cov coverage dev supper test testwatch
+.PHONY: clean cov coverage dev supper test testwatch
