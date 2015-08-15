@@ -6,15 +6,20 @@ var helper = require('../support/spec_helper');
 
 describe("models.Feed (bookshelf)", function() {
   var minimum_attrs;
+  var now;
 
   beforeEach(function() {
+    now = new Date();
+    now.setMilliseconds(0);
+
     minimum_attrs = {
+      url:          'http://example.com/rss.xml',
+      name:         'fake feed name',
+      last_fetched: now
     };
   });
 
   it('can be saved', function(done) {
-    var now = new Date();
-    now.setMilliseconds(0);
     var clock = this.sinon.useFakeTimers(now.valueOf());
     models.Feed
       .forge(minimum_attrs)
@@ -29,8 +34,11 @@ describe("models.Feed (bookshelf)", function() {
         delete actual.id;
 
         expect(actual).to.deep.equal({
-          created_at: now,
-          updated_at: now,
+          url:          'http://example.com/rss.xml',
+          name:         'fake feed name',
+          last_fetched: now,
+          created_at:   now,
+          updated_at:   now,
         });
 
         done();

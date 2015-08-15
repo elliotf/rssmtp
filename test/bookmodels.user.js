@@ -9,6 +9,9 @@ describe("models.User (bookshelf)", function() {
 
   beforeEach(function() {
     minimum_attrs = {
+      email:          'fake@example.com',
+      oauth_provider: 'fake oauth_provider',
+      oauth_id:       'fake oauth_id'
     };
   });
 
@@ -29,8 +32,11 @@ describe("models.User (bookshelf)", function() {
         delete actual.id;
 
         expect(actual).to.deep.equal({
-          created_at: now,
-          updated_at: now,
+          email:          'fake@example.com',
+          oauth_provider: 'fake oauth_provider',
+          oauth_id:       'fake oauth_id',
+          created_at:     now,
+          updated_at:     now,
         });
 
         done();

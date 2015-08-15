@@ -1,11 +1,12 @@
 'use strict';
 
-var request = require('request');
-
-function Fetcher() {
+function Fetcher(getter) {
+  this._getter = getter;
 }
 
-Fetcher.fetchFeed = function fetchFeed(feed, done) {
+Fetcher.prototype.fetchFeed = function fetchFeed(feed, done) {
+  var getter = this._getter;
+
   feed.set('last_fetched', new Date());
   feed
     .save()
@@ -16,7 +17,7 @@ Fetcher.fetchFeed = function fetchFeed(feed, done) {
 
       var url = feed.get('url');
 
-      request.get(url, function(err, response, body) {
+      getter(url, function(err, response, body) {
         if (err) {
           return done(err);
         }
