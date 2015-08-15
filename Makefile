@@ -36,7 +36,7 @@ test:
 					 APP_SMTP_SSL="true" \
 					 APP_SMTP_FROM="no-reply@example.com" \
 					 APP_SMTP_PASS="dummy password" \
-					 ./node_modules/.bin/mocha --recursive test -R list
+					 ./node_modules/.bin/mocha --recursive test -R dot
 
 testwatch:
 	DB_TOKEN="testwatch" ./node_modules/.bin/chicken -c 'clear; time make test' .
