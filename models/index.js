@@ -2,11 +2,11 @@ var Sequelize = require('sequelize')
   , path      = require('path')
   , fs        = require('fs')
   , env       = process.env.NODE_ENV || 'development'
-  , config    = require(__dirname + '/../config/config.json')[env]
+  , config    = require('config')
   , _         = require('lodash')
 ;
 
-var options = _.merge({}, config, {
+var options = _.merge({}, config.database, {
   define: {
     underscored: true
     , freezeTableName: true
@@ -14,7 +14,7 @@ var options = _.merge({}, config, {
   , logging: false
 });
 
-var sequelize = new Sequelize(config.database, config.username, config.password, options);
+var sequelize = new Sequelize(config.database.database, config.database.username, config.database.password, options);
 
 var files = fs.readdirSync(__dirname)
   .filter(function(filename){

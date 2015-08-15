@@ -1,7 +1,5 @@
-var mmh3       = require('murmurhash3')
-  , _          = require('lodash')
-  , nodemailer = require('nodemailer')
-;
+var mmh3       = require('murmurhash3');
+var _          = require('lodash');
 
 function init(Sequelize, sequelize, name, models) {
   var statics = {}
@@ -75,8 +73,10 @@ function init(Sequelize, sequelize, name, models) {
     var cleaned = _.pick(input, _.keys(attrs));
     delete cleaned['id'];
 
-    _(input).each(function(v,k){
-      if (!v) delete cleaned[k];
+    _.each(input, function(v,k){
+      if (!v) {
+        delete cleaned[k];
+      }
     });
 
     return cleaned;

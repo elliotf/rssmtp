@@ -1,6 +1,7 @@
-# please wake up, travis
 language: node_js
 node_js:
   - "0.10"
 before_script:
-  - cp config/config.json.example config/config.json
+  - mysql -e 'create database rssmtp;'
+  - ./node_modules/.bin/knex migrate:latest
+env: NODE_ENV=ci

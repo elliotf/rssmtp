@@ -1,9 +1,8 @@
-var request    = require('request')
-  , feedparser = require('../lib/feedparser')
-  , moment     = require('moment')
-  , async      = require('async')
-  , _          = require('lodash')
-;
+var request    = require('request');
+var feedparser = require('../lib/feedparser');
+var moment     = require('moment');
+var async      = require('async');
+var _          = require('lodash');
 
 function init(Sequelize, sequelize, name, models) {
   var statics = {}
